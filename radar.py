@@ -20,6 +20,7 @@ import re
 import sys
 import threading
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -197,6 +198,112 @@ def insidekampus_records(model, raw, now):
         except Exception as e:  # noqa: BLE001
             log(f"  ! could not read InsideKampus comp {c.get('slug')}: {e}")
     return out
+
+
+# ----------------------------------------------------------------------------
+# One comp, one card. Unstop always wins: an InsideKampus listing is kept only when Unstop does not have that comp.
+# ----------------------------------------------------------------------------
+_T_STOP = set("the a an of and for by in at on to with from presents presented powered edition season chapter version vol volume part".split())
+_T_GENERIC = set("challenge competition contest case study quiz business national international annual fest event championship league "
+                 "cup series program programme campus student students india indian indias school college institute round online".split())
+_O_STOP = set("the of and for limited ltd pvt private india indian company co corporation corp group inc llp institute institution "
+              "management technology university college school business studies department society club cell committee engineering "
+              "science sciences arts commerce research education academy foundation global services solutions technologies systems".split())
+_O_WEAK = set("iim iit nit bits delhi mumbai bangalore bengaluru calcutta kolkata lucknow indore ahmedabad kozhikode chennai hyderabad pune "
+              "gurgaon gurugram noida kanpur kharagpur roorkee madras bombay national".split())
+_O_HOST = {"insideiim", "insidekampus", "unstop", "dare2compete"}  # the platform itself named as organiser tells us nothing
+_UNSTOP_HOSTS = ("unstop.com", "dare2compete.com")                 # Dare2Compete is the old name of Unstop
+_ROMAN = {"ii": "2", "iii": "3", "iv": "4", "vi": "6", "vii": "7", "viii": "8", "ix": "9", "xi": "11", "xii": "12", "xiii": "13", "xiv": "14", "xv": "15"}
+
+
+def _roman(w):
+    val, total = {"i": 1, "v": 5, "x": 10}, 0
+    for a, b in zip(w, w[1:] + " "):
+        total += -val[a] if b in val and val[b] > val[a] else val[a]
+    return total if 0 < total < 40 else 0
+
+
+def _toks(s):
+    s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
+    s = re.sub(r"['`\u2019]", "", s)                                                    # India's -> indias
+    s = re.sub(r"\b(?:[a-z]\.){2,}[a-z]?", lambda m: m.group(0).replace(".", ""), s)   # E.P.I.C -> epic
+    s = re.sub(r"\b(class|season|edition|chapter|phase|part|volume|vol|version|round)\s+([ivx]{1,5})\b",
+               lambda m: m.group(1) + " " + str(_roman(m.group(2)) or m.group(2)), s)   # Class X -> class 10
+    return re.findall(r"[a-z]+|\d+(?:\.\d+)?", s)
+
+
+def _title_parts(t):
+    """Words that name the comp, and the numbers that name its edition (2026, 7.0, Season 6, Class VII)."""
+    toks = _toks(t)
+    words = {w for w in toks if w[0].isalpha() and w not in _T_STOP and w not in _ROMAN and len(w) > 1}
+    nums = {w[:-2] if w.endswith(".0") else w for w in toks if w[0].isdigit()} | {_ROMAN[w] for w in toks if w in _ROMAN}
+    return words, nums
+
+
+def _org_parts(r):
+    o = {w for w in _toks(" ".join(str(r.get(k) or "") for k in ("org", "fest"))) if w[0].isalpha() and w not in _O_STOP and len(w) > 1}
+    return set() if o & _O_HOST else o
+
+
+def _same_org(oa, ob, ta, tb):
+    hit = oa & ob
+    if hit and (len(hit) / min(len(oa), len(ob)) >= .6 or any(len(w) >= 5 and w not in _O_WEAK for w in hit)):
+        return True
+    # the brand of one listing sits inside the title of the other ("Cummins" and "Cummins Redefine 2026")
+    return any(o and (o - _O_WEAK) and o <= t for o, t in ((oa, tb), (ob, ta)))
+
+
+def same_comp(a, b):
+    """How sure we are that record a (InsideKampus) and record b (Unstop) are one comp. 0 means they are different.
+
+    The words that name the comp must be the same, or one title must be the other plus a few words. Filler words
+    ("Challenge", "Case", "Competition") never count. Two different edition numbers (2025 and 2026, Test 3 and
+    Test 5) always mean different comps. The organiser, or failing that the registration deadline, has to agree.
+    """
+    (ta, na), (tb, nb) = _title_parts(a.get("t")), _title_parts(b.get("t"))
+    if na and nb and not (na <= nb or nb <= na):
+        return 0
+    sa, sb = ta - _T_GENERIC, tb - _T_GENERIC
+    if not sa or not sb or not (sa <= sb or sb <= sa):
+        return 0
+    oa, ob = _org_parts(a), _org_parts(b)
+    org = _same_org(oa, ob, ta, tb)
+    clash = bool(oa and ob) and not org                              # two known organisers that are not the same
+    da, db = parse_dt(a.get("dl")), parse_dt(b.get("dl"))
+    near = bool(da and db and abs((da - db).total_seconds()) <= 3 * 86400)
+    small = min(len(sa), len(sb))
+    if sa == sb:
+        if org:
+            return 1
+        if clash:
+            return .8 if near and small >= 2 else 0
+        return .9 if small >= 2 or near else 0                       # one side does not say who runs it
+    extra = (sa | sb) - (sa & sb)                                    # what the longer title adds
+    if org:
+        return .9 if small >= 2 or extra <= (oa | ob) else 0         # "Moves 2026" and "Axis Bank Moves 2026", not "Ops Quiz" and "Ops Hunt"
+    if clash:
+        return 0
+    return .7 if (near and small >= 2) or small >= 3 else 0          # one side does not say who runs it
+
+
+def only_new_to_unstop(ik, unstop):
+    """Splits InsideKampus records into the ones Unstop does not have (kept) and the ones it does (left out)."""
+    keep, dupes = [], []
+    for r in ik:
+        host = urllib.parse.urlparse(r.get("url") or "").netloc.lower()
+        if any(host == h or host.endswith("." + h) for h in _UNSTOP_HOSTS):
+            dupes.append({"t": r["t"], "same": "its link opens Unstop", "id": None})
+            continue
+        best, twin = 0, None
+        for u in unstop:
+            sc = same_comp(r, u)
+            if sc > best:
+                best, twin = sc, u
+        if twin:
+            dupes.append({"t": r["t"], "same": twin["t"], "id": twin["id"]})
+        else:
+            keep.append(r)
+    return keep, dupes
 
 
 # ----------------------------------------------------------------------------
@@ -436,10 +543,13 @@ def build(cfg, items, details, now, offline=False):
             log(f"  ! could not read comp {it.get('id')}: {e}")
     signin = read_signin()
     use_ik = (cfg.get("sources") or {}).get("insidekampus", True)
+    dupes = []
     if use_ik:
-        ik = insidekampus_records(model, fetch_insidekampus(offline), now)
+        ik, dupes = only_new_to_unstop(insidekampus_records(model, fetch_insidekampus(offline), now), comps)
         comps += ik
-        log(f"  InsideKampus: {len(ik)} open")
+        log(f"  InsideKampus: {len(ik)} open that Unstop does not have" + (f", {len(dupes)} left out because Unstop lists them" if dupes else ""))
+        for d in dupes:
+            log(f"    = {d['t']}  (Unstop: {d['same']})")
     comps.sort(key=lambda c: -c["score"])
     open_ids = {c["id"] for c in comps}
 
@@ -473,7 +583,7 @@ def build(cfg, items, details, now, offline=False):
         "niches": [{"id": n["id"], "label": n["label"], "biz": bool(n.get("business"))} for n in cfg["niches"]],
         "roundTypes": {t["id"]: t["label"] for t in cfg["round_types"]},
         "tiers": cfg["scoring"]["tiers"], "preAlertDays": cfg.get("watch", {}).get("pre_alert_days", 14),
-        "signin": signin,
+        "signin": signin, "dupes": dupes,
         "sources": [{"id": "unstop", "label": "Unstop"}] + ([{"id": "ik", "label": "InsideKampus"}] if use_ik else []),
     }
     data = {"meta": meta, "comps": comps, "extra": extra, "events": events, "watch": watch}

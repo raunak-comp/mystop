@@ -28,15 +28,14 @@ Opening `dashboard.html` directly works too, but then your tracker lives only in
 The dashboard is called **MyStop**: Unstop, filtered and tracked for one person. It opens on the light theme; the sun / moon button at the top right switches to dark. On a phone the sections move to a bar at the bottom. The search box at the top works from every section.
 
 ### Home
-- **Your Top Picks.** The three highest-scoring open comps you have not registered for. The arrow opens the full card with the score breakdown.
-- **Starred Comps.** The comps you bookmarked, soonest deadline first, each with its days left. Below it three counts you can tap: registered, closing this week, internship chances.
+- **Your Top Picks.** The four highest-scoring open comps you have not registered for, each with its score, tags, prize and days left. Click a card and it opens in Competitions with the score breakdown.
 - **Upcoming Events.** The next dates from your tracker and your starred comps. If there are fewer than four, registration deadlines of your top picks fill the list.
 - **Rotating banner.** One comp per angle, sliding every few seconds: the open flagship, best ROI (prize and internship against rounds and registrations), most reachable (fully online with the fewest rounds and registrations), closing soon, biggest prize, internship on offer, least crowded and new this week. A comp appears once, hovering pauses it, and the arrows or a swipe move it by hand.
-- **Quick Links.** Your registrations, starred comps, comps closing this week, case comps.
+- **At a Glance.** Four counts you can tap: your registrations, comps closing within 7 days, internship chances, case comps.
 - A strip under the banner asks you to sign in or set up your profile while either is missing.
 - The card at the bottom of the sidebar shows when the data was last synced and has the **Refresh now** button.
 
-Labels, buttons, chips and short facts are written in Title Case, and full sentences keep sentence case. The top right holds a **Starred** shortcut with its count and, once sign-in is on, your account.
+Labels, buttons, chips and short facts are written in Title Case, and full sentences keep sentence case. Once sign-in is on, the top right holds your account.
 
 Organiser logos load from Unstop's servers, so they need internet; without it each comp shows its initials instead. The two banner photos are AI-generated and embedded in `assets.css`.
 
@@ -45,7 +44,7 @@ Every open comp as a card, scored 0 to 100. One card per row, and every card has
 
 Every filter applies together, and each one that is on shows as a chip above the list that you can remove on its own. **Sort By** orders by score, deadline, prize, fewest or most registered, fewest rounds, internship first or newest.
 
-- **My List.** Three switches that use your own marks: only starred, leave out the ones you registered for, bring back the ones you hid.
+- **My List.** Three switches that use your own marks: Only Starred, Hide Registered, Show Hidden.
 - **Prize & Internship.** A minimum prize pool, and internship chances: any, confirmed in the prizes, PPI (interview) or PPO (job offer). A solid amber flag on a card means the chance is written into the prize list, an outlined one means it is only mentioned in the description.
 - **Participants & Rounds.** Registrations at most and at least, and a cap on rounds.
 - **Circuits.** DU Circuit, IIMs IITs & Premier, Corporate & Global, Others.
@@ -63,12 +62,13 @@ Every filter applies together, and each one that is on shows as a chip above the
 - **Hide.** The eye button hides a comp for now. The line above the list shows how many are hidden, with **Show them** and **Unhide all**.
   - If the listing says travel or stay is covered, the card says so.
 - **Round 1 asks for.** Quiz, deck, video, code, live presentation. Each card also lists every stage with its type and dates.
-- **Star** a comp (the bookmark on the card) and it waits under **Starred** in the sidebar, in the top bar and on Home, and keeps its deadline in Upcoming Events. **Track** moves it to your tracker.
+- **Star** a comp (the bookmark on the card) and it waits under **Starred** in the sidebar (the Starred tab on a phone), and keeps its deadline in Upcoming Events. **Track** moves it to your tracker.
 
 ### My registrations
 Replaces the spreadsheet. Dates come from Unstop on every refresh, so you never type one.
 
-- Each comp shows its stages (quiz, deck, presentation …) with dates. A stage reads **N/A** and is locked until it opens on Unstop (its start date arrives; if a stage has no date, when the stage before it is done). From then on you set its status: Pending, Done / submitted, Cleared, Not cleared, Skipped. Plus an outcome and an optional note.
+- Each comp shows its stages (quiz, deck, presentation …) with dates. A stage reads **N/A** and is locked until it opens on Unstop (its start date arrives; if a stage has no date, when the stage before it is done). From then on you set its status: Pending, Done / submitted, Cleared, Not cleared, Skipped. Plus an outcome, your team name and an optional note.
+- **Team name.** Type it once and it locks: it turns into a label with no text box, and it also shows beside the organiser at the top of the comp. Only the pencil on its right unlocks it, then Save (or Enter) locks it again and Cancel (or Esc) keeps the old name. It syncs with the rest of your registrations.
 - **Calendar.** One row per comp, one horizontal bar per stage, coloured by type (quiz, deck, presentation …). Stages that have not opened yet are drawn hatched. The glowing line is today, the diamond at the end of a bar is its deadline, and a day where two comps have something due is highlighted as a clash. Click a bar to jump to that comp.
 - **High / Normal / Low** is your own priority. **Hide for now** takes a comp out of the list, the calendar and the reminders without deleting anything. It waits under **Hidden**, where you can unhide it or press **Unhide all**. **Remove** is the one that deletes.
 - Paste an Unstop link to add something you registered for earlier, including comps whose registration has already closed.
@@ -153,6 +153,7 @@ Good to know:
 ## Other sources
 
 - **InsideKampus** (`insidekampus.com`, InsideIIM's board) is read on every refresh and its open comps are scored and listed next to Unstop's, marked under Platforms. Most of its comps are for MBA students and are hidden for an undergraduate profile. Switch it off with `"insidekampus": false` under `sources` in `config.json`.
+- **A comp never shows twice.** Unstop always comes first. An InsideKampus listing is added only when Unstop does not have that comp, so the two platforms never overlap. A listing is left out when its link opens Unstop (or Dare2Compete, the old name of Unstop), or when its title names the same comp as an open Unstop listing and the organiser or the registration deadline agrees. Filler words such as Challenge or Case do not count, and a different edition number (2025 against 2026) is treated as a different comp. Every listing left out is printed in the run log with the Unstop comp it matched, and the count shows under Platforms.
 - **Official pages** of corporate and international challenges do not share a format, so they are watched instead of listed: give a watchlist entry a `url` and each refresh checks that page for registration wording and for changes. `group` set to `global` puts the entry in the International section and `when` is the one line shown about its usual window.
 
 ## Files
