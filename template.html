@@ -258,53 +258,71 @@
   .gh i { width: 8px; height: 8px; border-radius: 50%; background: var(--tx-4); }
   .gh.high i { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); } .gh.medium i { background: var(--vio); }
   .gh span { font: 600 12.5px/1 "Inter", sans-serif; color: var(--tx-3); padding: 4px 8px; border-radius: 999px; background: var(--fill); letter-spacing: 0; }
-  #list, .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(316px, 1fr)); gap: 14px; align-items: stretch; }
-  #list > .gh, #list > .empty { grid-column: 1 / -1; }
-  .row { position: relative; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--sh-s); transition: box-shadow .2s, transform .2s var(--ease), border-color .2s; }
-  .row.wide { grid-column: 1 / -1; }
-  .c-h { display: flex; align-items: center; gap: 12px; min-width: 0; }
-  .c-h .lg { --s: 46px; border-radius: 12px; }
-  .c-o { flex: 1; min-width: 0; }
-  .c-o b { display: block; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--tx-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .c-o .pills { flex-wrap: nowrap; overflow: hidden; margin-top: 5px; }
-  .c-o .pill { flex: none; height: 21px; padding: 0 8px; font-size: 11.5px; border-radius: 6px; }
-  .row .ib.star { flex: none; width: 38px; height: 38px; border-radius: 11px; background: var(--fill); color: var(--tx-3); }
+  /* One card per row. Every card has the same blocks at the same widths, so the columns line up down the page. */
+  #list, .cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; container-type: inline-size; }
+  .row { position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 16px 18px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--sh-s); transition: box-shadow .2s, transform .2s var(--ease), border-color .2s; }
+  .c-h { display: grid; grid-template-columns: 60px minmax(0, 1fr); column-gap: 14px; align-items: start; }
+  .c-h .lg { --s: 60px; border-radius: 14px; }
+  .c-o { min-width: 0; }
+  .c-top { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+  .c-top b { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--tx-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-top .due { flex: none; }
+  .row .ib.star { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--fill); color: var(--tx-3); }
   .row .ib.star:hover { color: #e7a417; }
   .row .ib.star[aria-pressed="true"] { background: #fdf0d3; }
   [data-theme="dark"] .row .ib.star[aria-pressed="true"] { background: rgba(231,164,23,.18); }
-  .row > a.t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; font-size: 16.5px; }
-  .c-p { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 8px 12px; border-radius: 12px; background: var(--ok-soft); color: var(--ok); }
-  .c-p > .i { flex: none; }
-  .c-p b { display: block; font: 800 17.5px/1.15 var(--f-d); letter-spacing: -.01em; }
-  .c-p small { display: block; font-size: 11.5px; font-weight: 600; opacity: .85; }
-  .c-p.none { background: var(--fill); color: var(--tx-3); }
-  .c-p.none b { font: 600 13.5px/1.25 "Inter", sans-serif; letter-spacing: 0; color: var(--tx-2); }
-  .fee { margin-left: auto; flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--card); color: var(--ok); font-size: 11.5px; font-weight: 700; box-shadow: 0 0 0 1px currentColor inset; }
-  .fee.paid { color: var(--warn); }
-  .c-fl { display: flex; flex-wrap: wrap; gap: 6px; }
-  .fl { display: inline-flex; align-items: center; gap: 6px; height: 27px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .c-o > a.t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 1px; font-size: 17px; line-height: 1.3; }
+  .c-o .pills { flex-wrap: wrap; margin-top: 9px; }
+  .c-o .pill { flex: none; height: 23px; padding: 0 9px; font-size: 11.5px; border-radius: 7px; }
+  .fl { flex: none; display: inline-flex; align-items: center; gap: 5px; height: 23px; padding: 0 9px; border-radius: 7px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
   .fl.int { background: var(--warn-soft); color: var(--warn); box-shadow: 0 0 0 1px rgba(196,124,12,.35) inset; }
   .fl.int.sure { background: #f3b63a; color: #3d2a00; box-shadow: none; }
   .fl.fit { background: var(--accent-soft); color: var(--accent-strong); }
   [data-theme="dark"] .fl.fit { color: var(--accent); }
   .fl.bad { background: var(--bad-soft); color: var(--bad); }
-  .c-s { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-  .c-s > div { min-width: 0; padding: 8px 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--card-2); text-align: center; }
-  .c-s b { display: block; font: 700 14.5px/1.2 var(--f-d); letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .c-s small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--tx-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .c-s .scx.high { background: var(--accent-soft); border-color: transparent; } .c-s .scx.high b { color: var(--accent-strong); }
-  .c-s .scx.medium { background: var(--vio-soft); border-color: transparent; } .c-s .scx.medium b { color: var(--vio); }
-  [data-theme="dark"] .c-s .scx.high b { color: var(--accent); }
-  .c-f { display: flex; align-items: center; gap: 4px; margin-top: auto; }
-  .c-f .due { margin-right: auto; }
-  .c-f .ib { width: 34px; height: 34px; border-radius: 10px; color: var(--tx-3); }
-  .c-f .ib:hover { color: var(--tx); }
-  .c-f .more { display: inline-flex; align-items: center; gap: 4px; height: 34px; padding: 0 10px; border: 0; border-radius: 10px; background: none; color: var(--tx-2); font-size: 12.5px; font-weight: 600; }
-  .c-f .more:hover, .c-f .more[aria-expanded="true"] { background: var(--fill); color: var(--tx); }
-  .c-f .more .i { transition: transform .2s var(--ease); } .c-f .more[aria-expanded="true"] .i { transform: rotate(180deg); }
-  .c-b { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .c-b .btn { justify-content: center; height: 38px; margin: 0; }
-  .row .why { margin-top: 2px; }
+  .c-m { display: grid; grid-template-columns: minmax(0, 400px) 88px 66px minmax(max-content, 1fr); gap: 10px; align-items: stretch; }
+  .c-p { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 50px; padding: 7px 12px; border-radius: 12px; background: var(--ok-soft); color: var(--ok); }
+  .c-p > .i { flex: none; }
+  .c-p > span:not(.fee) { flex: 1; min-width: 0; }
+  .c-p b { display: block; font: 800 17px/1.15 var(--f-d); letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-p small { display: block; font-size: 11.5px; font-weight: 600; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-p.nil { background: var(--fill); color: var(--tx-3); }
+  .c-p.nil b { font: 700 14px/1.2 var(--f-d); letter-spacing: 0; color: var(--tx-2); }
+  .fee { flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--card); color: var(--ok); font-size: 11.5px; font-weight: 700; box-shadow: 0 0 0 1px currentColor inset; }
+  .fee.paid { color: var(--warn); }
+  .c-n { min-width: 0; display: grid; align-content: center; padding: 6px 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-2); text-align: center; }
+  .c-n b { display: block; font: 700 15.5px/1.2 var(--f-d); letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-n small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--tx-3); white-space: nowrap; }
+  .c-n.scx.high { background: var(--accent-soft); border-color: transparent; } .c-n.scx.high b { color: var(--accent-strong); }
+  .c-n.scx.medium { background: var(--vio-soft); border-color: transparent; } .c-n.scx.medium b { color: var(--vio); }
+  [data-theme="dark"] .c-n.scx.high b { color: var(--accent); }
+  .c-a { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+  .c-a .due { display: none; margin-right: auto; }
+  .c-a .ib { flex: none; width: 32px; height: 32px; border-radius: 10px; color: var(--tx-3); }
+  .c-a .ib:hover { color: var(--tx); }
+  .c-a .ib.exp[aria-expanded="true"] { background: var(--fill); color: var(--tx); }
+  .c-a .btn { flex: none; justify-content: center; height: 40px; margin: 0; padding: 0; }
+  .c-a .ap { width: 80px; } .c-a .trackb { width: 116px; }
+  .row .why { margin-top: 0; }
+  @container (max-width: 689px) {
+    .c-h { grid-template-columns: 48px minmax(0, 1fr); column-gap: 12px; } .c-h .lg { --s: 48px; border-radius: 12px; }
+    .c-top .due { display: none; }
+    .c-o > a.t { font-size: 16px; }
+    .c-m { grid-template-columns: minmax(0, 1fr) 88px 66px; }
+    .c-a { grid-column: 1 / -1; }
+    .c-a .due { display: inline-flex; }
+  }
+  @container (max-width: 479px) {
+    .c-o { display: contents; }
+    .c-h .lg { grid-row: 1 / span 2; }
+    .c-top, .c-o > a.t { grid-column: 2; }
+    .c-o .pills { grid-column: 1 / -1; margin-top: 12px; }
+    .c-m { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .c-p { grid-column: 1 / -1; }
+    .c-a { flex-wrap: wrap; }
+    .c-a::before { content: ""; order: 1; flex: 0 0 100%; height: 0; margin: -4px 0; }
+    .c-a .ap, .c-a .trackb { order: 2; width: auto; flex: 1 1 calc(50% - 4px); }
+  }
   .achips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; } .achips:empty { display: none; }
   .ac { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 9px 0 12px; border: 0; border-radius: 999px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 600; }
   .ac i { font-style: normal; font-size: 15px; line-height: 1; opacity: .7; } .ac:hover i { opacity: 1; }
@@ -354,7 +372,7 @@
   .tiles button:hover { transform: translateY(-1px); } .tiles b { display: block; font: 800 21px/1.15 var(--f-d); color: var(--tx); }
   .wsec { margin: 28px 2px 12px; font: 800 20px/1.2 var(--f-d); letter-spacing: -.014em; } .wsec small { margin-left: 8px; font: 500 13px/1 "Inter", sans-serif; color: var(--tx-3); letter-spacing: 0; }
   .row:hover { border-color: var(--line-2); box-shadow: var(--sh-m); transform: translateY(-1px); }
-  .row.dim > *:not(.c-f):not(.c-b) { opacity: .45; }
+  .row.dim .c-h > .lg, .row.dim .c-o > a.t, .row.dim .c-o > .pills, .row.dim .c-top b, .row.dim .c-p, .row.dim .c-n { opacity: .45; }
   .rb { min-width: 0; }
   .t { font: 700 16.5px/1.3 var(--f-d); letter-spacing: -.014em; overflow-wrap: anywhere; }
   .rb .t { display: block; margin-top: 8px; width: fit-content; max-width: 100%; }
@@ -664,7 +682,6 @@
     .addrow { flex-wrap: wrap; }
     .w { grid-template-columns: minmax(0, 1fr); padding: 16px; } .w .acts { grid-column: 1; margin-top: 8px; }
     .np { right: 8px; left: 8px; top: 62px; width: auto; max-width: none; }
-    #list, .cards { grid-template-columns: minmax(0, 1fr); }
     .tb-s { padding: 0 10px; gap: 6px; } .tb-s span { display: none; }
     #acct { margin-left: 2px; } #acct .btn { height: 36px; padding: 0 12px; } .me img { width: 34px; height: 34px; }
     .am { right: 8px; left: 8px; top: 62px; width: auto; max-width: none; }
@@ -1298,6 +1315,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (c.prizeTxt) notes.push("<b>Prizes</b>" + escA(clip(c.prizeTxt, 110)));
     if (c.intern) notes.push(`<b>${IKL[c.internKind] || "Internship Chance"}, ${c.intern === 2 ? "Confirmed in the Prizes" : "Mentioned Only"}</b>` + escA(clip(c.internNote || "", 110)));
     if (c.fit.length) notes.push("<b>Fits Your Course</b>" + esc(c.fit.map(n => NICHE[n] || n).join(", ")));
+    if (c.tmax) notes.push("<b>Team</b>" + (c.tmax === 1 ? "Solo Entry" : (c.tmin && c.tmin !== c.tmax ? c.tmin + " to " + c.tmax : c.tmax) + " Members" + (c.sameOrg ? ", All from One College" : "")));
     if (c.restrN) notes.push(`<b>${c.restrN === 1 ? "One College Only" : c.restrN + " Colleges Only"}</b>` + esc(c.restr.slice(0, 4).join(", ")) + (c.restrN > 4 ? "…" : ""));
     return `<div class="why"><div><h4>Score ${c.score}</h4><div class="sc">${rows || "<span>No Signals Matched</span><b>0</b>"}<span class="tot">Priority Score</span><b class="tot">${c.score}</b></div></div>
       <div><h4>In Person?</h4>${where}</div>${stg}${notes.length ? `<div><h4>Notes</h4>${notes.map(n => `<p class="n">${n}</p>`).join("")}</div>` : ""}</div>`;
@@ -1314,28 +1332,26 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     pl.push(pill(LOC[c.loc].cls, LOC[c.loc].tag, LOC[c.loc].label));
     if (c.isNew) pl.push(pill("", "New"));
     const fl = [];
-    if (c.inel.length) fl.push(`<span class="fl bad" title="${esc(tc(c.inel.join(", ")))}">${I("lock", 13)}${esc(tc(c.inel[0]))}</span>`);
-    if (c.intern) fl.push(`<span class="fl int${c.intern === 2 ? " sure" : ""}" title="${esc(c.intern === 2 ? "Written into the prize list" : "Mentioned in the description, not in the prize list")}">${I("briefcase", 13)}${IKL[c.internKind] || "Internship Chance"}</span>`);
-    if (c.fit.length) fl.push(`<span class="fl fit" title="${esc("Matches your course through " + c.fit.map(n => NICHE[n] || n).join(", "))}">${I("check", 13)}Fits ${esc(courseShort())}</span>`);
-    const team = !c.tmax ? "N/A" : c.tmax === 1 ? "Solo" : c.tmin && c.tmin !== c.tmax ? c.tmin + " to " + c.tmax : String(c.tmax);
+    if (c.inel.length) fl.push(`<span class="fl bad" title="${esc(tc(c.inel.join(", ")))}">${I("lock", 12)}${esc(tc(c.inel[0]))}</span>`);
+    if (c.intern) fl.push(`<span class="fl int${c.intern === 2 ? " sure" : ""}" title="${esc(c.intern === 2 ? "Written into the prize list" : "Mentioned in the description, not in the prize list")}">${I("briefcase", 12)}${IKL[c.internKind] || "Internship Chance"}</span>`);
+    if (c.fit.length) pl.splice(pl.length - (c.isNew ? 1 : 0), 0, `<span class="fl fit" title="${esc("Matches your course through " + c.fit.map(n => NICHE[n] || n).join(", "))}">${I("check", 12)}Fits ${esc(courseShort())}</span>`);
     const fee = c.fee == null ? '<span class="fee">Free Entry</span>' : `<span class="fee paid">${c.fee > 0 ? inr(c.fee) + " Entry" : "Paid Entry"}</span>`;
-    const prize = c.prize ? `<div class="c-p" title="${esc(c.prizeTxt || "")}">${I("trophy", 20)}<span><b>${c.prizeEst ? "About " : ""}${inrShort(c.prize)}</b><small>Prize Pool</small></span>${fee}</div>`
-      : `<div class="c-p none">${I("trophy", 20)}<span><b>${c.prizeTxt ? "Goodies or Certificates" : "No Cash Prize Listed"}</b></span>${fee}</div>`;
-    return `<article class="row${hid ? " dim" : ""}${open ? " wide" : ""}" id="c-${id}">
-      <div class="c-h">${logo(c)}<div class="c-o"><b title="${esc(c.org)}">${esc(shortOrg(c.org))}</b><span class="pills">${pl.join("")}</span></div>
-        <button class="ib star" data-star="${id}" aria-pressed="${star}" title="${star ? "Remove from Starred" : "Star It, It Then Waits in Starred"}" aria-label="Star">${I("bookmark", 18)}</button></div>
-      <a class="t" href="${escA(c.url)}" target="_blank" rel="noopener" title="${esc(c.t)}">${esc(c.t)}</a>
-      ${prize}
-      ${fl.length ? `<div class="c-fl">${fl.join("")}</div>` : ""}
-      <div class="c-s"><div title="${c.sameOrg && c.tmax > 1 ? "Whole team from one college" : "Team size"}"><b>${team}</b><small>${c.tmax === 1 ? "Entry" : c.sameOrg ? "Same College" : "Team"}</small></div>
-        <div title="${c.first ? esc((RT[c.first] || "Round") + " comes first") : "Rounds"}"><b>${c.rounds || "N/A"}</b><small>${c.rounds === 1 ? "Round" : "Rounds"}</small></div>
-        <div title="Registered so far"><b>${c.reg ? NUM(c.reg) : "N/A"}</b><small>Registered</small></div>
-        <div class="scx ${c.tier}" title="Priority Score ${c.score} of 100, ${tc(c.tier)}"><b>${c.score}</b><small>Score</small></div></div>
-      <div class="c-f">${deadline(c)}
-        <button class="more" data-open="${id}" aria-expanded="${open}" title="Score, Location Check and Stages">Details${I("chev", 14)}</button>
-        <button class="ib" data-hide="${id}" aria-pressed="${hid}" title="${hid ? "Unhide" : "Hide for Now"}" aria-label="${hid ? "Unhide" : "Hide for Now"}">${I(hid ? "eye" : "eyeoff", 17)}</button></div>
-      <div class="c-b"><a class="btn" href="${escA(c.url)}" target="_blank" rel="noopener" title="Opens on ${esc(SRC[c.src] || "Unstop")}">Apply${I("up", 13)}</a>
-        <button class="btn trackb${trk ? " on" : ""}" data-track="${id}" title="${trk ? "Registered, Click to Remove" : "Add to My Registrations"}">${I(trk ? "check" : "plus", 14)}${trk ? "Registered" : "Track"}</button></div>
+    const prize = c.prize ? `<div class="c-p" title="${esc(c.prizeTxt || "")}">${I("trophy", 20)}<span><b>${inrShort(c.prize)}</b><small>${c.prizeEst ? "Estimated Pool" : "Prize Pool"}</small></span>${fee}</div>`
+      : `<div class="c-p nil" title="${esc(c.prizeTxt || "")}">${I("trophy", 20)}<span><b>No Cash Prize</b><small>${c.prizeTxt ? "Other Rewards" : "None Listed"}</small></span>${fee}</div>`;
+    const due = deadline(c);
+    return `<article class="row${hid ? " dim" : ""}" id="c-${id}">
+      <div class="c-h">${logo(c)}<div class="c-o">
+        <div class="c-top"><b title="${esc(c.org)}">${esc(shortOrg(c.org))}</b>${due}<button class="ib star" data-star="${id}" aria-pressed="${star}" title="${star ? "Remove from Starred" : "Star It, It Then Waits in Starred"}" aria-label="Star">${I("bookmark", 17)}</button></div>
+        <a class="t" href="${escA(c.url)}" target="_blank" rel="noopener" title="${esc(c.t)}">${esc(c.t)}</a>
+        <span class="pills">${fl.join("")}${pl.join("")}</span></div></div>
+      <div class="c-m">${prize}
+        <div class="c-n" title="Registered so far"><b>${c.reg ? NUM(c.reg) : "N/A"}</b><small>Registered</small></div>
+        <div class="c-n scx ${c.tier}" title="Priority Score ${c.score} of 100, ${tc(c.tier)}"><b>${c.score}</b><small>Score</small></div>
+        <div class="c-a">${due}
+          <button class="ib exp" data-open="${id}" aria-expanded="${open}" title="Score, Location Check and Stages" aria-label="Details">${I("chev", 17)}</button>
+          <button class="ib" data-hide="${id}" aria-pressed="${hid}" title="${hid ? "Unhide" : "Hide for Now"}" aria-label="${hid ? "Unhide" : "Hide for Now"}">${I(hid ? "eye" : "eyeoff", 17)}</button>
+          <a class="btn ap" href="${escA(c.url)}" target="_blank" rel="noopener" title="Opens on ${esc(SRC[c.src] || "Unstop")}">Apply${I("up", 13)}</a>
+          <button class="btn trackb${trk ? " on" : ""}" data-track="${id}" title="${trk ? "Registered, Click to Remove" : "Add to My Registrations"}">${I(trk ? "check" : "plus", 14)}${trk ? "Registered" : "Track"}</button></div></div>
       ${open ? why(c) : ""}</article>`;
   }
 

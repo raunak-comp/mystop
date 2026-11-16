@@ -41,7 +41,7 @@ Labels, buttons, chips and short facts are written in Title Case, and full sente
 Organiser logos load from Unstop's servers, so they need internet; without it each comp shows its initials instead. The two banner photos are AI-generated and embedded in `assets.css`.
 
 ### Discover
-Every open comp as a card, scored 0 to 100. Each card has the same blocks in the same place: organiser and tags, title, the prize band with the entry fee, flags (internship chance, fits your course, why you can't enter), four tiles (team, rounds, registered, score), time left, then Apply and Track.
+Every open comp as a card, scored 0 to 100. One card per row, and every card has the same blocks at the same widths, so the columns line up down the page: organiser, time left and the bookmark on top, then the title, then one line of tags (internship chance first, why you can't enter, fits your course), then a single strip with the prize band and entry fee, Registered, Score, Details, Hide, Apply and Track. A long title takes a second line and the card grows by that one line, nothing else moves. Team size and the stages sit under Details.
 
 Every filter applies together, and each one that is on shows as a chip above the list that you can remove on its own. **Sort By** orders by score, deadline, prize, fewest or most registered, fewest rounds, internship first or newest.
 
