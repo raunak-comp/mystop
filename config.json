@@ -646,7 +646,14 @@
   "_note": "Prestige points are multiplied down for formats that carry little resume signal.",
   "light_re": "quiz|trivia|crossword|call for (articles|entries|papers)|article|essay|olympiad",
   "light_prestige_mult": 0.6,
-  "soft_prestige_mult": 0.4
+  "soft_prestige_mult": 0.4,
+  "sim": {
+    "_note": "Simulations, mock stock, trading games, auctions and bidding events. A comp counts when its title matches `title`, or when its description or round text matches `text` and it is not a coding comp. They get the same format points as a case comp.",
+    "title": "simulat|mock[- ]?(stock|trad|market|ipo|auction)|stock[- ]?(market|exchange|trading|pitch|wars?|o[- ]?mania|mania|simulat|game|quest)|\\btrad(e|ing)\\s*(game|challenge|contest|league|wars?|floor|arena|mania|competition|tournament|quest)|\\b(virtual|paper|mock|algo(rithmic)?)[- ]trading|\\bbid(ding)?\\b|bid[- ]?(wars?|battle|blitz)|\\bauction|bulls?\\s*(&|and|vs\\.?|n|v/s)\\s*bears?|bears?\\s*(&|and|vs\\.?|n|v/s)\\s*bulls?|dalal|wall\\s*street|\\bbourse\\b|\\btraders?\\b|fantasy|war[- ]?room|crisis (committee|simulation)|business game|management game|market[- ]?(mania|mayhem|wars|masters)|portfolio (challenge|wars|battle)|investment (game|league|simulation)|\\bipl\\b|(power|strategy|war)[- ]?game",
+    "text": "mock[- ]stock|stock[- ]market simulat|(trading|market|investment|business|management|strategy|stock|portfolio|supply chain|marketing|financial|crisis|online|live)[- ]simulation( game| round| platform| challenge| competition| event)?|simulation[- ](game|based (competition|event|challenge|round)|platform|competition|challenge)|simulated (market|trading|stock|business|exchange)|virtual (stock|trading|portfolio|market|money|capital|cash|funds|corpus)|paper trading|trading (platform|floor|game|round|session|terminal)|(mock|live|open outcry) (trading|auction|bidding)|bidding (war|round|game|event)|auction (round|game|event|based|style|format)|ipl (mega )?auction|player auction|fantasy league|\\bdummy (money|capital|portfolio)\\b|in[- ]game (currency|money|economy|capital)",
+    "round": "simulat|trading|bidding|auction|mock stock|fantasy (league|game|auction)|war ?room|crisis|business game|management game",
+  "score": 5
+  }
  },
  "scoring": {
   "prize": [

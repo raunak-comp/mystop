@@ -175,6 +175,10 @@ class Model:
         self.niches = [{**n, "_re": rx(n["re"]), "_title": rx(n["title"]) if n.get("title") else None} for n in cfg["niches"]]
         self.fmt_strong = rx(cfg["format"]["strong"]["re"])
         self.coding_title = rx(cfg["format"].get("coding_title") or r"hackathon")
+        sim = cfg["format"].get("sim") or {}
+        self.sim_title, self.sim_text, self.sim_score = rx(sim.get("title") or r"simulat|mock stock"), rx(sim.get("text") or r"mock stock"), sim.get("score", 0)
+        # a round typed "sim" only makes the whole comp a simulation when its name says so (a "treasure hunt" or "numbers game" round does not)
+        self.sim_round = rx(sim.get("round") or r"simulat|trading|bidding|auction|mock stock|war ?room")
 
     # ------------------------------------------------------------------ helpers
     def brand_hit(self, s):
@@ -491,6 +495,10 @@ class Model:
             mult, mult_label = fc["light_prestige_mult"], "quiz / article format"
         elif self.fmt_strong.search(title) or it.get("subtype") == "case_competition":
             fmt = fc["strong"]["score"]
+        # simulations, mock stock, trading games, auctions: named in the title, or described that way in a comp that is not a coding one
+        is_code = bool(("tech" in niches and not biz) or (self.coding_title.search(title) and ("tech" in niches or not biz)))
+        is_sim = bool(self.sim_title.search(title) or (not is_code and (self.sim_text.search(body + " " + round_blob) or any(r["ty"] == "sim" and self.sim_round.search(r.get("t") or "") for r in rounds))))
+        sim_pts = self.sim_score if is_sim and not fmt and not is_code and mult == 1 else 0
         if prestige:
             if mult < 1:
                 prestige = int(round(prestige * mult))
@@ -498,6 +506,8 @@ class Model:
             why.insert(0, [prestige_label, prestige])
         if fmt:
             why.append(["Case / pitch / challenge format", fmt])
+        if sim_pts:
+            why.append(["Simulation / mock stock / trading format", sim_pts])
 
         # internship: only when it is a reward, read per sentence ------------
         prize_text = " ".join(" ".join(str(p.get(k) or "") for k in ("rank", "others")) for p in prizes)
@@ -579,7 +589,7 @@ class Model:
             pen += sc["school_only_penalty"]
             why.append(["School students only", sc["school_only_penalty"]])
 
-        score = max(0, min(100, prestige + biz + fmt + i_pts + p_pts + r_pts + g_reg + pen))
+        score = max(0, min(100, prestige + biz + fmt + sim_pts + i_pts + p_pts + r_pts + g_reg + pen))
         tier_lbl = "high" if score >= sc["tiers"]["high"] else "medium" if score >= sc["tiers"]["medium"] else "low"
 
         deadline = parse_dt(lr.get("end_regn_dt") or it.get("end_date") or det.get("end_date"))
@@ -605,7 +615,7 @@ class Model:
             "fee": fee, "dl": deadline.isoformat() if deadline else None, "rs": reg_start.isoformat() if reg_start else None,
             "listed": listed.isoformat() if listed else None,
             "elig": elig, "el": el, "g": gender[0] if len(gender) == 1 else None, "restr": allowed[:60], "restrN": len(allowed),
-            "score": int(round(score)), "tier": tier_lbl, "why": why, "sub": it.get("subtype") or None, "case": bool(fmt),
+            "score": int(round(score)), "tier": tier_lbl, "why": why, "sub": it.get("subtype") or None, "case": bool(fmt), "sim": is_sim,
             "logo": it.get("logoUrl2") or (it.get("organisation") or {}).get("logoUrl2") or (it.get("organisation") or {}).get("logoUrl") or None,
             "code": bool(("tech" in niches and not biz) or (self.coding_title.search(title) and ("tech" in niches or not biz))),
         }

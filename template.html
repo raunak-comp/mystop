@@ -55,8 +55,8 @@
   .grow { flex: 1; min-width: 0; }
 
   /* ------------------------------------------------ shell */
-  .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
-  .side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 26px 18px 22px; overflow: hidden auto; color: #fff; background: linear-gradient(180deg, #0d2253 0%, #0a1b44 55%, #081637 100%); }
+  .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; min-height: 100dvh; }
+  .side { position: sticky; top: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; padding: 26px 18px 22px; overflow: hidden auto; color: #fff; background: linear-gradient(180deg, #0d2253 0%, #0a1b44 55%, #081637 100%); }
   .side::before, .side::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 260px; pointer-events: none; }
   .side::before { background: linear-gradient(160deg, rgba(64,132,255,.32), rgba(64,132,255,.04)); clip-path: polygon(0 46%, 58% 100%, 0 100%); }
   .side::after { background: linear-gradient(200deg, rgba(64,132,255,.2), rgba(64,132,255,.02)); clip-path: polygon(100% 58%, 100% 100%, 26% 100%); }
@@ -79,7 +79,7 @@
   .sync-card button[disabled] { opacity: .7; cursor: default; }
 
   .main { min-width: 0; }
-  .bar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; height: 78px; padding: 0 28px; background: var(--blur-bg); backdrop-filter: saturate(1.3) blur(14px); -webkit-backdrop-filter: saturate(1.3) blur(14px); }
+  .bar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; height: 78px; padding: 0 max(28px, calc((100% - 1340px) / 2 + 28px)); background: var(--blur-bg); backdrop-filter: saturate(1.3) blur(14px); -webkit-backdrop-filter: saturate(1.3) blur(14px); }
   .search { display: flex; align-items: center; gap: 12px; height: 46px; flex: 0 1 680px; min-width: 0; padding: 0 16px; border: 1px solid transparent; border-radius: 12px; background: var(--fill); color: var(--tx-2); transition: border-color .15s, box-shadow .15s, background .15s; }
   .search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); background: var(--card); }
   .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--tx); font-size: 14.5px; }
@@ -215,6 +215,12 @@
   .ck span { min-width: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .ck small { color: var(--tx-3); font-size: 12px; }
   .evs { border-top: 1px solid var(--line); }
+  .rg-sum { margin: -8px 2px 12px; color: var(--tx-3); font-size: 14px; font-weight: 500; }
+  .rg-more { margin-top: 10px; }
+  .dtile.nil { color: var(--tx-3); }
+  .evb .tm { display: block; font-weight: 600; color: var(--accent-strong); } [data-theme="dark"] .evb .tm { color: var(--accent); } .evb .tm .i { display: inline-block; margin-right: 5px; vertical-align: -2px; }
+  .rg-empty { display: grid; place-content: center; justify-items: center; gap: 8px; min-height: 220px; padding: 26px 22px; border: 1px dashed var(--line-2); border-radius: 18px; background: var(--card); text-align: center; color: var(--tx-2); font-size: 14px; line-height: 1.5; }
+  .rg-empty > .i { color: var(--accent); } .rg-empty b { font: 700 18px/1.3 var(--f-d); letter-spacing: -.014em; color: var(--tx); } .rg-empty span { max-width: 38ch; } .rg-empty .btn { margin-top: 8px; }
   .evr { display: flex; align-items: center; gap: 22px; width: 100%; padding: 8px 6px 8px 0; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; transition: background .15s, padding .2s var(--ease); }
   .evr:hover { background: var(--card); padding-left: 6px; }
   .dtile { flex: none; width: 84px; height: 58px; border-radius: 10px; background: var(--fill); display: grid; place-content: center; text-align: center; color: var(--tx); }
@@ -222,8 +228,9 @@
   .dtile b { font: 800 26px/1.05 var(--f-d); letter-spacing: -.014em; }
   .evb { flex: 1; min-width: 0; }
   .evb b { display: block; font: 700 18px/1.3 var(--f-d); letter-spacing: -.014em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .evb small { display: block; margin-top: 1px; font-size: 14.5px; color: var(--tx-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .evb small em { font-style: normal; font-weight: 600; color: var(--tx-2); margin-right: 8px; }
+  .evb small { display: flex; align-items: center; margin-top: 1px; font-size: 14.5px; color: var(--tx-3); white-space: nowrap; min-width: 0; }
+  .evb small em { flex: none; font-style: normal; font-weight: 600; color: var(--tx-2); margin-right: 8px; }
+  .evb small .og, .evb small .tm { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .evr .pill { height: 30px; padding: 0 14px; border-radius: 999px; font-size: 13px; flex: none; }
   .promo { position: relative; border-radius: 18px; overflow: hidden; color: #fff; background: #0c2256 var(--img-promo, none) right center / cover no-repeat; box-shadow: var(--sh-m); }
   .promo::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,28,72,.96) 0%, rgba(10,28,72,.8) 42%, rgba(10,28,72,.1) 78%); }
@@ -435,7 +442,7 @@
   .foot b { color: var(--tx-2); font-weight: 600; }
 
   /* filters */
-  .filters { position: sticky; top: 92px; max-height: calc(100vh - 110px); display: flex; flex-direction: column; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--sh-s); }
+  .filters { position: sticky; top: 92px; max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); display: flex; flex-direction: column; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--sh-s); }
   .f-top { flex: none; }
   #fbody { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 6px; scrollbar-width: thin; scrollbar-color: var(--line-3) transparent; }
   .f-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 12px; }
@@ -703,6 +710,23 @@
     .tabbar button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px 6px; border: 0; border-radius: 13px; background: none; color: #a9b9da; font-size: 10.500px; font-weight: 600; }
     .tabbar button[aria-current="true"] { color: #fff; background: rgba(255,255,255,.13); }
     #toast { bottom: 96px; }
+    .reg .acts { flex-wrap: wrap; row-gap: 8px; }
+    .bar { padding-left: max(14px, env(safe-area-inset-left)); padding-right: max(14px, env(safe-area-inset-right)); }
+    .page { padding-left: max(14px, env(safe-area-inset-left)); padding-right: max(14px, env(safe-area-inset-right)); }
+    .tabbar { left: 50%; right: auto; width: min(540px, calc(100% - 20px)); transform: translateX(-50%); }
+  }
+  @media (min-width: 620px) and (max-width: 860px) {
+    .viewsM { flex-wrap: wrap; overflow: visible; margin: 0 0 16px; padding: 0; }
+    .stats, .ql { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .tools .sortl { display: none; }
+    .tools > .grow { flex: 1 0 100%; height: 0; margin: -5px 0; }
+    .tools #sort { flex: 1 1 0; min-width: 0; }
+  }
+  /* Phones zoom the whole page when a field with small text gets focus. 16px stops that. */
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px !important; }
   }
 </style>
 </head>
@@ -873,7 +897,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   // ------------------------------------------------------------------ data
   const PREM = new Set(["iim", "iit", "fms", "isb", "bschool", "nmims", "xaviers", "bits", "liberal", "newage", "premier"]), CORPS = new Set(["mbb", "big4", "fin", "corp", "global"]);
   const CIRCS = [{ id: "du", label: "DU Circuit" }, { id: "prem", label: "IIMs, IITs & Premier" }, { id: "corp", label: "Corporate & Global" }, { id: "other", label: "Others" }];
-  const KINDS = [{ id: "case", label: "Case, Strategy & Pitch" }, { id: "quiz", label: "Quizzes" }, { id: "sim", label: "Simulations & Trading" }, { id: "write", label: "Writing & Research" }, { id: "debate", label: "Debates & MUNs" }, { id: "other", label: "Everything Else" }];
+  const KINDS = [{ id: "case", label: "Case, Strategy & Pitch" }, { id: "quiz", label: "Quizzes" }, { id: "sim", label: "Simulations & Mock Stock" }, { id: "write", label: "Writing & Research" }, { id: "debate", label: "Debates & MUNs" }, { id: "other", label: "Everything Else" }];
   const CIRC = Object.fromEntries(CIRCS.map(x => [x.id, x.label])), KIND = Object.fromEntries(KINDS.map(x => [x.id, x.label]));
   const SRCS = META.sources || [{ id: "unstop", label: "Unstop" }], SRC = Object.fromEntries(SRCS.map(x => [x.id, x.label]));
   const prep = c => {
@@ -882,7 +906,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     c.circ = [cs.some(x => x === "du" || x === "du_top") && "du", cs.some(x => PREM.has(x)) && "prem", cs.some(x => CORPS.has(x)) && "corp"].filter(Boolean);
     if (!c.circ.length) c.circ = ["other"];
     c.kinds = [c.case && "case", (nn.includes("quiz") || /\bquiz/i.test(ttl)) && "quiz",
-      ((c.rd || []).some(r => r.ty === "sim") || /simulat|trading (game|challenge|contest|league)|mock (stock|trading)|stock market (game|challenge)|bidding|auction/i.test(ttl)) && "sim",
+      (c.sim || /simulat|trading (game|challenge|contest|league)|mock (stock|trading)|stock market (game|challenge)|bidding|auction/i.test(ttl)) && "sim",
       /essay|article|writing|research|\bpapers?\b|\bblog|journal|report\b|poster|policy brief/i.test(ttl) && "write",
       (nn.includes("debate") || /debate|\bmun\b|model united|parliament|moot/i.test(ttl)) && "debate"].filter(Boolean);
     if (!c.kinds.length) c.kinds = ["other"];
@@ -1124,6 +1148,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     { id: "all", label: "Everything I can do", set: {} },
     { id: "high", label: "High Priority", set: { tier: ["high"] } },
     { id: "case", label: "Case Comps only", set: { kinds: ["case"] } },
+    { id: "sim", label: "Simulations & mock stock", set: { kinds: ["sim"] } },
     { id: "iim", label: "IIM, fully online", set: { cats: ["iim"], loc: ["online"] } },
     { id: "iit", label: "IIT, online or Delhi", set: { cats: ["iit"], loc: ["online", "delhi"] } },
     { id: "bs", label: "Top B-schools", set: { cats: ["fms", "isb", "bschool", "nmims"] } },
@@ -1337,13 +1362,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   }
   const TYC = { quiz: "q", deck: "d", live: "l", video: "v", build: "b", sim: "s", other: "o", info: "o" };
   const IKL = { ppo: "PPO Chance", ppi: "PPI Chance", intern: "Internship Chance" };
+  const KINDTAG = { case: "Case Comp", quiz: "Quiz", sim: "Simulation", write: "Writing", debate: "Debate" };
+  const kindOf = c => c.kinds.includes("sim") ? "sim" : c.kinds.find(k => k !== "other");
   function row(c) {
     const id = c.sid, star = !!P.star[id], hid = !!P.hide[id], trk = !!P.tracked[id], open = OPEN.has(id);
     const pl = [];
     const cat = c.cats.filter(x => x !== "org" && !(x === "corp" && c.cats.some(y => ["mbb", "big4", "fin"].includes(y))))[0];
     if (cat) pl.push(pill("a", CATS[cat] || CAT[cat] || cat, CAT[cat]));
-    const kd = c.kinds.find(k => k !== "other");
-    if (kd) pl.push(pill("v", { case: "Case Comp", quiz: "Quiz", sim: "Simulation", write: "Writing", debate: "Debate" }[kd], KIND[kd]));
+    const kd = kindOf(c);
+    if (kd) pl.push(pill("v", KINDTAG[kd], KIND[kd]));
     pl.push(pill(LOC[c.loc].cls, LOC[c.loc].tag, LOC[c.loc].label));
     if (c.isNew) pl.push(pill("", "New"));
     const fl = [];
@@ -1701,33 +1728,38 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   function renderHome(anim) {
     const picks = listFor({}).filter(c => !P.tracked[c.id] && (c.daysLeft == null || c.daysLeft > .5)).sort(SORTS.score);
     const pickCard = c => {
-      const kind = c.case ? ["v", "Case Comp"] : c.first === "quiz" ? ["a", "Quiz"] : ["a", "Competition"], cat = c.cats.find(x => CATS[x] && x !== "corp" && x !== "global");
+      const kd = kindOf(c), kind = kd ? ["v", KINDTAG[kd]] : ["a", "Competition"];
       const second = c.intern ? `<span class="fl int${c.intern === 2 ? " sure" : ""}">${I("briefcase", 12)}${IKL[c.internKind] || "Internship Chance"}</span>` : LOC[c.loc] ? pill(LOC[c.loc].cls, LOC[c.loc].tag) : "";
       return `<article class="pick"><div class="pk-h">${logo(c)}<div class="pk-b"><small>${esc(shortOrg(c.org))}</small><button class="t" data-go="${c.id}" title="${esc(c.t)}"><span>${esc(c.t)}</span></button></div><span class="pk-s ${c.tier}" title="Priority Score ${c.score} of 100"><b>${c.score}</b><small>Score</small></span></div>
         <span class="pills pk-t">${pill(kind[0], kind[1])}${second}</span>
         <div class="pk-f">${c.prize ? `<span class="pk-p"><b>${inrShort(c.prize)}</b><small>${c.prizeEst ? "Estimated Pool" : "Prize Pool"}</small></span>` : `<span class="pk-p nil"><b>No Cash Prize</b><small>${c.prizeTxt ? "Other Rewards" : "None Listed"}</small></span>`}${deadline(c)}</div></article>`;
     };
-    // progress + what is coming up, from the tracker
+    // my registrations: one row per comp I am in, soonest step first
     const act = Object.keys(P.tracked).filter(id => rec(id) && !P.tracked[id].hidden && !dead(id));
-    let done = 0, total = 0; const todo = [], fin = [], evs = [];
-    act.forEach(id => { const c = rec(id); stages(id).forEach(x => {
-      if ((x.locked || x.st === "todo") && x.due && x.due >= NOW) evs.push({ ts: x.due, t: c.t, sub: (RT[x.r.ty] || "Round") + (x.r.ty === "live" || x.r.ty === "sim" ? "" : x.r.ty === "quiz" ? " Closes" : " Due"), org: c.org, id });
-      if (x.locked || x.st === "na") return;
-      total++;
-      if (x.st === "done" || x.st === "pass") { done++; fin.push({ c, x, id }); } else if (x.st === "todo") todo.push({ c, x, id });
-    }); });
-    todo.sort((a, b) => (a.x.due || 9e15) - (b.x.due || 9e15));
+    const regs = act.map(id => { const n = nextUp(id); return { id, c: rec(id), t: P.tracked[id], n, ts: n ? (n.locked ? (n.start || n.due) : n.due) : null }; })
+      .sort((a, b) => (a.ts || 9e15) - (b.ts || 9e15) || a.t.pri - b.t.pri);
+    const dueSoon = regs.filter(r => r.n && !r.n.locked && r.ts - NOW < 7 * DAY).length;
+    const regRow = r => {
+      const { c, t, n, ts } = r; let tile, sub, tag = "";
+      if (ts) {
+        const d = new Date(ts), k = Math.round((startOfDay(ts) - startOfDay(NOW)) / DAY);
+        tile = `<span class="dtile"><i>${d.toLocaleDateString("en-IN", { month: "short" }).toUpperCase()}</i><b>${String(d.getDate()).padStart(2, "0")}</b></span>`;
+        sub = (RT[n.r.ty] || "Round") + (n.locked ? " Opens" : n.r.ty === "live" || n.r.ty === "sim" ? "" : n.r.ty === "quiz" ? " Closes" : " Due");
+        tag = `<span class="pill${n.locked ? "" : " t-" + (k <= 2 ? "b" : k <= 7 ? "a" : "v")}">${k <= 0 ? "Today" : k === 1 ? "Tomorrow" : "In " + k + " Days"}</span>`;
+      } else {
+        tile = `<span class="dtile nil">${I("clock", 20)}</span>`;
+        sub = stages(r.id).length ? "Nothing Pending" : "No Stage Dates Yet";
+      }
+      return `<button class="evr" data-go="${r.id}" title="Open It in My Registrations">${tile}<span class="evb"><b>${esc(c.t)}</b><small><em>${esc(sub)}</em>${t.team ? `<span class="tm">${I("users", 13)}${esc(t.team)}</span>` : `<span class="og">${esc(shortOrg(c.org))}</span>`}</small></span>${tag}</button>`;
+    };
+    const nAll = Object.keys(P.tracked).filter(id => rec(id)).length;
+    const regPanel = `<section><div class="sec-h"><h2>My Registrations</h2><button class="va" data-tab="tracker">View All${I("arrow", 16)}</button></div>
+      ${regs.length ? `<p class="rg-sum">${regs.length} Active, ${dueSoon ? dueSoon + " Due in the Next 7 Days" : "Nothing Due in the Next 7 Days"}</p><div class="evs">${regs.slice(0, 5).map(regRow).join("")}</div>${regs.length > 5 ? `<button class="va rg-more" data-tab="tracker">${regs.length - 5} More in My Registrations${I("arrow", 16)}</button>` : ""}`
+        : `<div class="rg-empty">${I("cal", 26)}<b>${nAll ? "Nothing Active Right Now" : "Nothing Registered Yet"}</b><span>${nAll ? "Everything you registered for is under Hidden or Finished" : "Press Track on a comp you registered for. Its stages, dates and reminders then show up here"}</span><button class="btn primary sm" data-tab="${nAll ? "tracker" : "discover"}">${nAll ? "Open My Registrations" : "Find Competitions"}</button></div>`}</section>`;
     const nFor = id => listFor(PRESETS.find(p => p.id === id).set).length;
     const glance = (n, label, attr, tip) => `<button ${attr} title="${tip}"><b>${n}</b>${label}</button>`;
     const nudge = CLOUD && cloud.state === "out" ? `<div class="nudge">${I("user", 18)}<span>Sign in with Google and your comps follow you to every device</span><button class="btn primary sm" data-act="signin">${GI}Sign In</button></div>`
       : !profileSet() ? `<div class="nudge">${I("user", 18)}<span>Add your college and course so MyStop hides what you can't enter</span><button class="btn primary sm" data-act="profile">Set Up Profile</button></div>` : "";
-    Object.keys(P.star).forEach(id => { const c = BY[id]; if (c && !c.closed && !P.tracked[id] && c.dlMs && c.dlMs > NOW) evs.push({ ts: c.dlMs, t: c.t, sub: "Registration Closes", org: c.org, id }); });
-    for (const c of picks) { if (evs.length >= 4) break; if (c.dlMs && !P.star[c.id]) evs.push({ ts: c.dlMs, t: c.t, sub: "Registration Closes", org: c.org, id: c.id }); }
-    evs.sort((a, b) => a.ts - b.ts);
-    const evRow = e => {
-      const d = new Date(e.ts), n = Math.round((startOfDay(e.ts) - startOfDay(NOW)) / DAY), tone = n <= 2 ? "b" : n <= 7 ? "a" : n <= 14 ? "v" : "g";
-      return `<button class="evr" data-go="${e.id}"><span class="dtile"><i>${d.toLocaleDateString("en-IN", { month: "short" }).toUpperCase()}</i><b>${String(d.getDate()).padStart(2, "0")}</b></span><span class="evb"><b>${esc(e.t)}</b><small><em>${esc(e.sub)}</em>${esc(shortOrg(e.org))}</small></span><span class="pill t-${tone}">${n === 0 ? "Today" : n === 1 ? "Tomorrow" : "In " + n + " Days"}</span></button>`;
-    };
     const ws = (DATA.watch || []).map(watchInfo), wOpen = ws.filter(o => o.open).sort((a, b) => (a.open.dlMs || 9e15) - (b.open.dlMs || 9e15))[0], wNext = ws.filter(o => !o.open && o.exp && o.exp > NOW).sort((a, b) => a.exp - b.exp)[0];
     // the banner rotates through one comp per angle, each angle showing its true number one
     const low = c => c.tier !== "low", n0 = c => c.reg || 0, rnd = c => Math.max(1, c.rounds || 1);
@@ -1761,13 +1793,12 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const el = $("v-home");
     el.className = "page" + (anim ? " enter-p" : "");
     el.innerHTML = `<div class="hb"><div><div class="hb-brand">MyStop</div><div class="hb-h">${U ? "Welcome Back, " + escA(firstName()) + "." : "Your Personal Launchpad."}</div><div class="hb-s">Discover. Compete. Grow.</div></div><blockquote>“Dream bigger.<br>Apply smarter.”</blockquote></div>${nudge}
-      <div class="hg a"><section><div class="sec-h"><h2>Your Top Picks</h2><button class="va" data-preset="high">View All${I("arrow", 16)}</button></div>
-          <div class="picks">${picks.slice(0, 4).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section></div>
-      <div class="hg b"><section><div class="sec-h"><h2>Upcoming Events</h2><button class="va" data-tab="tracker">View All${I("arrow", 16)}</button></div>
-          <div class="evs">${evs.slice(0, 4).map(evRow).join("") || '<div class="none" style="margin-top:14px">No dates coming up</div>'}</div></section>
+      <div class="hg b">${regPanel}
         <section>${promo}
           <h2 class="ql-h">At a Glance</h2>
-          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor("case"), "Case Comps", 'data-preset="case"', "Case, Strategy and Pitch Comps")}</div></section></div>`;
+          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor("case"), "Case Comps", 'data-preset="case"', "Case, Strategy and Pitch Comps")}</div></section></div>
+      <div class="hg a"><section><div class="sec-h"><h2>Your Top Picks</h2><button class="va" data-preset="high">View All${I("arrow", 16)}</button></div>
+          <div class="picks">${picks.slice(0, 4).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section></div>`;
   }
 
   // ------------------------------------------------------------------ navigation + chrome

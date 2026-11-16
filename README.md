@@ -25,11 +25,11 @@ Opening `dashboard.html` directly works too, but then your tracker lives only in
 
 ## What is in the dashboard
 
-The dashboard is called **MyStop**: Unstop, filtered and tracked for one person. It opens on the light theme; the sun / moon button at the top right switches to dark. On a phone the sections move to a bar at the bottom. The search box at the top works from every section.
+The dashboard is called **MyStop**: Unstop, filtered and tracked for one person. It opens on the light theme; the sun / moon button at the top right switches to dark. On a phone or a tablet held upright the sections move to a bar at the bottom, and the layout is checked at 21 screen sizes from a 320 px phone to a 2560 px monitor. The search box at the top works from every section.
 
 ### Home
-- **Your Top Picks.** The four highest-scoring open comps you have not registered for, each with its score, tags, prize and days left. Click a card and it opens in Competitions with the score breakdown.
-- **Upcoming Events.** The next dates from your tracker and your starred comps. If there are fewer than four, registration deadlines of your top picks fill the list.
+- **My Registrations.** The first thing on Home, because keeping track of what you signed up for is the point of MyStop. One line says how many registrations are active and how many have something due in the next 7 days. Under it, up to five comps you are in, soonest first, each with the date, the next step (quiz closes, deck due, round opens), your team name and a Today / Tomorrow / In N Days tag. Click a row to open that comp in My Registrations. Only comps you tracked appear here: starred comps and top picks never do. With nothing tracked yet, it shows a button to find comps.
+- **Your Top Picks.** Lower down the page: the four highest-scoring open comps you have not registered for, each with its score, tags, prize and days left. Click a card and it opens in Competitions with the score breakdown.
 - **Rotating banner.** One comp per angle, sliding every few seconds: the open flagship, best ROI (prize and internship against rounds and registrations), most reachable (fully online with the fewest rounds and registrations), closing soon, biggest prize, internship on offer, least crowded and new this week. A comp appears once, hovering pauses it, and the arrows or a swipe move it by hand.
 - **At a Glance.** Four counts you can tap: your registrations, comps closing within 7 days, internship chances, case comps.
 - A strip under the banner asks you to sign in or set up your profile while either is missing.
@@ -48,7 +48,7 @@ Every filter applies together, and each one that is on shows as a chip above the
 - **Prize & Internship.** A minimum prize pool, and internship chances: any, confirmed in the prizes, PPI (interview) or PPO (job offer). A solid amber flag on a card means the chance is written into the prize list, an outlined one means it is only mentioned in the description.
 - **Participants & Rounds.** Registrations at most and at least, and a cap on rounds.
 - **Circuits.** DU Circuit, IIMs IITs & Premier, Corporate & Global, Others.
-- **Categories.** Case, strategy & pitch, quizzes, simulations & trading, writing & research, debates & MUNs.
+- **Categories.** Case, strategy & pitch, quizzes, simulations & mock stock (trading games, auctions, bidding wars, crisis and business simulations), writing & research, debates & MUNs.
 - **Participation** (solo OK or team), **Entry Fee** (free or paid) and **Platforms** (Unstop, InsideKampus).
 - **Fits My Course.** The course in your profile maps to domains (BBA to marketing, finance, consulting and so on, B.Tech to tech, product and analytics). Matching comps carry a Fits flag, and the profile dialog lists the domains for the course you pick.
 
@@ -62,7 +62,7 @@ Every filter applies together, and each one that is on shows as a chip above the
 - **Hide.** The eye button hides a comp for now. The line above the list shows how many are hidden, with **Show them** and **Unhide all**.
   - If the listing says travel or stay is covered, the card says so.
 - **Round 1 asks for.** Quiz, deck, video, code, live presentation. Each card also lists every stage with its type and dates.
-- **Star** a comp (the bookmark on the card) and it waits under **Starred** in the sidebar (the Starred tab on a phone), and keeps its deadline in Upcoming Events. **Track** moves it to your tracker.
+- **Star** a comp (the bookmark on the card) and it waits under **Starred** in the sidebar (the Starred tab on a phone). **Track** moves it to your tracker, and from then on its dates show in My Registrations on Home.
 
 ### My registrations
 Replaces the spreadsheet. Dates come from Unstop on every refresh, so you never type one.
@@ -174,7 +174,7 @@ Good to know:
 
 ## Scoring in one paragraph
 
-Organiser prestige (IIM, IIT, FMS, ISB, top B-schools, top DU colleges, Masters' Union, strategy firms, Big 4, banks, other known brands) up to 44; business niche up to 10; case or pitch format 5; internship 15 if it is in the prize list, 7 if a sentence offers it to winners; prize money up to 15; fewer rounds and fewer registrations add points, many rounds and thousands of registrations subtract. High is 55 and above, medium 35 and above. Every card shows its own breakdown. Change any of it in `config.json`, then run `python radar.py --offline`.
+Organiser prestige (IIM, IIT, FMS, ISB, top B-schools, top DU colleges, Masters' Union, strategy firms, Big 4, banks, other known brands) up to 44; business niche up to 10; case or pitch format 5, and the same 5 for a simulation, mock stock or trading format (the words that count are in `config.json` under `format.sim`); internship 15 if it is in the prize list, 7 if a sentence offers it to winners; prize money up to 15; fewer rounds and fewer registrations add points, many rounds and thousands of registrations subtract. High is 55 and above, medium 35 and above. Every card shows its own breakdown. Change any of it in `config.json`, then run `python radar.py --offline`.
 
 ## Limits worth knowing
 
