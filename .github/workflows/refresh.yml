@@ -1,0 +1,63 @@
+name: Refresh MyStop
+
+# Pulls the open competitions from Unstop, rebuilds the dashboard and publishes it on GitHub Pages.
+# Runs four times a day, whenever a file in the repository changes, and whenever you press "Run workflow" on the Actions tab.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "30 0,6,12,18 * * *"   # 6 am, 12 noon, 6 pm and 12 midnight IST
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Keeps the downloaded listings between runs, so a run only fetches what changed
+      # and date or prize changes on your registered comps can be spotted.
+      - name: Restore the Unstop cache
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: unstop-${{ github.run_id }}
+          restore-keys: unstop-
+
+      # If Unstop cannot be reached, the dashboard.html stored in the repo is published instead.
+      - name: Fetch from Unstop and build the dashboard
+        run: python radar.py || echo "::warning::Unstop fetch failed, publishing the last dashboard stored in the repo"
+
+      - name: Prepare the site
+        run: |
+          mkdir -p _site
+          cp dashboard.html _site/index.html
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
