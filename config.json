@@ -1,0 +1,391 @@
+{
+  "_readme": "Edit this file to tune Unstop Radar. Every pattern is a case-insensitive regular expression. After editing run: python radar.py --offline",
+  "profile": {
+    "_note": "Your details. The dashboard uses them until you change them under the profile button.",
+    "college": "Shaheed Sukhdev College of Business Studies (SSCBS)",
+    "course": "bba",
+    "year": "2029",
+    "gender": "M",
+    "sameTeam": true
+  },
+  "home": {
+    "_note": "Places you can reach without real travel. An in-person comp only survives the default filter if its venue (or, when no venue is listed, its organiser) matches one of these.",
+    "delhi": "\\b(new delhi|south delhi|north delhi|east delhi|west delhi|central delhi|delhi|dwarka|rohini)\\b|\\(DU\\)|\\bDU\\b",
+    "ncr": "\\b(gurgaon|gurugram|noida|greater noida|ghaziabad|faridabad)\\b|masters'? ?union",
+    "not_delhi": "delhi public school|delhi-ncr campus|XLRI"
+  },
+  "groups": [
+    {
+      "id": "iim",
+      "label": "IIM",
+      "score": 30,
+      "match": ["\\bIIMs?\\b", "indian institute of management"],
+      "boost": [
+        {"match": "ahmedabad|bangalore|bengaluru|calcutta|kolkata", "score": 40},
+        {"match": "lucknow|kozhikode|indore|mumbai", "score": 36}
+      ]
+    },
+    {
+      "id": "iit",
+      "label": "IIT",
+      "score": 28,
+      "match": ["\\bIITs?\\b", "indian institute of technology", "\\b(techkriti|antaragni|shaastra|saarang|techfest|mood indigo|kshitij|tryst|becon|cognizance|thomso|udgam|techniche|pravega)\\b"],
+      "boost": [
+        {"match": "bombay|delhi|madras|chennai|kanpur|kharagpur|techkriti|shaastra|techfest|kshitij|tryst|becon", "score": 34}
+      ]
+    },
+    {
+      "id": "fms",
+      "label": "FMS Delhi",
+      "score": 36,
+      "match": ["faculty of management studies.{0,40}delhi", "\\bFMS\\b.{0,30}delhi", "\\bFMS,? (new )?delhi"],
+      "always": true
+    },
+    {
+      "id": "isb",
+      "label": "ISB",
+      "score": 36,
+      "match": ["indian school of business(?! ?(&|and) ?(finance|media))", "\\bISB\\b(?! ?&)(?!M)"],
+      "always": true
+    },
+    {
+      "id": "bschool",
+      "label": "Top B-schools (XLRI, SPJIMR, MDI, IIFT…)",
+      "score": 26,
+      "match": [
+        "\\bXLRI\\b",
+        "SPJIMR|S\\.? ?P\\.? jain institute",
+        "management development institute|\\bMDI\\b",
+        "indian institute of foreign trade|\\bIIFT\\b",
+        "jamnalal bajaj|\\bJBIMS\\b",
+        "\\bSIBM\\b.{0,20}pune|symbiosis institute of business management.{0,20}pune",
+        "\\bSCMHRD\\b",
+        "tata institute of social sciences|\\bTISS\\b",
+        "\\bIMT\\b.*ghaziabad|institute of management technology.*ghaziabad",
+        "\\bXIMB\\b|xavier institute of management",
+        "international management institute|\\bIMI\\b",
+        "great lakes",
+        "goa institute of management",
+        "\\bMICA\\b",
+        "\\bTAPMI\\b|t\\.? ?a\\.? pai management",
+        "\\bIRMA\\b|institute of rural management",
+        "bocconi",
+        "\\bNITIE\\b",
+        "delhi school of economics|\\bDSE\\b"
+      ],
+      "boost": [
+        {"match": "XLRI|SPJIMR|S\\.? ?P\\.? jain|\\bMDI\\b|management development institute|\\bIIFT\\b|foreign trade|\\bJBIMS\\b|jamnalal", "score": 34}
+      ]
+    },
+    {
+      "id": "nmims",
+      "label": "NMIMS & Christ University",
+      "score": 24,
+      "match": ["\\bNMIMS\\b", "narsee monjee institute of management studies", "christ \\(deemed", "christ university", "\\bCHRIST\\b.{0,40}(bangalore|bengaluru)"],
+      "boost": [
+        {"match": "\\bNMIMS\\b.*mumbai|narsee monjee institute of management studies.*mumbai|\\bSBM\\b", "score": 28}
+      ],
+      "always": true
+    },
+    {
+      "id": "du_top",
+      "label": "DU top colleges",
+      "score": 28,
+      "match": ["shri ram college of commerce|\\bSRCC\\b", "lady shri ram|\\bLSR\\b", "st\\.? ?stephen", "hindu college(?!.*(guntur|moradabad|sonipat|amritsar))", "hans ?raj college", "kirori mal|\\bKMC\\b", "miranda house", "gargi college", "shaheed sukhdev|\\bSSCBS\\b", "sri venkateswara college", "ramjas", "jesus (and|&) mary", "daulat ram", "indraprastha college for women|\\bIPCW\\b", "kamala nehru college"],
+      "boost": [
+        {"match": "shri ram college of commerce|\\bSRCC\\b|lady shri ram|\\bLSR\\b|stephen|hindu college|hans ?raj|miranda", "score": 34}
+      ]
+    },
+    {
+      "id": "du",
+      "label": "DU (other colleges)",
+      "score": 14,
+      "unless": ["du_top", "bschool"],
+      "match": ["university of delhi", "delhi university", "\\(DU\\)", "\\bDU\\b"]
+    },
+    {
+      "id": "xaviers",
+      "label": "St. Xavier's (Mumbai, Kolkata)",
+      "score": 24,
+      "match": ["st\\.? ?xavier'?s? college", "\\bSXC\\b"],
+      "boost": [
+        {"match": "mumbai|kolkata|calcutta", "score": 30}
+      ],
+      "always": true
+    },
+    {
+      "id": "bits",
+      "label": "BITS Pilani",
+      "score": 28,
+      "match": ["birla institute of technology (&|and) science", "\\bBITS\\b(?!oM)(?! school)"],
+      "always": true
+    },
+    {
+      "id": "liberal",
+      "label": "Ashoka & liberal-arts universities",
+      "score": 24,
+      "match": ["ashoka university", "krea university", "\\bFLAME\\b university", "jindal global", "azim premji university", "shiv nadar"],
+      "boost": [
+        {"match": "ashoka university", "score": 30}
+      ],
+      "always": true
+    },
+    {
+      "id": "newage",
+      "label": "Masters' Union & new-age",
+      "score": 28,
+      "match": ["masters'? ?union", "plaksha", "scaler school", "\\btetr\\b", "mesa school", "\\bBITSoM\\b|bits school of management"]
+    },
+    {
+      "id": "premier",
+      "label": "Other premier institutes",
+      "score": 20,
+      "match": [
+        "delhi technological university|\\bDTU\\b",
+        "netaji subhas university|\\bNSUT\\b",
+        "\\bIIIT\\b.*(delhi|hyderabad|bangalore|bengaluru)|international institute of information technology.*(hyderabad|bangalore|bengaluru)|indraprastha institute of information technology",
+        "\\bNIT\\b.*(trichy|tiruchirappalli|surathkal|warangal)|national institute of technology.*(tiruchirappalli|karnataka|warangal)",
+        "indian institute of science|\\bIISc\\b",
+        "national law school|\\bNLSIU\\b|\\bNLU\\b",
+        "\\bISI\\b|indian statistical institute",
+        "loyola college.{0,20}chennai",
+        "jadavpur university",
+        "presidency (university|college).{0,20}(kolkata|chennai)",
+        "christian medical college",
+        "\\bNIFT\\b|\\bNID\\b"
+      ]
+    }
+  ],
+  "corporate": {
+    "_note": "An organiser counts as a 'Corporate (known brand)' if it is not a college AND (Unstop marks it tier 1/2 OR its name matches a brand below). A brand name in the competition TITLE also adds the tag (college × brand co-branded comps).",
+    "score_brand": 36,
+    "score_tier2": 26,
+    "score_other": {
+      "tier3": 12,
+      "none": 4
+    },
+    "cobrand_bonus": 4,
+    "college_like": "college|institut|insitut|universit|school|academy|vidya|\\bIIT\\b|\\bIIM\\b|\\bNIT\\b|faculty|polytechnic|campus|department",
+    "brands": ["HUL", "Hindustan Unilever", "Unilever", "P&G", "Procter", "Tata", "Reliance", "L'Oréal", "L’Oréal", "Loreal", "Flipkart", "Amazon", "AWS", "Google", "Microsoft", "Meta", "Deloitte", "EY", "KPMG", "PwC", "McKinsey", "BCG", "Bain", "Accenture", "Kearney", "Mahindra", "Aditya Birla", "ITC", "Nestlé", "Nestle", "Colgate", "Asian Paints", "Bajaj", "Godrej", "JSW", "Vedanta", "Adani", "Infosys", "TCS", "Wipro", "HCL", "Cognizant", "Capgemini", "JP Morgan", "J.P. Morgan", "Goldman Sachs", "Morgan Stanley", "HSBC", "Citi", "Citibank", "Barclays", "Deutsche Bank", "Axis Bank", "ICICI", "HDFC", "Kotak", "Schneider", "Shell", "Mondelez", "PepsiCo", "Coca-Cola", "Titan", "Tanishq", "Maruti", "Hero MotoCorp", "TVS", "Eurogrip", "Airtel", "Jio", "Swiggy", "Zomato", "Meesho", "Myntra", "Nykaa", "PhonePe", "Paytm", "CRED", "Zepto", "Blinkit", "Uber", "Walmart", "American Express", "Mastercard", "Visa", "Samsung", "Sony", "Dell", "Intel", "Nvidia", "Qualcomm", "Cisco", "IBM", "Oracle", "SAP", "Adobe", "Salesforce", "EXL", "ZS Associates", "Fractal", "Optum", "Novartis", "Pfizer", "Dr. Reddy", "Cipla", "Sun Pharma", "L&T", "Larsen", "Siemens", "Bosch", "ABB", "Honeywell", "Boeing", "Airbus", "Collins Aerospace", "Dabur", "Marico", "Emami", "Britannia", "Amul", "Pidilite", "Lenskart", "boAt", "Mamaearth", "Razorpay", "Groww", "Zerodha", "Finshots", "Ditto", "Amara Raja", "SAIL", "Steel Authority", "ONGC", "NTPC", "IOCL", "Indian Oil", "BPCL", "HPCL", "RBI", "SEBI", "NSE", "BSE", "NITI Aayog", "UNESCO", "UNICEF", "World Bank", "Rajasthan Royals", "Red Bull", "Diageo", "AB InBev", "Kellogg", "Kimberly", "Reckitt", "Johnson & Johnson", "GSK", "Abbott", "Bank of America", "Wells Fargo", "UBS", "BNY", "Standard Chartered", "BlackRock", "Nomura", "Jefferies", "Ather", "Ola", "OYO", "MakeMyTrip", "Dream11", "Urban Company", "Physics Wallah", "upGrad", "Unacademy", "Piramal", "Cummins", "Schlumberger", "Thermax", "Hexaware", "Publicis", "Ogilvy", "WPP", "Dentsu", "Boston Consulting", "Oliver Wyman", "Roland Berger", "Strategy&", "L.E.K.", "Arthur D. Little", "Alvarez & Marsal", "EY-Parthenon", "Monitor Deloitte", "Praxis Global", "Redseer", "Grant Thornton", "PricewaterhouseCoopers", "Ernst & Young", "CFA Institute", "CFA Society", "Bloomberg", "CRISIL", "Moody's", "S&P Global", "Avendus", "Motilal Oswal", "Edelweiss", "D. E. Shaw", "Jane Street", "Tower Research", "JPMorgan", "JPMorganChase", "Citigroup", "Macquarie", "Lazard", "Rothschild", "Evercore", "KKR", "Blackstone", "Bain Capital", "Mondelēz"],
+    "_families_note": "A known brand that also matches a family below gets that family's filter tag and score. Matched against the brand name found in the organiser (or co-branded title).",
+    "families": [
+      {"id": "mbb", "label": "McKinsey / Bain / BCG & strategy firms", "score": 42, "always": true, "match": "mckinsey|\\bbain\\b(?! capital)|\\bBCG\\b|boston consulting|kearney|oliver wyman|roland berger|strategy&|L\\.E\\.K|arthur d\\. little|alvarez|parthenon|monitor deloitte|praxis global|redseer|\\bZS\\b"},
+      {"id": "big4", "label": "Accenture, KPMG & Big 4", "score": 40, "always": true, "match": "accenture|kpmg|deloitte|\\bEY\\b|ernst|\\bPwC\\b|pricewaterhouse|grant thornton"},
+      {"id": "fin", "label": "Banks, markets & finance firms", "score": 40, "always": true, "match": "goldman|j\\.?p\\.? ?morgan|morgan stanley|\\bciti|hsbc|barclays|deutsche|\\bUBS\\b|nomura|blackrock|bank of america|wells fargo|standard chartered|jefferies|\\bBNY\\b|american express|kotak|axis bank|icici|hdfc|\\bCFA\\b|\\bNSE\\b|\\bBSE\\b|\\bSEBI\\b|\\bRBI\\b|zerodha|groww|bloomberg|crisil|moody|s&p global|avendus|motilal|edelweiss|d\\. e\\. shaw|jane street|tower research|macquarie|lazard|rothschild|evercore|\\bKKR\\b|blackstone|bain capital|mastercard|\\bvisa\\b"}
+    ]
+  },
+  "global": {
+    "_note": "Evidence points: foreign-currency prize 3, foreign venue 3, international organiser 3, world stage 3, open worldwide 2, country list 2, the word in the title 1, India-only wording -2. Tagged Global at tag_at points.",
+    "title": "\\b(global|international|world|worldwide|APAC|asia|intercontinental)\\b",
+    "title_exclude": "international (institute|school|university|college|management institute)",
+    "open_worldwide": "open to (all )?(students|participants|teams|anyone|everyone)[^.]{0,40}(across the (globe|world)|worldwide|around the world|all (over the world|countries|nationalities)|any (country|nationality))|(students|participants|teams) from (around|all over|across) the (world|globe)|from \\d+\\+? countries|international (students|participants|teams) (are|can|may)",
+    "world_stage": "(international|global|world|regional|asia[- ]pacific|APAC) (finals?|finale|grand finale|championship)|world(wide)? (finals?|championship)|represent india",
+    "org": "hong kong|singapore|bocconi|\\bUSA\\b|\\bUK\\b|dubai|london|europe|swiss|switzerland",
+    "india_only": "pan[- ]india|all[- ]india|national[- ]level|across india|indian (citizens|nationals|students|colleges|institutes) only|only (for|to) indian",
+    "tag_at": 3,
+    "strong_at": 5,
+    "score": 24,
+    "score_weak": 10,
+    "bonus_on_top": 6
+  },
+  "internship": {
+    "_note": "'strong' is tested on the prize list. In the description an internship only counts when a single sentence matches one of reward_patterns ({CUE} is replaced by 'cue') and none of the not_reward phrases.",
+    "strong": "\\bPPIs?\\b|\\bPPOs?\\b|pre[- ]placement|\\binternships?\\b|\\bjob offers?\\b|\\bfull[- ]time (offer|role)s?\\b",
+    "cue": "\\bPPIs?\\b|\\bPPOs?\\b|pre[- ]placement|\\binternships?\\b|\\bjob offers?\\b|full[- ]time (offer|role)s?",
+    "reward_patterns": [
+      "(winn\\w+|top[- ]?\\d+|top (teams?|performers?|participants?|\\w+ teams?)|finalists?|outstanding|best (teams?|performers?)|shortlisted)\\b[^.]{0,90}?{CUE}",
+      "{CUE}[^.]{0,60}?\\b(for|to) (the |all )?(winn\\w+|top|finalists?|best)",
+      "(stand a chance|chance to|opportunity to|get to)\\s+(win|get|bag|earn|grab|secure|land)[^.]{0,50}?{CUE}",
+      "\\b(win|bag|earn|grab|secure|land)\\s+(an?\\s+|a paid\\s+|paid\\s+)?{CUE}",
+      "\\bPPIs?\\b|\\bPPOs?\\b|pre[- ]placement (interviews?|offers?)"
+    ],
+    "not_reward": "campus ambassador|internship certificate|certificate of internship|as (a )?part of (your|their|the) internship|internship experience|during (your|their|an) internship|(currently|already) (doing|pursuing) (an? )?internship|interns? (are|is) (also )?(eligible|welcome|allowed)|unpaid|internship programme? (fee|cost)|pay(ing)? for|does not guarantee|no guarantee|preparing for",
+    "score_confirmed": 15,
+    "score_mentioned": 7,
+    "small_org_mult": 0.5
+  },
+  "usd_to_inr": 88,
+  "niches": [
+    {"id": "marketing", "label": "Marketing", "business": 10, "re": "marketing|\\bbrand(ing|s)?\\b|advertis|ad[- ]?mad|\\bGTM\\b|go[- ]to[- ]market|consumer insight|\\bsales\\b|kotler|\\bcampaigns?\\b"},
+    {"id": "finance", "label": "Finance", "business": 10, "re": "financ|invest(ment|or|ing)|\\bequity\\b|valuation|\\bstocks?\\b|trading|\\btrade(r|rs)?\\b|\\bM&A\\b|merger|banking|fin-?tech|portfolio|capital market|\\bIPO\\b|hedge|wealth management|accounting|\\baudit|\\bREITs?\\b|\\bbulls?\\b|d-street|dalal|\\bquant\\b"},
+    {"id": "consulting", "label": "Consulting & strategy", "business": 10, "re": "consult|strateg|case (study|studies|competition|challenge|comp)\\b|business case|boardroom|\\bCEO\\b"},
+    {"id": "startup", "label": "Entrepreneurship & startup", "business": 10, "re": "b[- ]plan|business plan|start[- ]?ups?\\b|\\bpitch|entrepreneur|\\bventures?\\b|shark tank|\\bfounders?\\b|ideathon|incubat|business model|e-?summit|e-?cell"},
+    {"id": "social", "label": "Social impact & sustainability", "business": 10, "re": "social (entrepreneur|impact|enterprise|innovation|venture|cause|good)\\w*|sustainab|\\bESG\\b|\\bCSR\\b|\\bSDGs?\\b|climate|net[- ]zero|carbon|non[- ]?profit|\\bNGOs?\\b|\\brural\\b|environmental"},
+    {"id": "bizgen", "label": "General business", "business": 10, "body": false, "re": "\\bbusiness\\b|\\bbiz\\b|commerce|\\bmanagement\\b|\\bCEO\\b|simulation|corporate|directorship"},
+    {"id": "product", "label": "Product management", "business": 7, "re": "product manage\\w*|\\bPRD\\b|product (teardown|strategy|challenge|sense|roadmap|case)|\\bprod[- ]?(craft|a-vista)\\b", "title": "\\bproducts?\\b|\\bprod"},
+    {"id": "ops", "label": "Operations & supply chain", "business": 7, "re": "operations|supply chain|logistic|\\bops\\b|six sigma|procurement|beer game"},
+    {"id": "hr", "label": "HR", "business": 7, "re": "\\bHR\\b|human resources?|people analytics|organi[sz]ational behavio"},
+    {"id": "analytics", "label": "Analytics & data", "business": 7, "re": "analytics|data (analysis|science|visuali[sz]ation|driven)|\\bSQL\\b|power ?bi|tableau|storylytics", "title": "\\bexcel\\b|\\bdata\\b"},
+    {"id": "econ", "label": "Economics & policy", "business": 7, "re": "econom|public policy|\\bpolicy\\b|geopolit"},
+    {"id": "debate", "label": "Debate & MUN", "business": 0, "body": false, "re": "debat|\\bMUN\\b|model united nations|turncoat|parliament|lok sabha|\\bUNSC\\b|\\bUNHRC\\b|extempore|elocution|vivaad|crisis committee"},
+    {"id": "tech", "label": "Tech & coding", "business": 0, "re": "hackathon|\\bcoding\\b|\\bcode\\b|programming|software|developer|machine learning|\\bML\\b|robot|\\bdrones?\\b|cyber|\\bCTF\\b|capture the flag|blockchain|web dev|app dev|algorithm|\\bDSA\\b|electronics|\\bIoT\\b|embedded|verilog|aeromodel|open source|\\bcloud\\b|data structure|\\bAI\\b|artificial intelligence"},
+    {"id": "quiz", "label": "Quiz & trivia", "business": 0, "body": false, "skip_tags": true, "re": "quiz|trivia|olympiad|crossword|puzzle|treasure hunt"},
+    {"id": "creative", "label": "Creative, writing & design", "business": 0, "body": false, "re": "\\bdesign|poster|photograph|\\bfilm|\\bvideo|\\breels?\\b|writing|writers?\\b|article|essay|poetry|poem|\\bstory|\\bart\\b|painting|\\blogo\\b|content|meme|\\bblog|literary|creative|editorial"},
+    {"id": "culture", "label": "Cultural, gaming & sports", "business": 0, "body": false, "re": "\\bdance|\\bmusic|singing|\\bband\\b|drama|theatre|fashion|e-?sports|gaming|\\bgames?\\b|bgmi|valorant|free fire|chess|cricket|football|\\bsports?\\b|cubing|fantasy|\\bIPL\\b"}
+  ],
+  "format": {
+    "coding_note": "A comp is treated as coding / hackathon / pure tech (hidden by default) when its only niche is tech, or when its title matches coding_title and it is tagged tech or has no business niche. Business comps that involve some tech stay.",
+    "coding_title": "hackathon|\\bhack\\w*|hack[- ]?a[- ]?thon|\\bcod(e|ing|athon|efest|er)s?\\b|\\bCTF\\b|capture the flag|\\bDSA\\b|programming|algorithm|\\bdebug|machine learning|\\bAI/ML\\b|\\bML\\b|datathon|data[- ]thon|kaggle|robo|build[- ]?a[- ]?thon|\\b(app|web|game) dev|cyber|bug bounty|\\bSQL\\b|python|\\bIoT\\b|circuit|\\bCAD\\b|drone|leetcode",
+    "strong": {
+      "re": "case (study|competition|challenge|comp)\\b|b[- ]plan|business plan|\\bpitch|simulation|strategy|challenge|shark tank|equity research",
+      "score": 5
+    },
+    "_note": "Prestige points are multiplied down for formats that carry little resume signal.",
+    "light_re": "quiz|trivia|crossword|call for (articles|entries|papers)|article|essay|olympiad",
+    "light_prestige_mult": 0.6,
+    "soft_prestige_mult": 0.4
+  },
+  "scoring": {
+    "prize": [[500000, 15], [250000, 13], [100000, 11], [50000, 8], [25000, 6], [10000, 4], [1, 2]],
+    "rounds": {
+      "1": 5,
+      "2": 4,
+      "3": 2,
+      "4": 0,
+      "5": -5,
+      "6+": -10
+    },
+    "registrations": [[300, 5], [1000, 3], [3000, -2], [10000, -10], [999999999, -30]],
+    "school_only_penalty": -25,
+    "tiers": {
+      "high": 55,
+      "medium": 35
+    }
+  },
+  "new_within_days": 3,
+  "fetch": {
+    "per_page": 100,
+    "workers": 6,
+    "pause": 0.25
+  },
+  "mode_model": {
+    "strict_groups": ["iim"],
+    "_note": "How the sentence reader decides whether you must show up in person. 'cues' find candidate sentences; the other patterns decide what each sentence means. Sentences it cannot classify confidently go to the 'unclear' bucket rather than being passed.",
+    "cues": [
+      "\\boff[- ]?line\\b",
+      "\\bon[- ]campus\\b",
+      "\\bin[- ]person\\b",
+      "\\bface[- ]to[- ]face\\b",
+      "\\bphysical(?:ly)?\\s+(?:presence|present|round|rounds|attendance|event|finale|final|participation|mode|pitch|presentation)\\b",
+      "\\b(?:held|conducted|hosted|organi[sz]ed|take place|takes place|taking place|happen(?:ing)?)\\s+(?:at|on|in)\\s+(?:the\\s+)?(?:\\S+\\s+){0,4}campus\\b",
+      "\\bcampus\\s+(?:finale|finals|round|immersion)\\b",
+      "\\bvenue\\b",
+      "\\b(?:travel|come|invited|fly|flown)\\s+(?:down\\s+)?to\\s+(?:the\\s+|our\\s+)?(?:\\S+\\s+){0,3}(?:campus|office|headquarters|HQ)\\b"
+    ],
+    "venue_online": "\\bvenue\\b\\s*[:\\-–]?\\s*(?:is\\s+)?(online|virtual|google meet|zoom|unstop|ms teams|microsoft teams|discord|n/?a\\b)",
+    "must_attend": "(cannot|can'?t|unable to|fail(s|ing)? to|do(es)? not|don'?t|not able to|who miss)\\s+(attend|be present|come|travel|make it|report|show up)",
+    "negation": "\\b(no|not|never|without|won'?t|isn'?t|aren'?t|neither|nor|zero|nothing|none|need not|needn'?t)\\b\\s+(\\S+\\s+){0,4}$",
+    "online_only": "(entirely|completely|fully|purely|100%|strictly|exclusively|totally)\\s+(online|virtual)|\\b(online|virtual)[- ]only\\b|all (the )?rounds (will be|are) (held |conducted )?(online|virtual)",
+    "topic_after": "presence|stores?|retail(?:ers?|ing)?|market(?:ing|s|place)?|channels?|sales|activations?|campaigns?|business(?:es)?|distribution|payments?|customers?|consumers?|shopping|media|touchpoints?|world|learning|classes|coaching|education|trade|commerce|networks?|strateg(?:y|ies)|branding|promotions?|outlets?|footprint|expansion|communit(?:y|ies)|advertis\\w+|engagement|users?|access|first|capabilit\\w+|functionalit\\w+|sync|usage|apps?|data|maps?|transactions?|UPI|players?|brands?|shops?|kirana|merchants?|sector|space|segment|ecosystem|initiatives?|tactics|efforts|activities|experiences? for (?:customers|users|consumers)",
+    "topic_pair_exempt": "rounds?|modes?|finale|finals?|presentations?|pitch(?:es)?|events?|participation|sessions?|stages?|tracks?|formats?",
+    "evaluation": "(judges?|jury|panel(ists)?|evaluators?|organi[sz]ers?|team)\\s+(will|shall|would|may|can)?\\s*(evaluate|assess|review|score|judge|shortlist|go through|check|screen)\\w*[^.]{0,40}\\boff[- ]?line\\b|(evaluation|judging|assessment|shortlisting|screening|scoring)\\s+(will be|is|shall be|happens)\\s*(done|conducted|carried out|held)?\\s*off[- ]?line\\b|\\boff[- ]?line\\s+(evaluation|judging|assessment|scrutiny|screening|shortlisting)",
+    "optional": "online\\s*(or|/)\\s*off[- ]?line|off[- ]?line\\s*(or|/)\\s*online|\\bhybrid\\b|\\beither\\b.{0,40}\\b(online|virtual)|\\boption(al|ally)?\\b|\\b(can|may|allowed to|free to|choose to)\\s+(also\\s+)?(join|present|attend|participate|appear|compete|pitch)\\s+(\\w+\\s+){0,2}(online|virtual|remote)|\\bvirtual(ly)?\\s+(option|participation|presentation|mode)|\\b(may|might|likely|tentative|tentatively|TBD|TBA)\\b|to be (decided|announced|confirmed|communicated)|subject to|if (feasible|possible|required|needed)|whether .{0,50}(in[- ]person|off[- ]?line) or online|online track",
+    "participation": "final|round|shortlist|held|conducted|hosted|present|pitch|attend|invited|report|campus|hackathon|event|stage|compete|competition|contest|challenge|showcase|demo|interview|ceremony|summit|conclave|fest|qualif|select|teams? will|participants? (will|must|should|are)|sprint|bootcamp|mode|format|takes? place|phase|participation|track",
+    "travel_paid": "travel (reimburse\\w*|allowance|support|expenses?( will be)? (covered|reimbursed|borne|paid)|will be (covered|reimbursed|provided|sponsored)|and (stay|accommodation)[^.]{0,40}(covered|provided|sponsored|reimbursed|taken care))|all[- ]expenses?[- ](paid|covered)|(fully|all)[- ](sponsored|funded) (trip|travel|visit)|accommodation (will be|is|shall be)\\s*(provided|covered|arranged)|\\bTA/DA\\b|flight tickets|expenses? (will be|are) (borne|covered|taken care)",
+    "places": [
+      "new delhi",
+      "delhi",
+      "gurgaon",
+      "gurugram",
+      "noida",
+      "greater noida",
+      "ghaziabad",
+      "faridabad",
+      "mumbai",
+      "navi mumbai",
+      "powai",
+      "pune",
+      "bangalore",
+      "bengaluru",
+      "chennai",
+      "hyderabad",
+      "kolkata",
+      "calcutta",
+      "ahmedabad",
+      "gandhinagar",
+      "jaipur",
+      "udaipur",
+      "jodhpur",
+      "lucknow",
+      "kanpur",
+      "varanasi",
+      "prayagraj",
+      "allahabad",
+      "indore",
+      "bhopal",
+      "nagpur",
+      "raipur",
+      "ranchi",
+      "jamshedpur",
+      "patna",
+      "bhubaneswar",
+      "guwahati",
+      "shillong",
+      "chandigarh",
+      "mohali",
+      "ropar",
+      "patiala",
+      "amritsar",
+      "jammu",
+      "srinagar",
+      "dehradun",
+      "roorkee",
+      "kashipur",
+      "rohtak",
+      "sonipat",
+      "kozhikode",
+      "kochi",
+      "trivandrum",
+      "thiruvananthapuram",
+      "coimbatore",
+      "trichy",
+      "tiruchirappalli",
+      "madurai",
+      "vellore",
+      "manipal",
+      "mangalore",
+      "surathkal",
+      "mysore",
+      "mysuru",
+      "goa",
+      "visakhapatnam",
+      "vizag",
+      "vijayawada",
+      "warangal",
+      "tirupati",
+      "kharagpur",
+      "durgapur",
+      "dhanbad",
+      "bodh gaya",
+      "sambalpur",
+      "sirmaur",
+      "nashik",
+      "surat",
+      "vadodara",
+      "anand",
+      "pilani",
+      "singapore",
+      "dubai",
+      "london",
+      "paris",
+      "new york",
+      "hong kong",
+      "IIT (?:bombay|madras|kanpur|kharagpur|roorkee|guwahati|hyderabad|bhu|indore|mandi|ropar|patna|jodhpur|gandhinagar|dhanbad|delhi)",
+      "IIM (?:ahmedabad|bangalore|calcutta|lucknow|kozhikode|indore|shillong|udaipur|raipur|ranchi|rohtak|kashipur|trichy|nagpur|amritsar|sambalpur|sirmaur|visakhapatnam|jammu|bodh gaya|mumbai)"
+    ]
+  },
+  "round_types": [
+    {"_note": "Checked in order against the round title; the first match wins. 'text' is tried on the first lines of the round description when the title says nothing.", "id": "info", "label": "Info", "title": "^(?!.*(quiz|test|submission|final|pitch|presentation)).*\\b(registrations?|orientation|webinar|briefing|workshop|masterclass|induction|kick[- ]?off|mentor(ing|ship)|results?|announcement|q\\s*&\\s*a|ama)\\b"},
+    {"id": "video", "label": "Video", "title": "\\bvideo|\\breels?\\b|recording", "text": "submit (a|your) video|video (submission|pitch)"},
+    {"id": "deck", "label": "Deck", "title": "deck|\\bppt\\b|submission|executive summary|proposal|\\breport\\b|abstract|synopsis|write[- ]?up|one[- ]pager|essay|article|\\bdocument|case (solution|study round)|b[- ]?plan (round|draft)|idea(tion)? (round|phase)|screening round|entries", "text": "submit|upload|\\bppt\\b|\\bdeck\\b|slides|executive summary|\\bpdf\\b"},
+    {"id": "quiz", "label": "Quiz", "title": "quiz|\\btests?\\b|assessment|\\bmcq|aptitude|olympiad|crossword|\\bexam|prelim", "text": "\\bmcqs?\\b|multiple[- ]choice|quiz|questions in \\d+|timed test|\\d+ questions"},
+    {"id": "live", "label": "Presentation", "title": "present|pitch|finale|\\bfinals?\\b|jury|panel|defen[cs]e|demo day|showcase|\\blive\\b|boardroom|shark tank|interview|\\bviva\\b|\\bGD\\b|group discussion|face[- ]off|showdown", "text": "present (their|your|to)|presentation to|pitch (to|their|your)|jury|panel of judges|q&a"},
+    {"id": "sim", "label": "Simulation", "title": "simulation|trading|bidding|auction|\\bgame\\b|mock stock|fantasy|treasure hunt|war ?room", "text": "simulation|trading platform|virtual portfolio|bidding"},
+    {"id": "build", "label": "Build", "title": "hackathon|coding|\\bbuild|development|sprint|\\bctf\\b|prototype|implementation", "text": "hackathon|build (a|your)|prototype|github"}
+  ],
+  "watch": {
+    "_note": "Named flagship comps live in watchlist.json.",
+    "recheck_hours": 6,
+    "pre_alert_days": 14
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_readme": "Big annual competitions to watch. Each is looked up on Unstop by name every few hours (all editions, open or closed). 'search' is what gets typed into Unstop's search, 'match' is a regex the title must match, 'org' a regex the organiser must match. 'url' (optional) is an official page outside Unstop: it is checked for registration wording and for changes. You can also add names from the dashboard (Watchlist tab) without touching this file.",
+  "comps": [
+    {"name": "Tata Imagination Challenge", "by": "Tata Group", "search": "tata imagination challenge", "match": "^\\s*tata imagination challenge", "org": "tata"},
+    {"name": "L'Oréal Brandstorm", "by": "L'Oréal", "search": "loreal brandstorm", "match": "brandstorm", "org": "or.{1,2}al"},
+    {"name": "HUL L.I.M.E.", "by": "Hindustan Unilever", "search": "hul lime", "match": "\\bL\\.?I\\.?M\\.?E\\b", "org": "unilever"},
+    {"name": "HUL FinAce", "by": "Hindustan Unilever", "search": "hul finace", "match": "finace", "org": "unilever"},
+    {"name": "Reliance T.U.P. (The Ultimate Pitch)", "by": "Reliance Industries", "search": "reliance tup", "match": "T\\.?U\\.?P\\b", "org": "reliance"},
+    {"name": "Flipkart WiRED", "by": "Flipkart", "search": "flipkart wired", "match": "wired", "org": "flipkart"},
+    {"name": "Accenture Innovation Challenge", "by": "Accenture", "search": "accenture innovation challenge", "match": "innovation challenge", "org": "accenture"},
+    {"name": "Aditya Birla Group Stratos", "by": "Aditya Birla Group", "search": "stratos", "match": "stratos", "org": "aditya birla"},
+    {"name": "TVS Credit E.P.I.C", "by": "TVS Credit", "search": "tvs credit epic", "match": "E\\.?P\\.?I\\.?C", "org": "tvs credit"},
+    {"name": "Colgate Transcend", "by": "Colgate-Palmolive", "search": "colgate transcend", "match": "transcend", "org": "colgate"},
+    {"name": "Amazon Customer Excellence (ACE) Challenge", "by": "Amazon", "search": "amazon ace challenge", "match": "\\bACE\\b", "org": "amazon"},
+    {"name": "Samsung E.D.G.E.", "by": "Samsung", "search": "samsung edge", "match": "E\\.?D\\.?G\\.?E", "org": "samsung"},
+    {"name": "Marico Over The Wall", "by": "Marico", "search": "over the wall", "match": "over the wall", "org": "marico"},
+    {"name": "Tata Crucible Campus Quiz", "by": "Tata Group", "search": "tata crucible", "match": "crucible campus", "org": "tata"},
+    {"name": "Hult Prize", "by": "Hult Prize Foundation", "search": "hult prize", "match": "^\\s*hult prize", "url": "https://www.hultprize.org/", "note": "Enter through your college"},
+    {"name": "CFA Institute Research Challenge", "by": "CFA Institute", "search": "cfa institute research challenge", "match": "cfa institute research challenge", "url": "https://www.cfainstitute.org/societies/challenge", "note": "Enter through your university"}
+  ]
+}
