@@ -232,7 +232,7 @@
   .pslide button { display: inline-flex; align-items: center; gap: 10px; height: 38px; margin-top: 16px; padding: 0 20px; border: 0; border-radius: 12px; background: #fff; color: #0c2050; font-weight: 700; font-size: 14px; transition: transform .15s, box-shadow .15s; }
   .pslide button:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(0,0,0,.5); }
   .ql-h { font-size: 21px; margin: 24px 2px 12px; }
-  .ql { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; }
+  .ql { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   .ql button { display: flex; align-items: center; justify-content: center; gap: 10px; height: 44px; padding: 0 10px; border: 0; border-radius: 12px; background: var(--fill); color: var(--tx); font-weight: 500; font-size: 14px; white-space: nowrap; transition: background .15s, transform .15s; }
   .ql button .i { color: var(--tx-2); } .ql button:hover { background: var(--active); transform: translateY(-1px); }
   .none { padding: 26px 20px; border: 1px dashed var(--line-2); border-radius: 16px; color: var(--tx-3); text-align: center; grid-column: 1 / -1; }
@@ -258,9 +258,103 @@
   .gh i { width: 8px; height: 8px; border-radius: 50%; background: var(--tx-4); }
   .gh.high i { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); } .gh.medium i { background: var(--vio); }
   .gh span { font: 600 12.5px/1 "Inter", sans-serif; color: var(--tx-3); padding: 4px 8px; border-radius: 999px; background: var(--fill); letter-spacing: 0; }
-  .row { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; column-gap: 16px; margin-bottom: 10px; padding: 16px 18px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--sh-s); transition: box-shadow .2s, border-color .2s, transform .2s var(--ease); }
+  #list, .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(316px, 1fr)); gap: 14px; align-items: stretch; }
+  #list > .gh, #list > .empty { grid-column: 1 / -1; }
+  .row { position: relative; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--sh-s); transition: box-shadow .2s, transform .2s var(--ease), border-color .2s; }
+  .row.wide { grid-column: 1 / -1; }
+  .c-h { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .c-h .lg { --s: 46px; border-radius: 12px; }
+  .c-o { flex: 1; min-width: 0; }
+  .c-o b { display: block; font-size: 13.5px; font-weight: 600; line-height: 1.3; color: var(--tx-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-o .pills { flex-wrap: nowrap; overflow: hidden; margin-top: 5px; }
+  .c-o .pill { flex: none; height: 21px; padding: 0 8px; font-size: 11.5px; border-radius: 6px; }
+  .row .ib.star { flex: none; width: 38px; height: 38px; border-radius: 11px; background: var(--fill); color: var(--tx-3); }
+  .row .ib.star:hover { color: #e7a417; }
+  .row .ib.star[aria-pressed="true"] { background: #fdf0d3; }
+  [data-theme="dark"] .row .ib.star[aria-pressed="true"] { background: rgba(231,164,23,.18); }
+  .row > a.t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; font-size: 16.5px; }
+  .c-p { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 8px 12px; border-radius: 12px; background: var(--ok-soft); color: var(--ok); }
+  .c-p > .i { flex: none; }
+  .c-p b { display: block; font: 800 17.5px/1.15 var(--f-d); letter-spacing: -.01em; }
+  .c-p small { display: block; font-size: 11.5px; font-weight: 600; opacity: .85; }
+  .c-p.none { background: var(--fill); color: var(--tx-3); }
+  .c-p.none b { font: 600 13.5px/1.25 "Inter", sans-serif; letter-spacing: 0; color: var(--tx-2); }
+  .fee { margin-left: auto; flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--card); color: var(--ok); font-size: 11.5px; font-weight: 700; box-shadow: 0 0 0 1px currentColor inset; }
+  .fee.paid { color: var(--warn); }
+  .c-fl { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fl { display: inline-flex; align-items: center; gap: 6px; height: 27px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .fl.int { background: var(--warn-soft); color: var(--warn); box-shadow: 0 0 0 1px rgba(196,124,12,.35) inset; }
+  .fl.int.sure { background: #f3b63a; color: #3d2a00; box-shadow: none; }
+  .fl.fit { background: var(--accent-soft); color: var(--accent-strong); }
+  [data-theme="dark"] .fl.fit { color: var(--accent); }
+  .fl.bad { background: var(--bad-soft); color: var(--bad); }
+  .c-s { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .c-s > div { min-width: 0; padding: 8px 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--card-2); text-align: center; }
+  .c-s b { display: block; font: 700 14.5px/1.2 var(--f-d); letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-s small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--tx-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-s .scx.high { background: var(--accent-soft); border-color: transparent; } .c-s .scx.high b { color: var(--accent-strong); }
+  .c-s .scx.medium { background: var(--vio-soft); border-color: transparent; } .c-s .scx.medium b { color: var(--vio); }
+  [data-theme="dark"] .c-s .scx.high b { color: var(--accent); }
+  .c-f { display: flex; align-items: center; gap: 4px; margin-top: auto; }
+  .c-f .due { margin-right: auto; }
+  .c-f .ib { width: 34px; height: 34px; border-radius: 10px; color: var(--tx-3); }
+  .c-f .ib:hover { color: var(--tx); }
+  .c-f .more { display: inline-flex; align-items: center; gap: 4px; height: 34px; padding: 0 10px; border: 0; border-radius: 10px; background: none; color: var(--tx-2); font-size: 12.5px; font-weight: 600; }
+  .c-f .more:hover, .c-f .more[aria-expanded="true"] { background: var(--fill); color: var(--tx); }
+  .c-f .more .i { transition: transform .2s var(--ease); } .c-f .more[aria-expanded="true"] .i { transform: rotate(180deg); }
+  .c-b { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .c-b .btn { justify-content: center; height: 38px; margin: 0; }
+  .row .why { margin-top: 2px; }
+  .achips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; } .achips:empty { display: none; }
+  .ac { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 9px 0 12px; border: 0; border-radius: 999px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 600; }
+  .ac i { font-style: normal; font-size: 15px; line-height: 1; opacity: .7; } .ac:hover i { opacity: 1; }
+  .ac.all { padding: 0 8px; background: none; color: var(--accent-strong); }
+  [data-theme="dark"] .ac { background: var(--fill); } [data-theme="dark"] .ac.all { background: none; color: var(--accent); }
+  .tools .cnt2 { font: 700 15px/1.2 var(--f-d); letter-spacing: -.01em; white-space: nowrap; }
+  .tools .sortl { color: var(--tx-3); font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .fhelp { margin: 0 8px 6px; color: var(--tx-3); font-size: 12px; line-height: 1.45; }
+  .seg.wide { display: flex; margin: 0 8px; } .seg.wide button { flex: 1; height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .seg.wide em { font-style: normal; font-size: 11px; font-weight: 500; color: var(--tx-3); }
+  .opt.mk { align-items: center; padding: 8px; }
+  .opt.mk .mi { flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--fill); color: var(--tx-2); }
+  .opt.mk:has(input:checked) .mi { background: var(--accent-soft); color: var(--accent-strong); }
+  .opt.mk input { order: 3; width: 34px; height: 20px; margin: 0; border: 0; border-radius: 999px; background: var(--line-3); position: relative; transition: background .15s; }
+  .opt.mk input::after { content: ""; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(13,27,62,.3); transition: transform .15s var(--ease); }
+  .opt.mk input:checked { background: var(--accent); } .opt.mk input:checked::after { transform: translateX(14px); }
+  .tb-s { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 14px; border: 0; border-radius: 12px; background: var(--fill); color: var(--tx); font-weight: 600; font-size: 13.5px; transition: background .12s; }
+  .tb-s:hover { background: var(--active); } .tb-s .i { color: #e7a417; fill: #e7a417; }
+  .tb-s em { font-style: normal; display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 11.5px; font-weight: 700; }
+  [data-theme="dark"] .tb-s em { background: var(--accent); }
+  #acct { display: flex; align-items: center; margin-left: 6px; } #acct:empty { display: none; }
+  .me img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex: none; }
+  .gi { width: 16px; height: 16px; flex: none; padding: 2px; border-radius: 50%; background: #fff; }
+  .am { position: fixed; right: 28px; top: 70px; width: 300px; max-width: calc(100vw - 24px); padding: 18px; background: var(--pop); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 18px; box-shadow: var(--shadow); z-index: 60; animation: drop .22s var(--ease); }
+  .am b { display: block; font: 700 16px/1.3 var(--f-d); } .am > small { display: block; color: var(--tx-3); font-size: 12.5px; overflow-wrap: anywhere; }
+  .am p { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--ok-soft); color: var(--ok); font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+  .am p .i { flex: none; margin-top: 1px; } .am p.err { background: var(--bad-soft); color: var(--bad); } .am p.sync { background: var(--fill); color: var(--tx-2); }
+  .am .btn { width: 100%; justify-content: center; margin-top: 6px; }
+  .pf-acct { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; padding: 12px 14px; border-radius: 12px; background: var(--tint); font-size: 13px; line-height: 1.4; color: var(--tx-2); } .pf-acct:empty { display: none; }
+  .pf-acct b { display: block; color: var(--tx); font-weight: 600; } .pf-acct .btn { margin-left: auto; flex: none; }
+  .fld > .pf-fit { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 0; font-weight: 400; } .fld > .pf-fit:empty { display: none; }
+  .pf-fit i { font-style: normal; font-size: 12px; color: var(--tx-3); width: 100%; }
+  .nudge { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 12px 16px; border-radius: 14px; background: var(--accent-soft); font-size: 14px; font-weight: 500; }
+  .nudge > .i { flex: none; color: var(--accent-strong); } .nudge .btn { margin-left: auto; flex: none; }
+  .spanel { display: flex; flex-direction: column; padding: 20px; border-radius: 18px; background: var(--tint); }
+  .spanel .sec-h { margin: 0 0 12px; } .spanel .sec-h h2 { font-size: 22px; }
+  .srow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 8px 10px 8px 8px; border-radius: 12px; background: var(--card); box-shadow: var(--sh-s); }
+  .sgo { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: inherit; text-align: left; }
+  .sgo .lg { --s: 38px; border-radius: 10px; } .sgo > span:last-child { flex: 1; min-width: 0; }
+  .sgo b { display: block; font: 700 13.5px/1.3 var(--f-d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sgo small { display: block; font-size: 12px; color: var(--tx-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .srow .pill { flex: none; }
+  .sempty { flex: 1; display: grid; place-content: center; justify-items: center; gap: 6px; padding: 14px 10px 18px; text-align: center; color: var(--tx-2); font-size: 13.5px; line-height: 1.45; }
+  .sempty > .i { color: #e7a417; fill: #e7a417; } .sempty b { font: 700 16px/1.3 var(--f-d); color: var(--tx); } .sempty .btn { margin-top: 8px; }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: auto; padding-top: 6px; }
+  .tiles button { padding: 10px 4px; border: 0; border-radius: 12px; background: var(--card); box-shadow: var(--sh-s); color: var(--tx-2); font-size: 11.5px; font-weight: 500; line-height: 1.3; transition: transform .15s; }
+  .tiles button:hover { transform: translateY(-1px); } .tiles b { display: block; font: 800 21px/1.15 var(--f-d); color: var(--tx); }
+  .wsec { margin: 28px 2px 12px; font: 800 20px/1.2 var(--f-d); letter-spacing: -.014em; } .wsec small { margin-left: 8px; font: 500 13px/1 "Inter", sans-serif; color: var(--tx-3); letter-spacing: 0; }
   .row:hover { border-color: var(--line-2); box-shadow: var(--sh-m); transform: translateY(-1px); }
-  .row.dim > *:not(.rr) { opacity: .45; }
+  .row.dim > *:not(.c-f):not(.c-b) { opacity: .45; }
   .rb { min-width: 0; }
   .t { font: 700 16.5px/1.3 var(--f-d); letter-spacing: -.014em; overflow-wrap: anywhere; }
   .rb .t { display: block; margin-top: 8px; width: fit-content; max-width: 100%; }
@@ -570,7 +664,12 @@
     .addrow { flex-wrap: wrap; }
     .w { grid-template-columns: minmax(0, 1fr); padding: 16px; } .w .acts { grid-column: 1; margin-top: 8px; }
     .np { right: 8px; left: 8px; top: 62px; width: auto; max-width: none; }
-    .tabbar { display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); z-index: 50; padding: 6px; border-radius: 18px; background: #0c2050; box-shadow: 0 18px 40px -10px rgba(8,22,55,.6); }
+    #list, .cards { grid-template-columns: minmax(0, 1fr); }
+    .tb-s { padding: 0 10px; gap: 6px; } .tb-s span { display: none; }
+    #acct { margin-left: 2px; } #acct .btn { height: 36px; padding: 0 12px; } .me img { width: 34px; height: 34px; }
+    .am { right: 8px; left: 8px; top: 62px; width: auto; max-width: none; }
+    .nudge { flex-wrap: wrap; } .nudge .btn { margin-left: 0; }
+    .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); z-index: 50; padding: 6px; border-radius: 18px; background: #0c2050; box-shadow: 0 18px 40px -10px rgba(8,22,55,.6); }
     .tabbar button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px 6px; border: 0; border-radius: 13px; background: none; color: #a9b9da; font-size: 10.500px; font-weight: 600; }
     .tabbar button[aria-current="true"] { color: #fff; background: rgba(255,255,255,.13); }
     #toast { bottom: 96px; }
@@ -600,29 +699,33 @@
       <button class="ib" id="refresh" hidden title="Refresh from Unstop" aria-label="Refresh from Unstop"></button>
       <button class="ib" data-act="theme" id="themeBtn" title="Switch Between Light and Dark" aria-label="Switch Theme"></button>
       <button class="ib" id="bell" aria-label="Notifications" aria-expanded="false" aria-controls="np" title="Notifications"></button>
-      <button class="me" data-act="profile" id="meBtn" title="Your Profile"></button>
+      <button class="tb-s" data-tab="saved" id="savedBtn" title="Your Starred Comps"></button>
+      <span id="acct"></span>
     </header>
+    <div class="am" id="acctMenu" hidden role="dialog" aria-label="Your Account"></div>
     <div class="np" id="np" hidden role="dialog" aria-label="Notifications"></div>
 
     <section class="page" id="v-home"></section>
     <section class="page" id="v-discover" hidden>
-      <div class="hero"><h2>Competitions</h2><p>Open on Unstop and scored for you, minus coding contests and anything you can't enter or reach from Delhi</p></div>
+      <div class="hero"><h2>Competitions</h2><p>Every open comp scored for you, minus coding contests and anything you can't enter or reach from Delhi</p></div>
       <div class="viewsM" id="viewsM" role="group" aria-label="Views"></div>
       <div class="stats" id="stats"></div>
       <div class="disc">
         <div class="col">
           <div class="tools" id="tools"></div>
+          <div class="achips" id="achips"></div>
           <div id="list"></div>
           <button class="btn" id="more" hidden>Show More</button>
           <p class="foot" id="foot"></p>
         </div>
         <aside class="filters" id="filters" aria-label="Filters">
-          <div class="f-top"><b>Filters<small>All Groups Must Match</small></b><button class="link" id="reset">Reset</button></div>
+          <div class="f-top"><b>Filters<small>Every Choice Applies Together</small></b><button class="link" id="reset">Reset All</button></div>
           <div id="fbody"></div>
         </aside>
       </div>
       <div class="f-apply"><button class="btn primary" id="closeFilters">Show Results</button></div>
     </section>
+    <section class="page" id="v-saved" hidden></section>
     <section class="page" id="v-tracker" hidden></section>
     <section class="page" id="v-watch" hidden></section>
   </div>
@@ -633,10 +736,11 @@
 <dialog id="profileDlg" aria-labelledby="pdT">
   <form class="dlg" method="dialog" id="profileForm">
     <h2 id="pdT">Your Profile</h2>
-    <p>Only used to hide comps you can't enter</p>
+    <p>Hides comps you can't enter and matches domains to your course</p>
+    <div class="pf-acct" id="pfAcct"></div>
     <label class="fld"><span>College</span><input class="field" type="text" id="pfCollege" placeholder="Shaheed Sukhdev College of Business Studies (SSCBS)" autocomplete="off">
       <small>Use the name Unstop uses, with the short form in brackets</small></label>
-    <label class="fld"><span>Course</span><select id="pfCourse"></select></label>
+    <label class="fld"><span>Course</span><select id="pfCourse"></select><span class="pf-fit" id="pfFit"></span></label>
     <div class="two">
       <label class="fld"><span>Graduating Year</span><select id="pfYear"></select></label>
       <label class="fld"><span>Gender</span><select id="pfGender"><option value="">Prefer Not to Say</option><option value="F">Woman</option><option value="M">Man</option><option value="O">Other</option></select></label>
@@ -737,7 +841,22 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   const I = (n, s) => `<svg class="i" width="${s || 16}" height="${s || 16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
 
   // ------------------------------------------------------------------ data
+  const PREM = new Set(["iim", "iit", "fms", "isb", "bschool", "nmims", "xaviers", "bits", "liberal", "newage", "premier"]), CORPS = new Set(["mbb", "big4", "fin", "corp", "global"]);
+  const CIRCS = [{ id: "du", label: "DU Circuit" }, { id: "prem", label: "IIMs, IITs & Premier" }, { id: "corp", label: "Corporate & Global" }, { id: "other", label: "Others" }];
+  const KINDS = [{ id: "case", label: "Case, Strategy & Pitch" }, { id: "quiz", label: "Quizzes" }, { id: "sim", label: "Simulations & Trading" }, { id: "write", label: "Writing & Research" }, { id: "debate", label: "Debates & MUNs" }, { id: "other", label: "Everything Else" }];
+  const CIRC = Object.fromEntries(CIRCS.map(x => [x.id, x.label])), KIND = Object.fromEntries(KINDS.map(x => [x.id, x.label]));
+  const SRCS = META.sources || [{ id: "unstop", label: "Unstop" }], SRC = Object.fromEntries(SRCS.map(x => [x.id, x.label]));
   const prep = c => {
+    c.sid = String(c.id); c.src = c.src || "unstop";
+    const cs = c.cats || [], nn = c.niches || [], ttl = c.t || "";
+    c.circ = [cs.some(x => x === "du" || x === "du_top") && "du", cs.some(x => PREM.has(x)) && "prem", cs.some(x => CORPS.has(x)) && "corp"].filter(Boolean);
+    if (!c.circ.length) c.circ = ["other"];
+    c.kinds = [c.case && "case", (nn.includes("quiz") || /\bquiz/i.test(ttl)) && "quiz",
+      ((c.rd || []).some(r => r.ty === "sim") || /simulat|trading (game|challenge|contest|league)|mock (stock|trading)|stock market (game|challenge)|bidding|auction/i.test(ttl)) && "sim",
+      /essay|article|writing|research|\bpapers?\b|\bblog|journal|report\b|poster|policy brief/i.test(ttl) && "write",
+      (nn.includes("debate") || /debate|\bmun\b|model united|parliament|moot/i.test(ttl)) && "debate"].filter(Boolean);
+    if (!c.kinds.length) c.kinds = ["other"];
+    c.fit = c.fit || [];
     c.dlMs = ms(c.dl);
     c.daysLeft = c.dlMs == null ? null : (c.dlMs - NOW) / DAY;
     c.isNew = c.listed ? (NOW - Date.parse(c.listed)) / DAY <= META.newDays : false;
@@ -788,12 +907,22 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   ];
   const COURSE = Object.fromEntries(COURSES.map(c => [c[0], { label: c[1], stream: c[2] }]));
   const ALSO = { mca: ["mca1"] };
+  // Which domains suit a course. The stream gives the base list and a few courses get their own order.
+  const BIZ = ["marketing", "finance", "consulting", "startup", "bizgen", "product", "ops", "hr", "analytics", "econ", "social"];
+  const FIT = { bSchools: BIZ, engineering: ["tech", "product", "analytics", "startup", "ops", "consulting"], arts: ["econ", "social", "creative", "debate", "marketing", "startup", "quiz"], law: ["debate", "econ", "social", "consulting"], medicine: ["social", "startup", "quiz", "analytics"] };
+  const FITC = { bcom: ["finance", "econ", "bizgen", "consulting", "marketing", "startup", "analytics", "ops"], mcom: ["finance", "econ", "bizgen", "consulting", "analytics"], ca: ["finance", "econ", "bizgen", "consulting", "analytics"], cs: ["finance", "bizgen", "consulting", "econ"],
+    bhm: ["ops", "marketing", "hr", "bizgen", "startup"], bdes: ["creative", "product", "marketing", "startup"], mdes: ["creative", "product", "marketing", "startup"], bfa: ["creative", "culture", "marketing"], barch: ["creative", "product", "social"],
+    bca: ["tech", "product", "analytics", "startup"], mca: ["tech", "product", "analytics", "startup"] };
+  const PGC = new Set(COURSES.slice(22, 37).map(c => c[0]).concat("ipm"));
+  const domainsFor = course => { const info = COURSE[course]; return info ? (FITC[course] || FIT[info.stream] || []) : []; };
 
   // ------------------------------------------------------------------ personal state
   const NOPROFILE = () => ({ college: "", course: "", year: "", gender: "", sameTeam: true });
-  const BLANK = () => ({ v: 2, profile: Object.assign(NOPROFILE(), META.profile || {}), star: {}, hide: {}, tracked: {}, watch: [], read: {}, readAll: 0, look: "light" });
-  let P = BLANK(), serverOK = false, saveTimer = null, canStore = true;
   const SERVED = location.protocol.startsWith("http");
+  // The profile in config.json is the owner's. It is the default only on your own computer, never on the public link.
+  const MINE = !SERVED || /^(localhost|127\.|\[::1\])|\.e2b\.app$/.test(location.hostname);
+  const BLANK = () => ({ v: 2, profile: Object.assign(NOPROFILE(), MINE ? META.profile || {} : {}), star: {}, hide: {}, tracked: {}, watch: [], read: {}, readAll: 0, look: "light" });
+  let P = BLANK(), serverOK = false, saveTimer = null, canStore = true;
   function adopt(o) {
     const b = BLANK();
     if (!o || typeof o !== "object") return b;
@@ -814,10 +943,105 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     return BLANK();
   }
   const hasData = p => !!(p.profile.course || p.profile.college || Object.keys(p.tracked).length || Object.keys(p.star).length || Object.keys(p.hide).length || p.watch.length);
+  function storeLocal() { try { localStorage.setItem("unstopRadar.v2", JSON.stringify(P)); } catch (e) { canStore = false; } }
   function save() {
     P.ts = Date.now();
-    try { localStorage.setItem("unstopRadar.v2", JSON.stringify(P)); } catch (e) { canStore = false; }
+    storeLocal();
     if (serverOK) { clearTimeout(saveTimer); saveTimer = setTimeout(push, 500); }
+    if (U) { clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudPush, 900); if (cloud.state !== "sync") { cloud.state = "sync"; acctPaint(); } }
+  }
+
+  // ------------------------------------------------------------------ account: Google sign-in, one copy of your data per account
+  // Switched on by signin.txt (the Firebase web config). Signed out, everything stays in this browser as before.
+  const CLOUD = SERVED && META.signin && META.signin.apiKey ? META.signin : null;
+  const cloud = { state: CLOUD ? "wait" : "off", timer: null, db: null, stop: null, sent: new Set() };
+  let U = null;
+  const firstName = () => U ? (U.name || U.email || "You").split(/[\s@]/)[0] : "";
+  const loadJs = src => new Promise((ok, no) => { const el = document.createElement("script"); el.src = src; el.onload = ok; el.onerror = () => no(new Error("blocked")); document.head.appendChild(el); });
+  async function cloudInit() {
+    if (!CLOUD) return;
+    try {
+      if (!window.firebase) for (const m of ["app", "auth", "firestore"]) await loadJs("https://www.gstatic.com/firebasejs/10.12.5/firebase-" + m + "-compat.js");
+      if (!firebase.apps.length) firebase.initializeApp(CLOUD);
+      cloud.db = firebase.firestore();
+      firebase.auth().onAuthStateChanged(onUser);
+    } catch (e) { cloud.state = "off"; acctPaint(); }
+  }
+  const rich = o => !!(Object.keys(o.tracked).length || Object.keys(o.star).length || Object.keys(o.hide).length || o.watch.length);
+  // What was done on this device before signing in is added to the account, never dropped.
+  function mergeIn(acc, dev) {
+    ["star", "hide", "tracked", "read"].forEach(k => { Object.keys(dev[k]).forEach(id => { if (!(id in acc[k])) acc[k][id] = dev[k][id]; }); });
+    dev.watch.forEach(m => { if (!acc.watch.some(x => x.name.toLowerCase() === m.name.toLowerCase())) acc.watch.push(m); });
+    if (!(acc.profile.course || acc.profile.college) && (dev.profile.course || dev.profile.college)) acc.profile = dev.profile;
+    acc.ts = Date.now();
+    return acc;
+  }
+  const userDoc = () => cloud.db.collection("users").doc(U.uid);
+  async function onUser(u) {
+    if (cloud.stop) { cloud.stop(); cloud.stop = null; }
+    U = u ? { uid: u.uid, name: u.displayName || "", email: u.email || "", photo: u.photoURL || "" } : null;
+    if (!U) { cloud.state = "out"; renderAll(); return; }
+    cloud.state = "sync"; acctPaint();
+    try {
+      if (P.uid && P.uid !== U.uid) P = Object.assign(BLANK(), { look: P.look });
+      const snap = await userDoc().get(), raw = snap.exists ? snap.data() : null, acc = raw && raw.state ? adopt(JSON.parse(raw.state)) : null;
+      let dirty = !acc;
+      if (acc) {
+        if (P.uid === U.uid) { if ((P.ts || 0) > (acc.ts || 0)) dirty = true; else P = acc; }
+        else if (rich(P) || ((P.profile.course || P.profile.college) && !(acc.profile.course || acc.profile.college))) { P = mergeIn(acc, P); dirty = true; }
+        else P = acc;
+      }
+      P.uid = U.uid;
+      if (!P.ts) P.ts = Date.now();
+      storeLocal();
+      if (dirty) await cloudPush(); else cloud.state = "ok";
+      cloud.stop = userDoc().onSnapshot(d => {
+        const v = d.exists ? d.data() : null;
+        if (!v || !v.state || (d.metadata && d.metadata.hasPendingWrites) || (v.ts || 0) <= (P.ts || 0)) return;
+        P = adopt(JSON.parse(v.state)); P.uid = U.uid; storeLocal(); applyTheme(); recheck(); renderAll();
+      }, () => {});
+    } catch (e) { cloud.state = "err"; }
+    applyTheme(); recheck(); renderAll();
+  }
+  async function cloudPush() {
+    if (!U || !cloud.db) return;
+    clearTimeout(cloud.timer);
+    try {
+      await userDoc().set({ state: JSON.stringify(P), ts: P.ts || Date.now(), name: U.name });
+      cloud.state = "ok";
+      // comp numbers only, so the refresh keeps a registered comp up to date after it leaves the open list
+      const ids = Object.keys(P.tracked).filter(id => /^\d+$/.test(id) && !cloud.sent.has(id));
+      if (ids.length) { ids.forEach(id => cloud.sent.add(id)); cloud.db.collection("public").doc("tracked").set({ ids: firebase.firestore.FieldValue.arrayUnion(...ids) }, { merge: true }).catch(() => {}); }
+    } catch (e) { cloud.state = "err"; }
+    acctPaint();
+  }
+  async function signIn() {
+    if (!CLOUD || !window.firebase) return toast("Sign-in is still loading, try again in a moment");
+    try {
+      const prov = new firebase.auth.GoogleAuthProvider(); prov.setCustomParameters({ prompt: "select_account" });
+      await firebase.auth().signInWithPopup(prov);
+    } catch (e) {
+      const c = (e && e.code) || "";
+      if (/popup-closed|cancelled/.test(c)) return;
+      toast(/popup-blocked/.test(c) ? "Allow pop-ups for this site, then sign in again" : /unauthorized-domain/.test(c) ? "This link is not on the Firebase authorised domains list yet" : /operation-not-allowed/.test(c) ? "Google sign-in is not switched on in Firebase yet" : "Sign-in did not go through, try again");
+    }
+  }
+  async function signOut() {
+    $("acctMenu").hidden = true;
+    try { if (cloud.state === "sync") await cloudPush(); await firebase.auth().signOut(); } catch (e) {}
+    // the account keeps everything, this device goes back to empty
+    P = Object.assign(BLANK(), { look: P.look });
+    try { localStorage.removeItem("unstopRadar.v2"); } catch (e) {}
+    recheck(); renderAll(); toast("Signed out, your data stays in your account");
+  }
+  const GI = '<svg class="gi" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.500c3.540 0 6.710 1.220 9.210 3.600l6.850-6.850C35.900 2.380 30.470 0 24 0 14.620 0 6.510 5.380 2.560 13.220l7.980 6.190C12.430 13.720 17.740 9.500 24 9.500z"/><path fill="#4285F4" d="M46.980 24.550c0-1.570-.150-3.090-.380-4.550H24v9.020h12.940c-.580 2.960-2.260 5.480-4.780 7.180l7.730 6c4.510-4.180 7.090-10.360 7.090-17.650z"/><path fill="#FBBC05" d="M10.530 28.590c-.480-1.450-.760-2.990-.760-4.590s.270-3.140.760-4.590l-7.980-6.190C.920 16.460 0 20.120 0 24c0 3.880.920 7.540 2.560 10.780l7.970-6.190z"/><path fill="#34A853" d="M24 48c6.480 0 11.930-2.130 15.890-5.810l-7.730-6c-2.150 1.450-4.920 2.300-8.160 2.300-6.260 0-11.570-4.220-13.470-9.910l-7.980 6.190C6.510 42.620 14.620 48 24 48z"/></svg>';
+  function acctPaint() {
+    const el = $("acct"), m = $("acctMenu");
+    if (!CLOUD || cloud.state === "wait" || cloud.state === "off") { el.innerHTML = ""; m.hidden = true; return; }
+    if (!U) { m.hidden = true; el.innerHTML = `<button class="btn primary" data-act="signin" title="Sign in with Google to keep your comps on every device">${GI}Sign In</button>`; return; }
+    const st = cloud.state, line = st === "err" ? "Could not reach your account, changes stay on this device for now" : st === "sync" ? "Saving to your account…" : "Saved to your account, the same on every device";
+    el.innerHTML = `<button class="me" data-act="acct" aria-expanded="${!m.hidden}" title="Your Account">${U.photo ? `<img src="${escA(U.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="ava">${escA(firstName().slice(0, 1).toUpperCase())}</span>`}<span class="me-t"><b>${escA(firstName())}</b><small>${st === "err" ? "Sync Failed" : st === "sync" ? "Saving…" : "Synced"}</small></span>${I("chev", 15)}</button>`;
+    m.innerHTML = `<b>${escA(U.name || firstName())}</b><small>${escA(U.email)}</small><p class="${st}">${I(st === "err" ? "alert" : st === "sync" ? "refresh" : "check", 15)}<span>${line}</span></p><button class="btn" data-act="profile">Edit Profile</button><button class="btn ghost" data-act="signout">Sign Out</button>`;
   }
   function push() { fetch("api/state", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(P) }).catch(() => {}); }
   function applyTheme() { document.documentElement.dataset.theme = P.look; $("themeBtn").innerHTML = I(P.look === "dark" ? "sun" : "moon", 19); }
@@ -847,39 +1071,41 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       }
       if (p.year && el.py && el.py.length && !el.py.includes(+p.year) && !why.length) why.push(el.py.join(" / ") + " Batch Only");
     }
+    if (c.pgOnly && p.course && !PGC.has(p.course)) why.push("MBA Students Only");
     if (c.g === "F" && p.gender && p.gender !== "F") why.push("Women Only");
     if (c.restrN && !collegeMatch(c)) why.push(c.restrN === 1 ? "One College Only" : c.restrN + " Colleges Only");
     if (c.sameOrg && p.sameTeam === false && (c.tmin || 1) > 1) why.push("One-College Teams Only");
     return why;
   }
-  const recheck = () => { Object.values(BY).forEach(c => { c.inel = ineligible(c); }); };
+  const recheck = () => { const mine = domainsFor(P.profile.course); Object.values(BY).forEach(c => { c.inel = ineligible(c); c.fit = (c.niches || []).filter(n => mine.includes(n)); }); };
   const profileSet = () => !!(P.profile.course || P.profile.college);
   const courseShort = () => ((COURSE[P.profile.course] || {}).label || P.profile.course || "").split(" / ")[0];
 
   // ------------------------------------------------------------------ discover: state + filters
   const DEFAULTS = () => ({
     q: "", sort: "score", tier: [], cats: [], catsAll: false, loc: ["online", "delhi", "ncr"],
-    niches: [], nichesAll: false, intern: 0, minPrize: 0, maxRounds: 0, maxReg: 0, free: false, first: [],
-    caseOnly: false, hideCode: true, eligOnly: true, dl: 0, isNew: false, starred: false, showHidden: false, hideTracked: false
+    niches: [], nichesAll: false, intern: 0, minPrize: 0, maxRounds: 0, maxReg: 0, minReg: 0, first: [],
+    circ: [], kinds: [], src: [], team: "", fee: "", fit: false,
+    hideCode: true, eligOnly: true, dl: 0, isNew: false, starred: false, showHidden: false, hideTracked: false
   });
   const PRESETS = [
     { id: "all", label: "Everything I can do", set: {} },
     { id: "high", label: "High Priority", set: { tier: ["high"] } },
-    { id: "case", label: "Case Comps only", set: { caseOnly: true } },
+    { id: "case", label: "Case Comps only", set: { kinds: ["case"] } },
     { id: "iim", label: "IIM, fully online", set: { cats: ["iim"], loc: ["online"] } },
     { id: "iit", label: "IIT, online or Delhi", set: { cats: ["iit"], loc: ["online", "delhi"] } },
     { id: "bs", label: "Top B-schools", set: { cats: ["fms", "isb", "bschool", "nmims"] } },
     { id: "du", label: "DU & new-age", set: { cats: ["du_top", "du", "newage"] } },
     { id: "firms", label: "Consulting & finance", set: { cats: ["mbb", "big4", "fin"] } },
     { id: "corp", label: "Corporate, low effort", set: { cats: ["corp"], maxRounds: 3, maxReg: 3000 } },
-    { id: "intern", label: "Internship / PPI", set: { intern: 1 } },
+    { id: "intern", label: "Internship, PPI or PPO", set: { intern: 1 } },
     { id: "prize", label: "₹1 lakh+ prize", set: { minPrize: 100000, sort: "prize" } },
     { id: "week", label: "Closing this week", set: { dl: 7, sort: "dl" } },
     { id: "every", label: "All 651, incl. rejected", set: { loc: LOCS.map(l => l.id), eligOnly: false, hideCode: false } }
   ];
   PRESETS[PRESETS.length - 1].label = `All ${COMPS.length}, incl. rejected`;
   let S = DEFAULTS(), shown = 40, TAB = "home", fOpen = true;
-  const OPEN = new Set(), SEC = { niches: false, rewards: false, effort: false, first: false, deadline: false, marks: false };
+  const OPEN = new Set(), SEC = { tier: false, cats: false, niches: false, first: false, deadline: false };
 
   const has = (arr, sel, all) => !sel.length || (all ? sel.every(x => arr.includes(x)) : sel.some(x => arr.includes(x)));
   const TESTS = {
@@ -888,13 +1114,18 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     cats: c => has(c.cats, S.cats, S.catsAll),
     loc: c => !S.loc.length || S.loc.includes(c.loc),
     niches: c => has(c.niches, S.niches, S.nichesAll),
-    intern: c => !S.intern || c.intern >= (S.intern === 2 ? 2 : 1),
+    intern: c => !S.intern || (S.intern === 1 ? c.intern >= 1 : S.intern === 2 ? c.intern === 2 : c.internKind === (S.intern === 3 ? "ppo" : "ppi")),
+    circ: c => has(c.circ, S.circ, false),
+    kinds: c => has(c.kinds, S.kinds, false),
+    src: c => !S.src.length || S.src.includes(c.src),
+    team: c => !S.team || (S.team === "solo" ? (c.tmin || 1) <= 1 : (c.tmax || 1) > 1),
+    fee: c => !S.fee || (S.fee === "free" ? c.fee == null : c.fee != null),
+    minReg: c => !S.minReg || (c.reg || 0) >= S.minReg,
+    fit: c => !S.fit || c.fit.length > 0,
     minPrize: c => !S.minPrize || c.prize >= S.minPrize,
     maxRounds: c => !S.maxRounds || c.rounds == null || c.rounds <= S.maxRounds,
     maxReg: c => !S.maxReg || c.reg <= S.maxReg,
-    free: c => !S.free || c.fee == null,
     first: c => !S.first.length || S.first.includes(c.first),
-    caseOnly: c => !S.caseOnly || !!c.case,
     hideCode: c => !S.hideCode || !c.code,
     eligOnly: c => !S.eligOnly || !c.inel.length,
     dl: c => !S.dl || (c.daysLeft != null && c.daysLeft <= S.dl),
@@ -913,6 +1144,9 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     dl: (a, b) => (a.daysLeft ?? 9999) - (b.daysLeft ?? 9999) || b.score - a.score,
     prize: (a, b) => b.prize - a.prize || b.score - a.score,
     reg: (a, b) => (a.reg || 1e9) - (b.reg || 1e9) || b.score - a.score,
+    regMost: (a, b) => (b.reg || 0) - (a.reg || 0) || b.score - a.score,
+    rounds: (a, b) => (a.rounds || 99) - (b.rounds || 99) || b.score - a.score,
+    intern: (a, b) => b.intern - a.intern || b.score - a.score,
     new: (a, b) => (b.listed || "").localeCompare(a.listed || "") || b.score - a.score
   };
   function activePreset() {
@@ -937,7 +1171,46 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   const seg = key => `<span class="seg" role="group" aria-label="Match Mode"><button data-seg="${key}" data-val="0" aria-pressed="${!S[key]}">Any</button><button data-seg="${key}" data-val="1" aria-pressed="${!!S[key]}">All</button></span>`;
   const sel = (key, opts) => `<select data-sel="${key}">` + opts.map(o => `<option value="${o[0]}"${S[key] == o[0] ? " selected" : ""}>${tc(o[1])}</option>`).join("") + "</select>";
   const toggle = (key, label, n, note) => `<label class="opt"><input type="checkbox" data-t="${key}"${S[key] ? " checked" : ""}><span class="lbl">${tc(label)}${note ? `<small>${tc(note)}</small>` : ""}</span>${n == null ? "" : `<span class="cnt">${n}</span>`}</label>`;
+  const mark = (key, icon, label, note, n) => `<label class="opt mk"><span class="mi">${I(icon, 15)}</span><span class="lbl">${tc(label)}<small>${note}</small></span><span class="cnt">${n}</span><input type="checkbox" data-t="${key}"${S[key] ? " checked" : ""}></label>`;
+  const pick = (key, opts) => `<span class="seg wide" role="group">${opts.map(o => `<button data-pick="${key}" data-val="${o[0]}" aria-pressed="${S[key] === o[0]}">${tc(o[1])}<em>${o[2]}</em></button>`).join("")}</span>`;
   const sec = (id, title, on, body, extra) => `<details class="fs" data-sec="${id}"${SEC[id] === false ? "" : " open"}><summary><span>${tc(title)}${on ? '<i class="onn"></i>' : ""}</span>${extra || ""}${I("chev", 14)}</summary><div class="fs-b">${body}</div></details>`;
+  const NUM = n => Number(n).toLocaleString("en-IN");
+  const INTL = ["", "Internship, PPI or PPO", "Confirmed in the Prizes", "PPO, Job Offer Chance", "PPI, Interview Chance"];
+
+  // Every filter that is switched on, as a chip you can clear on its own
+  function chipsNow() {
+    const d = DEFAULTS(), out = [], add = (k, l) => out.push([k, l]);
+    if (S.q) add("q", "Search “" + S.q + "”");
+    if (S.starred) add("starred", "Starred Only");
+    if (S.hideTracked) add("hideTracked", "Not Registered Yet");
+    if (S.showHidden) add("showHidden", "Hidden Ones Shown");
+    if (!S.eligOnly) add("eligOnly", "Incl. Comps I Can't Enter");
+    if (S.fit) add("fit", "Fits My Course");
+    if (S.minPrize) add("minPrize", S.minPrize === 1 ? "Has a Cash Prize" : "Prize " + inrShort(S.minPrize) + "+");
+    if (S.intern) add("intern", INTL[S.intern]);
+    if (S.maxReg) add("maxReg", "Under " + NUM(S.maxReg) + " Registered");
+    if (S.minReg) add("minReg", NUM(S.minReg) + "+ Registered");
+    if (S.maxRounds) add("maxRounds", S.maxRounds === 1 ? "1 Round Only" : "Up to " + S.maxRounds + " Rounds");
+    S.circ.forEach(v => add("circ:" + v, CIRC[v]));
+    S.kinds.forEach(v => add("kinds:" + v, KIND[v]));
+    if (S.team) add("team", S.team === "solo" ? "Solo OK" : "Team Comps");
+    if (S.fee) add("fee", S.fee === "free" ? "Free Entry" : "Paid Entry");
+    S.src.forEach(v => add("src:" + v, "On " + (SRC[v] || v)));
+    if (JSON.stringify([...S.loc].sort()) !== JSON.stringify([...d.loc].sort())) add("loc", S.loc.length ? "Where: " + S.loc.map(v => LOC[v].tag).join(", ") : "Any Location");
+    S.tier.forEach(v => add("tier:" + v, tc(v) + " Priority"));
+    S.cats.forEach(v => add("cats:" + v, CATS[v] || CAT[v] || v));
+    S.niches.forEach(v => add("niches:" + v, NICHE[v] || v));
+    S.first.forEach(v => add("first:" + v, "Round 1: " + (RT[v] || v)));
+    if (S.dl) add("dl", "Closes in " + S.dl + " Days");
+    if (S.isNew) add("isNew", "New Listings");
+    if (!S.hideCode) add("hideCode", "Coding Comps Shown");
+    return out;
+  }
+  function clearChip(k) {
+    const i = k.indexOf(":");
+    if (i > 0) { const key = k.slice(0, i), v = k.slice(i + 1); S[key] = S[key].filter(x => x !== v); }
+    else { S[k] = DEFAULTS()[k]; if (k === "q") $("q").value = ""; }
+  }
 
   function renderFilters() {
     const d = DEFAULTS();
@@ -945,31 +1218,41 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const nichesUsed = META.niches.filter(n => COMPS.some(c => c.niches.includes(n.id)));
     const firstUsed = FIRST.filter(f => COMPS.some(c => c.first === f.id));
     const ae = document.activeElement, fb = $("fbody");
-    const focusSel = ae && fb.contains(ae) ? ["k", "v", "t", "sel", "seg", "val"].filter(k => ae.dataset[k] != null).map(k => `[data-${k}="${ae.dataset[k]}"]`).join("") : "";
+    const focusSel = ae && fb.contains(ae) ? ["k", "v", "t", "sel", "seg", "pick", "val"].filter(k => ae.dataset[k] != null).map(k => `[data-${k}="${ae.dataset[k]}"]`).join("") : "";
     const cut = facet("eligOnly", c => c.inel.length > 0), code = facet("hideCode", c => !!c.code);
-    const p = P.profile, who = [acronym(p.college) || p.college, courseShort(), p.year].filter(Boolean).join(" ");
+    const p = P.profile, who = [acronym(p.college) || p.college, courseShort(), p.year].filter(Boolean).join(" "), mine = domainsFor(p.course);
+    const nT = v => facet("team", c => v === "solo" ? (c.tmin || 1) <= 1 : v === "team" ? (c.tmax || 1) > 1 : true), nF = v => facet("fee", c => v === "free" ? c.fee == null : v === "paid" ? c.fee != null : true);
     fb.innerHTML =
-      sec("elig", "Eligibility", !S.eligOnly, toggle("eligOnly", "Only Comps I Can Enter", null, cut ? `${cut} Hidden` : "Nothing Hidden") +
+      sec("marks", "My List", S.starred || S.hideTracked || S.showHidden,
+        `<p class="fhelp">Uses what you marked on the cards with the bookmark, Track and eye buttons</p>` +
+        mark("starred", "bookmark", "Only Comps I Starred", "The ones you bookmarked", Object.keys(P.star).length) +
+        mark("hideTracked", "check", "Leave Out Comps I Registered For", "They already sit in Registrations", facet("hideTracked", c => !!P.tracked[c.id])) +
+        mark("showHidden", "eye", "Bring Back Comps I Hid", "The ones you put away with the eye button", Object.keys(P.hide).length)) +
+      sec("elig", "Eligibility", !S.eligOnly || S.fit, toggle("eligOnly", "Only Comps I Can Enter", null, cut ? `${cut} Hidden` : "Nothing Hidden") +
+        (mine.length ? toggle("fit", "Fits My Course", facet("fit", c => c.fit.length > 0), esc(courseShort() + " matches " + mine.slice(0, 3).map(n => NICHE[n] || n).join(", ") + (mine.length > 3 ? " and " + (mine.length - 3) + " more" : ""))) : "") +
         `<span class="fnote">${profileSet() ? esc(who) : "No Profile Yet"}<button class="link" data-act="profile">${profileSet() ? "Edit" : "Set Up"}</button></span>`) +
-      sec("format", "Format", S.caseOnly || !S.hideCode, toggle("hideCode", "Hide Coding Contests & Hackathons", null, code ? `${code} Hidden` : "None in This View") +
-        toggle("caseOnly", "Case, Strategy & Pitch Comps Only", facet("caseOnly", c => !!c.case))) +
-      sec("tier", "Priority", S.tier.length, checks("tier", TIERS, id => facet("tier", c => c.tier === id))) +
+      sec("rewards", "Prize & Internship", S.intern || S.minPrize,
+        `<div class="frow"><span>Prize Pool</span>${sel("minPrize", [[0, "Any"], [1, "Any cash prize"], [10000, "₹10,000+"], [25000, "₹25,000+"], [50000, "₹50,000+"], [100000, "₹1 lakh+"], [250000, "₹2.5 lakh+"], [500000, "₹5 lakh+"]])}</div>
+         <div class="frow"><span>Internship, PPI or PPO</span>${sel("intern", [[0, "Any"], [1, "Any chance"], [2, "Confirmed in prizes"], [4, "PPI, interview"], [3, "PPO, job offer"]])}</div>
+         <span class="fnote">${plural(facet("intern", c => c.intern > 0), "comp")} here ${facet("intern", c => c.intern > 0) === 1 ? "carries" : "carry"} an internship chance, ${facet("intern", c => c.intern === 2)} written into the prizes</span>`) +
+      sec("effort", "Participants & Rounds", S.maxRounds || S.maxReg || S.minReg,
+        `<div class="frow"><span>Registered, At Most</span>${sel("maxReg", [[0, "Any"], [100, "Under 100"], [250, "Under 250"], [500, "Under 500"], [1000, "Under 1,000"], [3000, "Under 3,000"], [10000, "Under 10,000"]])}</div>
+         <div class="frow"><span>Registered, At Least</span>${sel("minReg", [[0, "Any"], [25, "25+"], [100, "100+"], [500, "500+"], [1000, "1,000+"], [5000, "5,000+"]])}</div>
+         <div class="frow"><span>Rounds</span>${sel("maxRounds", [[0, "Any"], [1, "1 only"], [2, "Up to 2"], [3, "Up to 3"], [4, "Up to 4"]])}</div>`) +
+      sec("circ", "Circuits", S.circ.length, checks("circ", CIRCS, id => facet("circ", c => c.circ.includes(id)))) +
+      sec("kinds", "Categories", S.kinds.length || !S.hideCode, checks("kinds", KINDS, id => facet("kinds", c => c.kinds.includes(id))) +
+        toggle("hideCode", "Hide Coding Contests & Hackathons", null, code ? `${code} Hidden` : "None in This View")) +
+      sec("team", "Participation", S.team, pick("team", [["", "All", nT("")], ["solo", "Solo OK", nT("solo")], ["team", "Team", nT("team")]])) +
+      sec("fee", "Entry Fee", S.fee, pick("fee", [["", "All", nF("")], ["free", "Free", nF("free")], ["paid", "Paid", nF("paid")]])) +
       sec("loc", "Where It Happens", JSON.stringify([...S.loc].sort()) !== JSON.stringify([...d.loc].sort()), checks("loc", LOCS, id => facet("loc", c => c.loc === id))) +
-      sec("cats", "Organiser", S.cats.length, checks("cats", catsUsed, id => facet("cats", c => c.cats.includes(id))), seg("catsAll")) +
-      sec("niches", "Niche", S.niches.length, checks("niches", nichesUsed, id => facet("niches", c => c.niches.includes(id))), seg("nichesAll")) +
-      sec("rewards", "Rewards", S.intern || S.minPrize,
-        `<div class="frow"><span>Internship / PPI</span>${sel("intern", [[0, "Any"], [1, "Offered as a reward"], [2, "Listed in prizes"]])}</div>
-         <div class="frow"><span>Prize Money</span>${sel("minPrize", [[0, "Any"], [10000, "₹10,000+"], [25000, "₹25,000+"], [50000, "₹50,000+"], [100000, "₹1 lakh+"], [250000, "₹2.5 lakh+"], [500000, "₹5 lakh+"]])}</div>`) +
-      sec("effort", "Effort", S.maxRounds || S.maxReg || S.free,
-        `<div class="frow"><span>Rounds</span>${sel("maxRounds", [[0, "Any"], [1, "1 only"], [2, "Up to 2"], [3, "Up to 3"], [4, "Up to 4"]])}</div>
-         <div class="frow"><span>Registered So Far</span>${sel("maxReg", [[0, "Any"], [250, "Under 250"], [500, "Under 500"], [1000, "Under 1,000"], [3000, "Under 3,000"], [10000, "Under 10,000"]])}</div>` +
-        toggle("free", "Free Entry Only", facet("free", c => c.fee == null))) +
+      sec("src", "Platforms", S.src.length, checks("src", SRCS, id => facet("src", c => c.src === id))) +
+      sec("tier", "Priority", S.tier.length, checks("tier", TIERS, id => facet("tier", c => c.tier === id))) +
+      sec("cats", "Organiser, in Detail", S.cats.length, checks("cats", catsUsed, id => facet("cats", c => c.cats.includes(id))), seg("catsAll")) +
+      sec("niches", "Domain", S.niches.length, checks("niches", nichesUsed, id => facet("niches", c => c.niches.includes(id))), seg("nichesAll")) +
       sec("first", "Round 1 Asks For", S.first.length, checks("first", firstUsed, id => facet("first", c => c.first === id))) +
       sec("deadline", "Deadline & Freshness", S.dl || S.isNew,
         `<div class="frow"><span>Registration Closes</span>${sel("dl", [[0, "Any time"], [3, "Within 3 days"], [7, "Within 7 days"], [14, "Within 14 days"]])}</div>` +
-        toggle("isNew", `Listed in the Last ${META.newDays} Days`, facet("isNew", c => c.isNew))) +
-      sec("marks", "My Marks", S.starred || S.hideTracked || S.showHidden,
-        toggle("starred", "Starred Only", Object.keys(P.star).length) + toggle("hideTracked", "Hide Ones I Registered For", facet("hideTracked", c => !!P.tracked[c.id])) + toggle("showHidden", "Show the Ones I Hid", Object.keys(P.hide).length));
+        toggle("isNew", `Listed in the Last ${META.newDays} Days`, facet("isNew", c => c.isNew)));
     if (focusSel) { const el = fb.querySelector(focusSel); if (el) el.focus({ preventScroll: true }); }
   }
 
@@ -1004,7 +1287,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   function why(c) {
     const rows = c.why.map(w => `<span>${esc(tc(w[0]))}</span><b class="${w[1] < 0 ? "neg" : ""}">${w[1] > 0 ? "+" : ""}${w[1]}</b>`).join("");
     const verdict = { none: "Nothing in the listing asks you to show up", required: "A stage needs you there in person" + (c.inCity ? " (" + c.inCity + ")" : ""), unclear: "The in-person wording is vague, so check the listing" }[c.need] || "";
-    let where = `<p class="ev ${c.need === "none" ? "fine" : c.need === "unclear" ? "mid" : "req"}"><i>${esc(tc("Unstop lists it as " + c.mode))}${c.city ? " in " + esc(c.city) : ""}</i>${esc(verdict)}</p>`;
+    let where = `<p class="ev ${c.need === "none" ? "fine" : c.need === "unclear" ? "mid" : "req"}"><i>${esc(tc((SRC[c.src] || "Unstop") + " lists it as " + c.mode))}${c.city ? " in " + esc(c.city) : ""}</i>${esc(verdict)}</p>`;
     if (c.strict) where += `<p class="ev req"><i>IIM Rule</i>Any in-person wording rejects it</p>`;
     where += c.ev.slice(0, 2).map(e => { const L = EVL[e.label] || [e.label, "mid"]; return `<p class="ev ${L[1]}"><i>${esc(tc(L[0]))}</i>${hl(near(e.snip, e.kw, 150), e.kw)}</p>`; }).join("");
     if (c.ev.length > 2) where += `<p class="ev"><i>${plural(c.ev.length - 2, "More Sentence")} in the Listing</i></p>`;
@@ -1013,40 +1296,46 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const notes = [];
     if (c.inel.length) notes.push("<b>Why You Can't Enter</b>" + esc(tc(c.inel.join(", "))));
     if (c.prizeTxt) notes.push("<b>Prizes</b>" + escA(clip(c.prizeTxt, 110)));
-    if (c.internNote) notes.push("<b>Internship</b>" + escA(clip(c.internNote, 110)));
+    if (c.intern) notes.push(`<b>${IKL[c.internKind] || "Internship Chance"}, ${c.intern === 2 ? "Confirmed in the Prizes" : "Mentioned Only"}</b>` + escA(clip(c.internNote || "", 110)));
+    if (c.fit.length) notes.push("<b>Fits Your Course</b>" + esc(c.fit.map(n => NICHE[n] || n).join(", ")));
     if (c.restrN) notes.push(`<b>${c.restrN === 1 ? "One College Only" : c.restrN + " Colleges Only"}</b>` + esc(c.restr.slice(0, 4).join(", ")) + (c.restrN > 4 ? "…" : ""));
     return `<div class="why"><div><h4>Score ${c.score}</h4><div class="sc">${rows || "<span>No Signals Matched</span><b>0</b>"}<span class="tot">Priority Score</span><b class="tot">${c.score}</b></div></div>
       <div><h4>In Person?</h4>${where}</div>${stg}${notes.length ? `<div><h4>Notes</h4>${notes.map(n => `<p class="n">${n}</p>`).join("")}</div>` : ""}</div>`;
   }
   const TYC = { quiz: "q", deck: "d", live: "l", video: "v", build: "b", sim: "s", other: "o", info: "o" };
+  const IKL = { ppo: "PPO Chance", ppi: "PPI Chance", intern: "Internship Chance" };
   function row(c) {
-    const star = !!P.star[c.id], hid = !!P.hide[c.id], trk = !!P.tracked[c.id], open = OPEN.has(c.id);
+    const id = c.sid, star = !!P.star[id], hid = !!P.hide[id], trk = !!P.tracked[id], open = OPEN.has(id);
     const pl = [];
-    const cats = c.cats.filter(x => x !== "org" && !(x === "corp" && c.cats.some(y => ["mbb", "big4", "fin"].includes(y)))).slice(0, 1);
-    cats.forEach(x => pl.push(pill("a", CATS[x] || CAT[x] || x, CAT[x])));
-    if (c.case) pl.push(pill("v", "Case Comp", "Case, Strategy or Pitch Format"));
+    const cat = c.cats.filter(x => x !== "org" && !(x === "corp" && c.cats.some(y => ["mbb", "big4", "fin"].includes(y))))[0];
+    if (cat) pl.push(pill("a", CATS[cat] || CAT[cat] || cat, CAT[cat]));
+    const kd = c.kinds.find(k => k !== "other");
+    if (kd) pl.push(pill("v", { case: "Case Comp", quiz: "Quiz", sim: "Simulation", write: "Writing", debate: "Debate" }[kd], KIND[kd]));
     pl.push(pill(LOC[c.loc].cls, LOC[c.loc].tag, LOC[c.loc].label));
-    if (c.intern) pl.push(pill("w", "Internship", c.internNote || ""));
     if (c.isNew) pl.push(pill("", "New"));
-    if (c.inel.length) pl.push(pill("b", c.inel[0]));
-    const m = [];
-    if (c.prize) m.push(`<span title="Prize Pool">${I("trophy", 14)}<b>${c.prizeEst ? "~" : ""}${inrShort(c.prize)}</b></span>`);
-    if (c.rounds) m.push(`<span>${I("layers", 14)}<span><b>${c.rounds}</b> ${c.rounds > 1 ? "Rounds" : "Round"}${c.first ? ", " + esc(RT[c.first] || "Round") + " First" : ""}</span></span>`);
-    if (c.reg) m.push(`<span>${I("users", 14)}<span><b>${c.reg.toLocaleString("en-IN")}</b> Registered</span></span>`);
-    if (c.tmax) m.push(`<span>${I("user", 14)}${c.tmax === 1 ? "Solo" : "Team of " + (c.tmin && c.tmin !== c.tmax ? c.tmin + " to " + c.tmax : c.tmax)}${c.sameOrg && c.tmax > 1 ? ", Same College" : ""}</span>`);
-    if (c.fee != null) m.push(`<span>${c.fee > 0 ? inr(c.fee) + " Fee" : "Paid Entry"}</span>`);
-    
-    return `<article class="row${hid ? " dim" : ""}" id="c-${c.id}">
-      ${logo(c)}
-      <div class="rb"><span class="pills">${pl.join("")}</span><a class="t" href="${escA(c.url)}" target="_blank" rel="noopener">${esc(c.t)}${I("up", 13)}</a><div class="orgl" title="${esc(c.org)}">${esc(shortOrg(c.org))}</div>
-        <div class="meta">${m.join("")}</div></div>
-      <div class="rr"><div class="rr-top">${deadline(c)}${ring(c)}</div>
-        <div class="acts">
-          <button class="ib exp" data-open="${c.id}" aria-expanded="${open}" title="Score, Location Check and Stages" aria-label="Details">${I("chev", 17)}</button>
-          <button class="ib star" data-star="${c.id}" aria-pressed="${star}" title="${star ? "Remove Star" : "Star to Keep Its Deadline on Home"}" aria-label="Star">${I("star", 17)}</button>
-          <button class="ib" data-hide="${c.id}" aria-pressed="${hid}" title="${hid ? "Unhide" : "Hide for Now"}" aria-label="${hid ? "Unhide" : "Hide for Now"}">${I(hid ? "eye" : "eyeoff", 17)}</button>
-          <button class="btn sm trackb${trk ? " on" : ""}" data-track="${c.id}" title="${trk ? "Registered, Click to Remove" : "Add to My Registrations"}">${I(trk ? "check" : "plus", 14)}${trk ? "Registered" : "Track"}</button>
-        </div></div>
+    const fl = [];
+    if (c.inel.length) fl.push(`<span class="fl bad" title="${esc(tc(c.inel.join(", ")))}">${I("lock", 13)}${esc(tc(c.inel[0]))}</span>`);
+    if (c.intern) fl.push(`<span class="fl int${c.intern === 2 ? " sure" : ""}" title="${esc(c.intern === 2 ? "Written into the prize list" : "Mentioned in the description, not in the prize list")}">${I("briefcase", 13)}${IKL[c.internKind] || "Internship Chance"}</span>`);
+    if (c.fit.length) fl.push(`<span class="fl fit" title="${esc("Matches your course through " + c.fit.map(n => NICHE[n] || n).join(", "))}">${I("check", 13)}Fits ${esc(courseShort())}</span>`);
+    const team = !c.tmax ? "N/A" : c.tmax === 1 ? "Solo" : c.tmin && c.tmin !== c.tmax ? c.tmin + " to " + c.tmax : String(c.tmax);
+    const fee = c.fee == null ? '<span class="fee">Free Entry</span>' : `<span class="fee paid">${c.fee > 0 ? inr(c.fee) + " Entry" : "Paid Entry"}</span>`;
+    const prize = c.prize ? `<div class="c-p" title="${esc(c.prizeTxt || "")}">${I("trophy", 20)}<span><b>${c.prizeEst ? "About " : ""}${inrShort(c.prize)}</b><small>Prize Pool</small></span>${fee}</div>`
+      : `<div class="c-p none">${I("trophy", 20)}<span><b>${c.prizeTxt ? "Goodies or Certificates" : "No Cash Prize Listed"}</b></span>${fee}</div>`;
+    return `<article class="row${hid ? " dim" : ""}${open ? " wide" : ""}" id="c-${id}">
+      <div class="c-h">${logo(c)}<div class="c-o"><b title="${esc(c.org)}">${esc(shortOrg(c.org))}</b><span class="pills">${pl.join("")}</span></div>
+        <button class="ib star" data-star="${id}" aria-pressed="${star}" title="${star ? "Remove from Starred" : "Star It, It Then Waits in Starred"}" aria-label="Star">${I("bookmark", 18)}</button></div>
+      <a class="t" href="${escA(c.url)}" target="_blank" rel="noopener" title="${esc(c.t)}">${esc(c.t)}</a>
+      ${prize}
+      ${fl.length ? `<div class="c-fl">${fl.join("")}</div>` : ""}
+      <div class="c-s"><div title="${c.sameOrg && c.tmax > 1 ? "Whole team from one college" : "Team size"}"><b>${team}</b><small>${c.tmax === 1 ? "Entry" : c.sameOrg ? "Same College" : "Team"}</small></div>
+        <div title="${c.first ? esc((RT[c.first] || "Round") + " comes first") : "Rounds"}"><b>${c.rounds || "N/A"}</b><small>${c.rounds === 1 ? "Round" : "Rounds"}</small></div>
+        <div title="Registered so far"><b>${c.reg ? NUM(c.reg) : "N/A"}</b><small>Registered</small></div>
+        <div class="scx ${c.tier}" title="Priority Score ${c.score} of 100, ${tc(c.tier)}"><b>${c.score}</b><small>Score</small></div></div>
+      <div class="c-f">${deadline(c)}
+        <button class="more" data-open="${id}" aria-expanded="${open}" title="Score, Location Check and Stages">Details${I("chev", 14)}</button>
+        <button class="ib" data-hide="${id}" aria-pressed="${hid}" title="${hid ? "Unhide" : "Hide for Now"}" aria-label="${hid ? "Unhide" : "Hide for Now"}">${I(hid ? "eye" : "eyeoff", 17)}</button></div>
+      <div class="c-b"><a class="btn" href="${escA(c.url)}" target="_blank" rel="noopener" title="Opens on ${esc(SRC[c.src] || "Unstop")}">Apply${I("up", 13)}</a>
+        <button class="btn trackb${trk ? " on" : ""}" data-track="${id}" title="${trk ? "Registered, Click to Remove" : "Add to My Registrations"}">${I(trk ? "check" : "plus", 14)}${trk ? "Registered" : "Track"}</button></div>
       ${open ? why(c) : ""}</article>`;
   }
 
@@ -1059,10 +1348,13 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       `<div class="stat"><b>${soon}</b><span>Closing in 3 Days</span></div>` +
       `<div class="stat"><b>${it}</b><span>With an Internship</span></div>`;
     const allHid = Object.keys(P.hide).length, hereHid = COMPS.filter(c => P.hide[c.id] && passes(c, "showHidden")).length, ac = activeCount();
-    $("tools").innerHTML =
-      (allHid ? `<span class="hidbar">${I("eyeoff", 14)}<b>${allHid} Hidden</b>${hereHid !== allHid ? `<span>${hereHid} in This View</span>` : ""}<button class="link" data-act="showHidden">${S.showHidden ? "Put Away" : "Show"}</button><button class="link" data-act="unhideAll">Unhide All</button></span>` : "") +
-      `<span class="grow"></span><select id="sort" aria-label="Sort By">${[["score", "Priority Score"], ["dl", "Deadline, Soonest"], ["prize", "Prize Money"], ["reg", "Fewest Registrations"], ["new", "Newest Listing"]].map(o => `<option value="${o[0]}"${S.sort === o[0] ? " selected" : ""}>${o[1]}</option>`).join("")}</select>` +
+    const SORTL = [["score", "Priority Score"], ["dl", "Deadline, Soonest"], ["prize", "Biggest Prize"], ["reg", "Fewest Registered"], ["regMost", "Most Registered"], ["rounds", "Fewest Rounds"], ["intern", "Internship First"], ["new", "Newest Listing"]];
+    $("tools").innerHTML = `<span class="cnt2">${plural(list.length, "Comp")}</span>` +
+      (allHid ? `<span class="hidbar">${I("eyeoff", 14)}<b>${allHid} Hidden</b><button class="link" data-act="showHidden">${S.showHidden ? "Put Away" : "Show"}</button><button class="link" data-act="unhideAll">Unhide All</button></span>` : "") +
+      `<span class="grow"></span><label class="sortl" for="sort">Sort By</label><select id="sort" aria-label="Sort By">${SORTL.map(o => `<option value="${o[0]}"${S.sort === o[0] ? " selected" : ""}>${o[1]}</option>`).join("")}</select>` +
       `<button class="btn${ac ? " on" : ""}" data-act="filters">${I("sliders", 14)}Filters${ac ? `<span class="bc">${ac}</span>` : ""}</button>`;
+    const chips = chipsNow();
+    $("achips").innerHTML = chips.map(x => `<button class="ac" data-clear="${escA(x[0])}" title="Remove This Filter">${esc(tc(x[1]))}<i>×</i></button>`).join("") + (chips.length > 1 ? '<button class="ac all" id="reset3">Reset All</button>' : "");
     let html = "", tier = null;
     const grouped = S.sort === "score";
     list.slice(0, shown).forEach(c => {
@@ -1081,6 +1373,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     renderViews();
   }
   const update = () => { shown = 40; renderDiscover(true); };
+  const liveStars = () => Object.keys(P.star).map(id => BY[id]).filter(c => c && !c.closed && (c.daysLeft == null || c.daysLeft > 0)).sort(SORTS.dl);
+  function renderSaved(anim) {
+    const live = liveStars(), gone = Object.keys(P.star).length - live.length, el = $("v-saved");
+    el.className = "page" + (anim ? " enter-p" : "");
+    el.innerHTML = `<div class="hero"><h2>Starred</h2><p>Comps you bookmarked, soonest deadline first</p></div>` +
+      (live.length ? `<div class="cards">${live.map(row).join("")}</div>` : `<div class="empty">${I("bookmark", 26)}<b>Nothing Starred Yet</b><p>Tap the bookmark on any comp and it waits here with its deadline</p><p style="margin-top:14px"><button class="btn primary" data-tab="discover">Browse Competitions</button></p></div>`) +
+      (gone ? `<p class="foot">${plural(gone, "starred comp")} ${gone === 1 ? "has" : "have"} closed <button class="link" data-act="clearGone">Clear ${gone === 1 ? "It" : "Them"}</button></p>` : "");
+    $("pgS").textContent = plural(live.length, "starred comp");
+  }
   function renderViews() {
     const ap = TAB === "discover" ? activePreset() : null;
     $("viewsM").innerHTML = PRESETS.map(p => `<button data-preset="${p.id}" aria-pressed="${p.id === ap}">${esc(tc(p.label))}<em>${countFor(p.set)}</em></button>`).join("");
@@ -1244,7 +1545,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const rank = o => o.open ? 0 : !o.exp ? 3 : o.exp < NOW - 45 * DAY ? 2 : 1;
     items.sort((a, b) => rank(a) - rank(b) || (a.exp || 0) - (b.exp || 0));
     const chip = (cls, txt, title) => `<span class="pill t-${cls}"${title ? ` title="${esc(tc(title))}"` : ""}>${esc(tc(txt))}</span>`;
-    const html = items.map(o => {
+    const wcard = o => {
       const w = o.w, c = o.open, chips = [];
       let state, cls = "", ln;
       if (c) {
@@ -1256,18 +1557,24 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
         cls = late ? "late" : "soon"; state = late ? "Overdue" : o.exp ? "Expected " + new Date(o.exp).toLocaleDateString("en-IN", { month: "short", year: "numeric" }) : "Closed";
         ln = late ? `Was Due Around <b>${fD(o.exp)}</b> and Is Not Listed Yet` : o.exp ? `Opens Around <b>${fD(o.exp)}</b>${ran ? ", Last Ran " + ran : ""}` : `Last Edition Was <a href="${escA(o.last.url)}" target="_blank" rel="noopener">${esc(o.last.t)}</a>`;
         if (o.lastRec) o.lastRec.inel.forEach(r => chips.push(chip("b", r, "Going by the Last Edition")));
+      } else if (w.url) {
+        const pg = w.page || {}, live = pg.ok && pg.open;
+        cls = live ? "open" : ""; state = live ? "Registration Looks Open" : "Runs on Its Own Site";
+        ln = esc(w.when || "Dates are on the official site");
       } else {
         state = "Not on Unstop";
-        ln = w.unstop_ok === false ? "Unstop Search Failed on the Last Check" : "No Edition on Unstop Under This Name";
+        ln = w.unstop_ok === false ? "Unstop Search Failed on the Last Check" : esc(w.when || "No Edition on Unstop Under This Name");
       }
       if (w.note) chips.push(chip("n", w.note));
       if (w.url) { const pg = w.page || {}; if (pg.ok && pg.open) chips.push(chip("g", "Site Shows Registration")); chips.push(`<a class="pill" href="${escA(w.url)}" target="_blank" rel="noopener">Official Site${I("up", 11)}</a>`); }
       return `<article class="w ${cls}" id="w-${escA(w.name)}"><div><h3>${esc(w.name)}<span class="pill t-${{ open: "g", soon: "a", late: "w" }[cls] || "n"}">${esc(tc(state))}</span>${w.by ? `<small>${esc(w.by)}</small>` : ""}</h3><p>${ln}</p>${chips.length ? `<div class="chips">${chips.join("")}</div>` : ""}</div>
         <div class="acts">${c ? `<a class="btn sm ghost" href="${escA(c.url)}" target="_blank" rel="noopener">Open${I("up", 12)}</a><button class="btn sm${P.tracked[c.id] ? " on" : ""}" data-track="${c.id}">${I(P.tracked[c.id] ? "check" : "plus", 13)}${P.tracked[c.id] ? "Registered" : "Track"}</button>` : ""}${w.mine ? `<button class="btn sm ghost" data-unwatch="${escA(w.name)}">Remove</button>` : ""}</div></article>`;
-    }).join("");
+    };
+    const glob = items.filter(o => o.w.group === "global"), ind = items.filter(o => o.w.group !== "global");
+    const html = (ind.length ? `<h3 class="wsec">Indian Flagships<small>${ind.length}</small></h3>` + ind.map(wcard).join("") : "") + (glob.length ? `<h3 class="wsec">International<small>${glob.length}</small></h3>` + glob.map(wcard).join("") : "");
     const pend = pending.map(m => `<article class="w"><div><h3>${esc(m.name)}<small>Added</small></h3><p>${serverOK ? "It is looked up on Unstop at the next refresh" : SERVED ? "It is checked once you add it to watchlist.json" : "It needs python radar.py --serve to be checked"}</p></div><div class="acts"><button class="btn sm ghost" data-unwatch="${escA(m.name)}">Remove</button></div></article>`).join("");
     const checked = (DATA.watch || []).map(w => ms(w.checked)).filter(Boolean).sort().pop();
-    $("v-watch").innerHTML = `<div class="hero"><h2>Flagship Watchlist</h2><p>The big annual comps, followed by name so you see the day one opens</p></div>
+    $("v-watch").innerHTML = `<div class="hero"><h2>Flagship Watchlist</h2><p>The big annual comps in India and abroad, followed by name so you see the day one opens</p></div>
       <form class="addrow" id="watchForm"><input class="field" type="text" id="watchName" placeholder="Add a Comp by Name, Like Mahindra War Room" aria-label="Competition Name"><button class="btn primary" type="submit">${I("plus", 14)}Watch</button></form>
       ${html}${pend}
       <p class="foot">${checked ? "Last checked " + fDT(checked) + ", expected" : "Expected"} dates are estimated from the last edition</p>`;
@@ -1361,16 +1668,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       if (x.st === "done" || x.st === "pass") { done++; fin.push({ c, x, id }); } else if (x.st === "todo") todo.push({ c, x, id });
     }); });
     todo.sort((a, b) => (a.x.due || 9e15) - (b.x.due || 9e15));
-    const pct = total ? Math.round(done / total * 100) : 0, p = P.profile;
-    const items = todo.slice(0, 2).map(o => ({ on: false, attr: `data-go="${o.id}"`, tx: VERB[o.x.r.ty] || "Complete the Round", sub: o.c.t + (o.x.due ? tc((o.x.due < NOW ? ", was due " : ", due ") + dayTxt(o.x.due)) : "") }))
-        .concat(fin.slice(-1).map(o => ({ on: true, attr: `data-go="${o.id}"`, tx: `${RT[o.x.r.ty] || "Round"} Done`, sub: o.c.t })));
-    const fill = [
-      { on: profileSet(), attr: 'data-act="profile"', tx: profileSet() ? "Profile Set" : "Set Up Your Profile", sub: profileSet() ? [acronym(p.college) || p.college, courseShort(), p.year].filter(Boolean).join(" ") : "" },
-      { on: Object.keys(P.tracked).length > 0, attr: 'data-tab="discover"', tx: "Track a Comp You Registered For" },
-      { on: Object.keys(P.star).length > 0, attr: 'data-tab="discover"', tx: "Star a Comp to Keep Its Deadline Here" }];
-    while (items.length < 3 && fill.length) items.push(fill.shift());
-    const CR = 2 * Math.PI * 60;
-    const ringP = `<div class="pring"><svg width="144" height="144" viewBox="0 0 144 144"><defs><linearGradient id="pgr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--navy)"/></linearGradient></defs><circle class="tr" cx="72" cy="72" r="60"/>${pct ? `<circle class="fg" cx="72" cy="72" r="60" stroke="url(#pgr)" stroke-dasharray="${CR.toFixed(1)}" stroke-dashoffset="${(CR * (1 - pct / 100)).toFixed(1)}" transform="rotate(-90 72 72)"/>` : ""}</svg><div><b>${pct}%</b><span>${total ? `${done} of ${total} Open Stages Done` : act.length ? "No Stage Open Yet" : "Nothing Tracked Yet"}</span></div></div>`;
+    const stars = liveStars(), mineAll = listFor({});
+    const sRow = c => { const n = c.daysLeft, tone = n == null ? "g" : n <= 2 ? "b" : n <= 7 ? "a" : "v";
+      return `<div class="srow"><button class="sgo" data-go="${c.sid}" title="${esc(c.t)}">${logo(c)}<span><b>${esc(c.t)}</b><small>${c.dlMs ? "Closes " + fD(c.dlMs) : "No Deadline"}${c.prize ? ", " + inrShort(c.prize) + " Pool" : ""}</small></span></button>${P.tracked[c.sid] ? '<span class="pill t-g">Registered</span>' : `<span class="pill t-${tone}">${n == null ? "Open" : n < 1 ? "Today" : Math.floor(n) + "d Left"}</span>`}</div>`; };
+    const tile = (n, label, attr) => `<button ${attr}><b>${n}</b>${label}</button>`;
+    const panel = `<section class="spanel"><div class="sec-h"><h2>Starred Comps</h2>${stars.length ? `<button class="va" data-tab="saved">All ${stars.length}${I("arrow", 16)}</button>` : ""}</div>
+      ${stars.length ? stars.slice(0, 4).map(sRow).join("") : `<div class="sempty">${I("bookmark", 26)}<b>Nothing Starred Yet</b><span>Tap the bookmark on a comp and it waits here with its deadline</span><button class="btn sm" data-tab="discover">Browse Competitions</button></div>`}
+      <div class="tiles">${tile(act.length, "Registered", 'data-tab="tracker"')}${tile(mineAll.filter(c => c.daysLeft != null && c.daysLeft <= 7).length, "Close This Week", 'data-preset="week"')}${tile(mineAll.filter(c => c.intern).length, "Internship Chances", 'data-preset="intern"')}</div></section>`;
+    const nudge = CLOUD && cloud.state === "out" ? `<div class="nudge">${I("user", 18)}<span>Sign in with Google and your comps follow you to every device</span><button class="btn primary sm" data-act="signin">${GI}Sign In</button></div>`
+      : !profileSet() ? `<div class="nudge">${I("user", 18)}<span>Add your college and course so MyStop hides what you can't enter</span><button class="btn primary sm" data-act="profile">Set Up Profile</button></div>` : "";
     Object.keys(P.star).forEach(id => { const c = BY[id]; if (c && !c.closed && !P.tracked[id] && c.dlMs && c.dlMs > NOW) evs.push({ ts: c.dlMs, t: c.t, sub: "Registration Closes", org: c.org, id }); });
     for (const c of picks) { if (evs.length >= 4) break; if (c.dlMs && !P.star[c.id]) evs.push({ ts: c.dlMs, t: c.t, sub: "Registration Closes", org: c.org, id: c.id }); }
     evs.sort((a, b) => a.ts - b.ts);
@@ -1410,41 +1716,40 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       ${promoN > 1 ? `<div class="pnav">${slides.map((x, i) => `<button class="pbar${i === promoI ? " on" : ""}" data-pgo="${i}" aria-label="${esc(x.eye)}" title="${esc(x.eye)}"><i></i></button>`).join("")}<span class="grow"></span><button class="parr prev" data-pstep="-1" aria-label="Previous">${I("arrow", 14)}</button><button class="parr" data-pstep="1" aria-label="Next">${I("arrow", 14)}</button></div>` : ""}</div>`;
     const el = $("v-home");
     el.className = "page" + (anim ? " enter-p" : "");
-    el.innerHTML = `<div class="hb"><div><div class="hb-brand">MyStop</div><div class="hb-h">Your Personal Launchpad.</div><div class="hb-s">Discover. Compete. Grow.</div></div><blockquote>“Dream bigger.<br>Apply smarter.”</blockquote></div>
+    el.innerHTML = `<div class="hb"><div><div class="hb-brand">MyStop</div><div class="hb-h">${U ? "Welcome Back, " + escA(firstName()) + "." : "Your Personal Launchpad."}</div><div class="hb-s">Discover. Compete. Grow.</div></div><blockquote>“Dream bigger.<br>Apply smarter.”</blockquote></div>${nudge}
       <div class="hg a"><section><div class="sec-h"><h2>Your Top Picks</h2><button class="va" data-preset="high">View All${I("arrow", 16)}</button></div>
           <div class="picks">${picks.slice(0, 3).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section>
-        <section class="prog"><h2>Your Progress</h2><div class="prog-b">${ringP}<div class="cks">${items.slice(0, 3).map(o => `<button class="ck${o.on ? " on" : ""}" ${o.attr}><i>${o.on ? I("check", 12) : ""}</i><span>${esc(o.tx)}${o.sub ? `<br><small>${esc(o.sub)}</small>` : ""}</span></button>`).join("")}</div></div></section></div>
+        ${panel}</div>
       <div class="hg b"><section><div class="sec-h"><h2>Upcoming Events</h2><button class="va" data-tab="tracker">View All${I("arrow", 16)}</button></div>
           <div class="evs">${evs.slice(0, 4).map(evRow).join("") || '<div class="none" style="margin-top:14px">No dates coming up</div>'}</div></section>
         <section>${promo}
           <h2 class="ql-h">Quick Links</h2>
-          <div class="ql"><button data-tab="tracker">${I("briefcase", 17)}Registered</button><button data-quick="starred">${I("bookmark", 17)}Starred</button><button data-preset="week">${I("clock", 17)}This Week</button><button data-preset="case">${I("layers", 17)}Case Comps</button></div></section></div>`;
+          <div class="ql"><button data-tab="tracker">${I("briefcase", 17)}Registered</button><button data-tab="saved">${I("bookmark", 17)}Starred</button><button data-preset="week">${I("clock", 17)}This Week</button><button data-preset="case">${I("layers", 17)}Case Comps</button></div></section></div>`;
   }
 
   // ------------------------------------------------------------------ navigation + chrome
-  const TABS = [["home", "Home", "home"], ["discover", "Competitions", "trophy"], ["tracker", "Registrations", "cal"], ["watch", "Watchlist", "flag"]];
+  const TABS = [["home", "Home", "home"], ["discover", "Competitions", "trophy"], ["saved", "Starred", "bookmark"], ["tracker", "Registrations", "cal"], ["watch", "Watchlist", "flag"]];
   function renderChrome() {
     const act = Object.keys(P.tracked).filter(id => rec(id) && !P.tracked[id].hidden && !dead(id)).length;
     const open = (DATA.watch || []).filter(w => w.open).length;
-    const cnt = { home: "", discover: "", tracker: act ? `<em>${act}</em>` : "", watch: open ? `<em class="hot">${open} Open</em>` : "" };
+    const nStar = liveStars().length;
+    const cnt = { home: "", discover: "", saved: nStar ? `<em>${nStar}</em>` : "", tracker: act ? `<em>${act}</em>` : "", watch: open ? `<em class="hot">${open} Open</em>` : "" };
     $("navMain").innerHTML = TABS.map(t => `<button class="nv" data-tab="${t[0]}" aria-current="${TAB === t[0]}">${I(t[2], 20)}<span>${t[1]}</span>${cnt[t[0]]}</button>`).join("") +
       `<button class="nv" data-act="profile">${I("user", 20)}<span>Profile</span></button>`;
-    $("tabbar").innerHTML = TABS.map(t => `<button data-tab="${t[0]}" aria-current="${TAB === t[0]}">${I(t[2], 19)}${{ home: "Home", discover: "Explore", tracker: "Registered", watch: "Watchlist" }[t[0]]}</button>`).join("");
+    $("tabbar").innerHTML = TABS.map(t => `<button data-tab="${t[0]}" aria-current="${TAB === t[0]}">${I(t[2], 19)}${{ home: "Home", discover: "Explore", saved: "Starred", tracker: "Registered", watch: "Watchlist" }[t[0]]}</button>`).join("");
     document.body.dataset.tab = TAB;
-    const p = P.profile, ac = acronym(p.college), name = ac || p.college || "Set Up Profile";
-    const ini = (ac || p.college || "?").replace(/[^A-Za-z ]/g, "").split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "?";
-    const crest = /sukhdev|sscbs/i.test(p.college || "");
-    $("meBtn").innerHTML = `${crest ? `<span class="ava crest" role="img" aria-label="${esc(name)}"></span>` : `<span class="ava">${profileSet() ? esc(ac ? ac.slice(0, 2) : ini) : I("user", 16)}</span>`}<span class="me-t"><b>${esc(name)}</b><small>${profileSet() ? esc([courseShort(), p.year].filter(Boolean).join(" ")) : "Hides Comps You Can't Enter"}</small></span>${I("chev", 15)}`;
+    $("savedBtn").innerHTML = `${I("bookmark", 17)}<span>Starred</span>${nStar ? `<em>${nStar}</em>` : ""}`;
+    acctPaint();
     if (TAB !== "discover") renderViews();
   }
   function renderAll(anim) {
     renderChrome();
-    if (TAB === "home") renderHome(anim); else if (TAB === "discover") renderDiscover(anim); else if (TAB === "tracker") renderTracker(); else renderWatch();
+    if (TAB === "home") renderHome(anim); else if (TAB === "discover") renderDiscover(anim); else if (TAB === "saved") renderSaved(anim); else if (TAB === "tracker") renderTracker(); else renderWatch();
     renderBell();
   }
   function setTab(t) {
     TAB = t;
-    ["home", "discover", "tracker", "watch"].forEach(k => { $("v-" + k).hidden = k !== t; });
+    ["home", "discover", "saved", "tracker", "watch"].forEach(k => { $("v-" + k).hidden = k !== t; });
     document.body.classList.remove("fopen");
     renderAll(true);
     window.scrollTo(0, 0);
@@ -1479,9 +1784,13 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     $("pfCourse").innerHTML = '<option value="">Choose…</option>' + og("Undergraduate", ug) + og("Postgraduate", pg) + og("Other", oth);
     const y0 = new Date(NOW).getFullYear();
     $("pfYear").innerHTML = '<option value="">Choose…</option>' + Array.from({ length: 8 }, (_, i) => y0 + i).map(y => `<option${String(p.year) === String(y) ? " selected" : ""}>${y}</option>`).join("");
+    $("pfAcct").innerHTML = !CLOUD || cloud.state === "wait" || cloud.state === "off" ? "" : U ? `<span><b>Signed in as ${escA(U.name || U.email)}</b>Saved to your account, the same on every device</span>` : `<span><b>Only saved in this browser</b>Sign in and it follows you to every device</span><button class="btn primary sm" type="button" data-act="signin">${GI}Sign In</button>`;
+    paintFit();
     $("pfCollege").value = p.college || ""; $("pfGender").value = p.gender || ""; $("pfTeam").checked = p.sameTeam !== false;
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
   }
+  const paintFit = () => { const m = domainsFor($("pfCourse").value); $("pfFit").innerHTML = m.length ? "<i>Domains matched to this course, shown as Fits on the cards</i>" + m.map(n => `<span class="pill t-a">${esc(tc(NICHE[n] || n))}</span>`).join("") : ""; };
+  $("pfCourse").addEventListener("change", paintFit);
   const closeProfile = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); };
   $("profileForm").addEventListener("submit", e => {
     e.preventDefault();
@@ -1509,6 +1818,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   document.addEventListener("click", e => {
     const np = $("np");
     if (!np.hidden && !np.contains(e.target) && !e.target.closest("#bell")) togglePanel(false);
+    const am = $("acctMenu");
+    if (!am.hidden && !am.contains(e.target) && !e.target.closest("#acct")) { am.hidden = true; acctPaint(); }
     if (e.target.id === "scrim") { document.body.classList.remove("fopen"); return; }
     const b = e.target.closest("button"); if (!b) return;
     const d = b.dataset;
@@ -1516,13 +1827,19 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     else if (b.id === "readAll") { P.readAll = NOW; P.read = {}; save(); renderBell(); }
     else if (d.n != null) { const n = NOTIFS[+d.n]; P.read[n.key] = 1; save(); togglePanel(false); if (n.id) goComp(n.id); else if (n.watch) { setTab("watch"); flash(document.getElementById("w-" + n.watch)); } else renderBell(); }
     else if (d.tab) setTab(d.tab);
-    else if (d.act === "profile") openProfile();
+    else if (d.act === "profile") { $("acctMenu").hidden = true; openProfile(); }
+    else if (d.act === "signin") signIn();
+    else if (d.act === "signout") signOut();
+    else if (d.act === "acct") { am.hidden = !am.hidden; acctPaint(); }
+    else if (d.act === "clearGone") { const keep = new Set(liveStars().map(c => c.sid)), old = P.star; P.star = Object.fromEntries(Object.keys(old).filter(id => keep.has(id)).map(id => [id, 1])); save(); renderAll(); toast("Closed comps cleared from Starred", () => { P.star = old; save(); renderAll(); }); }
+    else if (d.pick) { S[d.pick] = d.val; update(); }
+    else if (d.clear) { clearChip(d.clear); update(); }
     else if (d.act === "theme") { P.look = P.look === "dark" ? "light" : "dark"; applyTheme(); save(); }
     else if (d.act === "filters") { if (window.innerWidth <= 1240) document.body.classList.toggle("fopen"); else { fOpen = !fOpen; $("v-discover").classList.toggle("nof", !fOpen); } }
     else if (d.seg) { e.preventDefault(); S[d.seg] = d.val === "1"; update(); }
     else if (d.preset) { const q = TAB === "discover" && S.q !== jumpQ ? S.q : ""; S = Object.assign(DEFAULTS(), JSON.parse(JSON.stringify(PRESETS.find(p => p.id === d.preset).set)), { q }); $("q").value = q; shown = 40; if (TAB !== "discover") setTab("discover"); else renderDiscover(true); }
-    else if (d.open) { const id = +d.open; OPEN.has(id) ? OPEN.delete(id) : OPEN.add(id); renderDiscover(); }
-    else if (d.star) { const id = d.star; P.star[id] ? delete P.star[id] : P.star[id] = 1; save(); renderAll(); }
+    else if (d.open) { const id = d.open; OPEN.has(id) ? OPEN.delete(id) : OPEN.add(id); if (TAB === "saved") renderSaved(); else renderDiscover(); }
+    else if (d.star) { const id = d.star; if (P.star[id]) { delete P.star[id]; save(); renderAll(); toast("Removed from Starred", () => { P.star[id] = 1; save(); renderAll(); }); } else { P.star[id] = 1; save(); renderAll(); toast("Starred, find it under Starred"); } }
     else if (d.hide) {
       const id = d.hide;
       if (P.hide[id]) { delete P.hide[id]; save(); renderAll(); toast("Back in Your List"); }
@@ -1544,9 +1861,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     else if (d.pstep) promoGo(promoI + +d.pstep);
     else if (d.go) goComp(d.go);
     else if (d.unwatch) { P.watch = P.watch.filter(m => m.name !== d.unwatch); DATA.watch = (DATA.watch || []).filter(w => !(w.mine && w.name === d.unwatch)); save(); renderAll(); }
-    else if (d.quick === "starred") { S = Object.assign(DEFAULTS(), { starred: true, loc: LOCS.map(l => l.id), eligOnly: false, hideCode: false }); $("q").value = ""; shown = 40; setTab("discover"); }
     else if (b.id === "refresh2") $("refresh").click();
-    else if (b.id === "reset" || b.id === "reset2") { S = DEFAULTS(); $("q").value = ""; update(); }
+    else if (b.id === "reset" || b.id === "reset2" || b.id === "reset3") { S = DEFAULTS(); $("q").value = ""; update(); }
     else if (b.id === "more") { shown += 40; renderDiscover(); }
     else if (b.id === "closeFilters") document.body.classList.remove("fopen");
   });
@@ -1561,7 +1877,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       if (!id) return toast("That is not an Unstop competition link");
       if (P.tracked[id]) return goComp(id);
       if (BY[id]) { track(id); renderAll(); return toast("Tracking " + BY[id].t); }
-      if (!serverOK) return toast(SERVED ? "Only open comps can be added here" : "Closed comps need python radar.py --serve");
+      if (!serverOK && U) { track(id, { id: +id, t: "Unstop Comp " + id, org: "Details arrive at the next sync", url: /^https?:/.test(raw) ? raw : "https://unstop.com/competitions/" + id, dl: null, rd: [], loc: "online", logo: null, closed: true }); renderAll(); return toast("Added, its details arrive at the next sync"); }
+      if (!serverOK) return toast(CLOUD ? "Sign in to add a comp that has closed" : SERVED ? "Only open comps can be added here" : "Closed comps need python radar.py --serve");
       const btn = e.target.querySelector("button"); btn.disabled = true; btn.textContent = "Looking It Up…";
       try {
         const r = await fetch("api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: raw }) }), j = await r.json();
@@ -1582,6 +1899,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   // ------------------------------------------------------------------ refresh + boot
   const gen = new Date(META.generated);
   $("syncLine").textContent = `${COMPS.length} Open Comps, Synced ${fD(+gen)} at ${fT(+gen)}`;
+  document.querySelector(".sync-card b").textContent = SRCS.length > 1 ? "Live from " + SRCS.map(x => x.label).join(" & ") : "Live from Unstop";
   $("foot").innerHTML = "Scored by the rules in <b>config.json</b>, so open the listing before you commit";
   const rb = $("refresh");
   rb.innerHTML = I("refresh", 19);
@@ -1617,6 +1935,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     fOpen = window.innerWidth > 1240;
     recheck();
     renderAll(true);
+    cloudInit();
   }
   boot();
 })();

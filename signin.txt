@@ -1,0 +1,5 @@
+# MyStop sign-in
+# Paste the firebaseConfig block from Firebase below these lines, exactly as Firebase shows it.
+# While nothing is pasted here, MyStop works without sign-in and keeps everything in the browser.
+# These values are meant to be public. Your data is protected by the Firestore rules in README.md.
+

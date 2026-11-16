@@ -29,20 +29,31 @@ The dashboard is called **MyStop**: Unstop, filtered and tracked for one person.
 
 ### Home
 - **Your Top Picks.** The three highest-scoring open comps you have not registered for. The arrow opens the full card with the score breakdown.
-- **Your Progress.** Of the stages that have opened in your tracked comps, the share you have marked done, plus the next things to do.
+- **Starred Comps.** The comps you bookmarked, soonest deadline first, each with its days left. Below it three counts you can tap: registered, closing this week, internship chances.
 - **Upcoming Events.** The next dates from your tracker and your starred comps. If there are fewer than four, registration deadlines of your top picks fill the list.
 - **Rotating banner.** One comp per angle, sliding every few seconds: the open flagship, best ROI (prize and internship against rounds and registrations), most reachable (fully online with the fewest rounds and registrations), closing soon, biggest prize, internship on offer, least crowded and new this week. A comp appears once, hovering pauses it, and the arrows or a swipe move it by hand.
 - **Quick Links.** Your registrations, starred comps, comps closing this week, case comps.
+- A strip under the banner asks you to sign in or set up your profile while either is missing.
 - The card at the bottom of the sidebar shows when the data was last synced and has the **Refresh now** button.
 
-Labels, buttons, chips and short facts are written in Title Case, and full sentences keep sentence case. The top right shows the SSCBS crest while the profile college is SSCBS, and initials for any other college.
+Labels, buttons, chips and short facts are written in Title Case, and full sentences keep sentence case. The top right holds a **Starred** shortcut with its count and, once sign-in is on, your account.
 
 Organiser logos load from Unstop's servers, so they need internet; without it each comp shows its initials instead. The two banner photos are AI-generated and embedded in `assets.css`.
 
 ### Discover
-Every open comp, scored 0 to 100 and sorted. Filters combine as AND across groups; inside Organiser and Niche you can switch between "any" and "all".
+Every open comp as a card, scored 0 to 100. Each card has the same blocks in the same place: organiser and tags, title, the prize band with the entry fee, flags (internship chance, fits your course, why you can't enter), four tiles (team, rounds, registered, score), time left, then Apply and Track.
 
-- **Eligibility.** Your profile (SSCBS, BBA, graduating 2029) is already filled in from `config.json`; the button at the top right edits it. Comps you can't enter disappear from every view: wrong course or batch, school-only, women-only, limited to a list of colleges that does not include yours, or same-college teams if you said you can't form one. "Everything, incl. rejected" shows them again with the reason.
+Every filter applies together, and each one that is on shows as a chip above the list that you can remove on its own. **Sort By** orders by score, deadline, prize, fewest or most registered, fewest rounds, internship first or newest.
+
+- **My List.** Three switches that use your own marks: only starred, leave out the ones you registered for, bring back the ones you hid.
+- **Prize & Internship.** A minimum prize pool, and internship chances: any, confirmed in the prizes, PPI (interview) or PPO (job offer). A solid amber flag on a card means the chance is written into the prize list, an outlined one means it is only mentioned in the description.
+- **Participants & Rounds.** Registrations at most and at least, and a cap on rounds.
+- **Circuits.** DU Circuit, IIMs IITs & Premier, Corporate & Global, Others.
+- **Categories.** Case, strategy & pitch, quizzes, simulations & trading, writing & research, debates & MUNs.
+- **Participation** (solo OK or team), **Entry Fee** (free or paid) and **Platforms** (Unstop, InsideKampus).
+- **Fits My Course.** The course in your profile maps to domains (BBA to marketing, finance, consulting and so on, B.Tech to tech, product and analytics). Matching comps carry a Fits flag, and the profile dialog lists the domains for the course you pick.
+
+- **Eligibility.** On your own computer the profile is filled in from `config.json`. On the public link everyone sets their own under Profile. Comps you can't enter disappear from every view: wrong course or batch, school-only, women-only, MBA-only, limited to a list of colleges that does not include yours, or same-college teams if you said you cannot form one.
 - **Where it happens.** The reader labels every sentence that has in-person wording: must attend, optional, vague, negated ("no travel needed"), about offline as a case topic, or only the judging being offline. The verdict and the sentences are under "Why NN?" on each card.
   - IIM comps are strict: any in-person wording at all rejects them.
   - Delhi, Gurugram, Noida and the rest of NCR are kept. Anything else must be fully online.
@@ -52,7 +63,7 @@ Every open comp, scored 0 to 100 and sorted. Filters combine as AND across group
 - **Hide.** The eye button hides a comp for now. The line above the list shows how many are hidden, with **Show them** and **Unhide all**.
   - If the listing says travel or stay is covered, the card says so.
 - **Round 1 asks for.** Quiz, deck, video, code, live presentation. Each card also lists every stage with its type and dates.
-- **Star** a comp to keep its registration deadline in Upcoming Events on Home. **Track** moves it to your tracker.
+- **Star** a comp (the bookmark on the card) and it waits under **Starred** in the sidebar, in the top bar and on Home, and keeps its deadline in Upcoming Events. **Track** moves it to your tracker.
 
 ### My registrations
 Replaces the spreadsheet. Dates come from Unstop on every refresh, so you never type one.
@@ -63,7 +74,7 @@ Replaces the spreadsheet. Dates come from Unstop on every refresh, so you never 
 - Paste an Unstop link to add something you registered for earlier, including comps whose registration has already closed.
 
 ### Flagship watchlist
-Big annual comps followed by name all year (Tata Imagination Challenge, HUL L.I.M.E., Reliance T.U.P., Brandstorm …). For each one you see whether it is open, when the last edition ran, when the next is expected, and whether you could have entered the last edition. Add your own by name in the tab, or edit `watchlist.json`. Entries with an official `url` outside Unstop are also checked for registration wording and page changes.
+Big annual comps followed by name all year, in two sections: Indian flagships (Tata Imagination Challenge, HUL L.I.M.E., Reliance T.U.P. …) and international ones (Brandstorm, Hult Prize, CFA Research Challenge, Global Case Competition at Harvard, Undergrad Case Competition World Cup, Schneider Go Green, HSBC Business Case Programme, CME Trading Challenge, Red Bull Basement). For each one you see whether it is open, when the last edition ran, when the next is expected, and whether you could have entered the last edition. Comps that run on their own site show their usual window and a link. Add your own by name in the tab, or edit `watchlist.json`.
 
 ### Notifications (bell, top right)
 
@@ -82,21 +93,67 @@ Changes are found by comparing each refresh with the previous one, so they start
 The folder is ready to go on GitHub as it is. `.gitignore` keeps `cache/` and `my/` out, so your tracker never leaves your computer.
 
 1. Create a new repository on github.com, for example `mystop`. It has to be Public for a free GitHub Pages link.
-2. On the empty repository page choose "uploading an existing file", drag in everything from this folder (including `.github`), and commit.
+2. On the empty repository page choose "uploading an existing file", drag in everything from this folder, and commit.
 3. Open Settings, then Pages, and set Source to **GitHub Actions**.
-4. Open the Actions tab, pick **Refresh MyStop** and press **Run workflow**. About three minutes later the dashboard is live at `https://YOUR-USERNAME.github.io/mystop/`.
+4. Check that `.github/workflows/refresh.yml` reached the repository. Drag and drop often skips folders whose name starts with a dot. If it is missing, choose Add file, then Create new file, type `.github/workflows/refresh.yml` as the name, paste the contents of that file and commit.
 
-After that `.github/workflows/refresh.yml` pulls fresh data from Unstop four times a day (6 am, noon, 6 pm, midnight IST) and republishes. If Unstop cannot be reached, it publishes the `dashboard.html` stored in the repository instead.
+That commit starts the first run. About four minutes later the dashboard is live at `https://YOUR-USERNAME.github.io/mystop/`.
+
+After that `.github/workflows/refresh.yml` pulls fresh data from Unstop four times a day (6 am, noon, 6 pm, midnight IST) and after every change to the repository, then republishes. If Unstop cannot be reached, it publishes the `dashboard.html` stored in the repository instead.
 
 What is different on the GitHub link:
 
-- Your registrations, stars and hidden comps are saved in the browser you use, so your phone and your laptop each keep their own list.
+- Until sign-in is switched on (next section), your registrations, stars and hidden comps are saved in the browser you use, so your phone and your laptop each keep their own list.
 - There is no Refresh button, the schedule does it. For an extra refresh press Run workflow on the Actions tab.
 - A comp can be added to the tracker by link only while it is open on Unstop.
 - To follow another flagship comp, add it to `watchlist.json` in the repository.
-- A public repository shows the profile in `config.json` (college, course, batch, gender) to anyone who has the link.
+- The profile in `config.json` is only the default on your own computer. On the public link every visitor starts with an empty profile and fills in their own.
 
 GitHub pauses scheduled runs after 60 days without a commit and emails you first. One click on the Actions tab turns them back on.
+
+## Sign-in on every device
+
+Sign-in is optional. It uses Google sign-in through Firebase (free). Once it is on, anyone can sign in with their own Google account, a college account included, and gets their own registrations, stars, hidden comps and profile on every device. Signed out, MyStop works as before and keeps everything in the browser.
+
+Set it up once, all in the browser:
+
+1. Open `console.firebase.google.com`, sign in, press **Create a project**, name it `mystop`, switch Google Analytics off, press **Create project**. If a college account is refused here, use a personal Gmail. This only decides who owns the project, not who can sign in to MyStop.
+2. In the left menu open **Build**, then **Authentication**, press **Get started**, choose **Google**, switch **Enable** on, pick your email as the support email, press **Save**.
+3. Still in Authentication open the **Settings** tab, then **Authorized domains**, press **Add domain**, type `YOUR-USERNAME.github.io`, press **Add**.
+4. In the left menu open **Build**, then **Firestore Database**, press **Create database**, pick the Mumbai location (`asia-south1`), choose **Start in production mode**, press **Create**.
+5. Open the **Rules** tab of Firestore, delete what is there, paste the rules below, press **Publish**.
+6. Press the gear next to **Project Overview**, then **Project settings**. Under **Your apps** press the `</>` icon, type `mystop` as the nickname, leave Hosting unticked, press **Register app**. Firebase shows a block that starts with `const firebaseConfig = {`. Copy that block.
+7. On GitHub open `signin.txt` in the repository, press the pencil, paste the block under the comment lines, press **Commit changes**.
+
+About four minutes later the link shows a **Sign In** button top right.
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /public/tracked {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
+```
+
+What the rules mean: each person can read and write only their own record. `public/tracked` holds nothing but competition numbers, so the scheduled refresh can keep a registered comp up to date after it leaves Unstop's open list.
+
+Good to know:
+
+- The values in `signin.txt` are meant to be public. Every Firebase website ships them to the browser. The rules above are what protect the data. GitHub may still email a "secret detected" notice about the API key, which you can close as "used in tests" or ignore.
+- The first sign-in on a device moves whatever that device already had into the account. Signing out empties the device and leaves the account untouched.
+- With sign-in on, a comp that has already closed can be added by link in Registrations. Its details arrive at the next refresh.
+
+## Other sources
+
+- **InsideKampus** (`insidekampus.com`, InsideIIM's board) is read on every refresh and its open comps are scored and listed next to Unstop's, marked under Platforms. Most of its comps are for MBA students and are hidden for an undergraduate profile. Switch it off with `"insidekampus": false` under `sources` in `config.json`.
+- **Official pages** of corporate and international challenges do not share a format, so they are watched instead of listed: give a watchlist entry a `url` and each refresh checks that page for registration wording and for changes. `group` set to `global` puts the entry in the International section and `when` is the one line shown about its usual window.
 
 ## Files
 
@@ -106,9 +163,10 @@ GitHub pauses scheduled runs after 60 days without a commit and emails you first
 | `model.py` | The reader: location, stage types, global evidence, internship, eligibility, score |
 | `config.json` | All rules and weights: college lists, brands, sentence patterns, niches, scoring |
 | `watchlist.json` | The flagship list |
+| `signin.txt` | The Firebase web config that switches Google sign-in on. Empty means no sign-in |
 | `template.html` | The dashboard. `dashboard.html` is this plus the data and the font |
 | `fonts.css` | The Inter and Plus Jakarta Sans typefaces, embedded so the dashboard needs no internet. Delete it and the dashboard falls back to your system font |
-| `assets.css`, `assets/` | The two banner photos and the college crest shown top right, embedded, and their originals |
+| `assets.css`, `assets/` | The two banner photos, embedded, and their originals |
 | `my/state.json` | Your profile, stars, hidden comps, tracker and read marks. Back this up. `my/state.backup.json` is the previous save |
 | `cache/` | Downloaded listings, the previous snapshot (`history.json`) and the notification log (`events.json`). Safe to delete; it rebuilds |
 | `data.json` | The same data the dashboard uses, for your own scripts |

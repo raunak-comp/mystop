@@ -37,6 +37,10 @@ LIST_URL = API + "/opportunity/search-result?opportunity=competitions&oppstatus=
 SEARCH_URL = API + "/opportunity/search-result?opportunity=competitions&per_page=30&searchTerm={q}"
 DETAIL_URL = API + "/competition/{id}"
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+IK_API = "https://api.insidekampus.com/graphql"
+IK_QUERY = """query Q($input: CompetitionMasterPaginatedListInput!) { getFilteredCompetitions(CompetitionMasterPaginatedListInput: $input) { total data {
+ _id slug title description eligibility timelines rewards registrationStart registrationEnd noOfParticipants externalLink
+ teamSize { type size } cardImage { url } organization { name featuredImage } campuses { campus { name } } } } }"""
 RUN_LOCK = threading.Lock()
 
 
@@ -128,6 +132,98 @@ def fetch_all(cfg):
             f.unlink()
     write_json(CACHE / "list.json", items)
     return items, details
+
+
+# ----------------------------------------------------------------------------
+# Second source: InsideKampus (InsideIIM's competition board)
+# ----------------------------------------------------------------------------
+def _iso(s):
+    """InsideKampus dates look like 2026-11-11T17:29:00.000Z."""
+    return re.sub(r"\.\d+", "", str(s)).replace("Z", "+00:00") if s else None
+
+
+def fetch_insidekampus(offline=False):
+    f = CACHE / "ik.json"
+    if offline:
+        return read_json(f, [])
+    try:
+        body = json.dumps({"query": IK_QUERY, "variables": {"input": {"filters": {"sortBy": "CLOSING_SOON"}, "limit": 200, "page": 1}}}).encode()
+        req = urllib.request.Request(IK_API, data=body, headers={"Content-Type": "application/json", "User-Agent": UA, "Origin": "https://insidekampus.com"})
+        with urllib.request.urlopen(req, timeout=40) as r:
+            data = ((json.loads(r.read()).get("data") or {}).get("getFilteredCompetitions") or {}).get("data") or []
+        write_json(f, data)
+        return data
+    except Exception as e:  # noqa: BLE001 - a second source must never break the run
+        log(f"  ! InsideKampus could not be read: {e}")
+        return read_json(f, [])
+
+
+PG_ONLY = re.compile(r"\bMBA\b|\bPGDM\b|\bPGP\b|post[- ]?graduat|b-?school students|management students|\bPG students", re.I)
+UG_TOO = re.compile(r"under[- ]?graduat|\bUG\b|\bBBA\b|\bB\.?Com\b|any (degree|stream|course|college student)|open to all (college )?students", re.I)
+
+
+def insidekampus_records(model, raw, now):
+    """Turns InsideKampus listings that are still open into the same record shape as Unstop ones."""
+    out = []
+    for c in raw:
+        try:
+            end, start = parse_dt(_iso(c.get("registrationEnd"))), parse_dt(_iso(c.get("registrationStart")))
+            if not end or end <= now or (start and start > now + dt.timedelta(days=3)):
+                continue
+            org = c.get("organization") or {}
+            ts = c.get("teamSize") or {}
+            size = int(ts.get("size") or 1)
+            tmin, tmax = (1, 1) if ts.get("type") == "SOLO" else (size, size) if ts.get("type") == "STRICT" else (1, size)
+            rewards = " ".join(c.get("rewards") or [])
+            it = {
+                "id": "ik-" + str(c["_id"]), "title": c.get("title") or "", "region": "online",
+                "details": " ".join(x for x in [c.get("description"), c.get("eligibility"), c.get("timelines"), rewards] if x),
+                "organisation": {"name": org.get("name") or "", "logoUrl2": org.get("featuredImage")},
+                "seo_url": c.get("externalLink") or "https://insidekampus.com/competitions/" + str(c.get("slug") or ""),
+                "registerCount": int(c.get("noOfParticipants") or 0),
+                "regnRequirements": {"end_regn_dt": end.isoformat(), "start_regn_dt": start.isoformat() if start else None,
+                                     "min_team_size": tmin, "max_team_size": tmax},
+                "approved_date": start.isoformat() if start else None,
+            }
+            r = model.classify(it, {"overall_prizes": rewards}, now)
+            r["src"] = "ik"
+            who = text_of(c.get("eligibility")) or text_of(c.get("description"))[:600]
+            r["pgOnly"] = bool(PG_ONLY.search(who + " " + r["t"]) and not UG_TOO.search(who))
+            camp = [(x.get("campus") or {}).get("name") for x in c.get("campuses") or []]
+            camp = [x for x in camp if x]
+            if camp:
+                r["restr"], r["restrN"] = camp[:60], len(camp)
+            out.append(r)
+        except Exception as e:  # noqa: BLE001
+            log(f"  ! could not read InsideKampus comp {c.get('slug')}: {e}")
+    return out
+
+
+# ----------------------------------------------------------------------------
+# Sign-in (optional): signin.txt holds the Firebase web config, pasted as Firebase shows it
+# ----------------------------------------------------------------------------
+def read_signin():
+    f = ROOT / "signin.txt"
+    if not f.exists():
+        return None
+    txt = "\n".join(ln for ln in f.read_text("utf-8").splitlines() if not ln.strip().startswith("#"))
+    got = dict(re.findall(r"[\"']?(apiKey|authDomain|projectId|storageBucket|messagingSenderId|appId)[\"']?\s*:\s*[\"']([^\"']+)[\"']", txt))
+    return got if got.get("apiKey") and got.get("projectId") else None
+
+
+def cloud_tracked(signin):
+    """Ids that signed-in users track. Lets a comp stay up to date after it leaves the open list."""
+    if not signin:
+        return []
+    try:
+        url = "https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/public/tracked?key=%s" % (
+            urllib.parse.quote(signin["projectId"]), urllib.parse.quote(signin["apiKey"]))
+        doc = json.loads(http_get(url, tries=2, timeout=20))
+        vals = (((doc.get("fields") or {}).get("ids") or {}).get("arrayValue") or {}).get("values") or []
+        return [int(v["stringValue"]) for v in vals if str(v.get("stringValue", "")).isdigit()][-400:]
+    except Exception as e:  # noqa: BLE001
+        log(f"  ! shared tracked list not read: {str(e)[:80]}")
+        return []
 
 
 def load_cached():
@@ -318,7 +414,7 @@ def check_watchlist(cfg, state, now, offline, open_items=()):
             cache[name]["was_open"] = bool(open_ed)
         if eds:
             extra_ids.append(eds[0]["id"])
-        out.append({"name": name, "by": e.get("by"), "note": e.get("note"), "url": e.get("url"), "mine": bool(e.get("mine")),
+        out.append({"name": name, "by": e.get("by"), "note": e.get("note"), "url": e.get("url"), "mine": bool(e.get("mine")), "group": e.get("group") or "india", "when": e.get("when"),
                     "editions": eds, "open": open_ed["id"] if open_ed else None, "last": eds[0]["id"] if eds else None,
                     "page": res.get("page"), "checked": res.get("checked"), "unstop_ok": res.get("unstop_ok")})
     if not offline:
@@ -338,13 +434,19 @@ def build(cfg, items, details, now, offline=False):
             comps.append(model.classify(it, details.get(it["id"]), now))
         except Exception as e:  # noqa: BLE001 - one odd record must not kill the run
             log(f"  ! could not read comp {it.get('id')}: {e}")
+    signin = read_signin()
+    use_ik = (cfg.get("sources") or {}).get("insidekampus", True)
+    if use_ik:
+        ik = insidekampus_records(model, fetch_insidekampus(offline), now)
+        comps += ik
+        log(f"  InsideKampus: {len(ik)} open")
     comps.sort(key=lambda c: -c["score"])
     open_ids = {c["id"] for c in comps}
 
     watch, watch_events, watch_ids = check_watchlist(cfg, state, now, offline, items)
 
     # tracked comps and last flagship editions that are no longer in the open list
-    want = [int(k) for k in (state.get("tracked") or {}) if str(k).isdigit()] + watch_ids
+    want = [int(k) for k in (state.get("tracked") or {}) if str(k).isdigit()] + watch_ids + ([] if offline else cloud_tracked(signin))
     extra = []
     for cid in dict.fromkeys(want):
         if cid in open_ids:
@@ -371,6 +473,8 @@ def build(cfg, items, details, now, offline=False):
         "niches": [{"id": n["id"], "label": n["label"], "biz": bool(n.get("business"))} for n in cfg["niches"]],
         "roundTypes": {t["id"]: t["label"] for t in cfg["round_types"]},
         "tiers": cfg["scoring"]["tiers"], "preAlertDays": cfg.get("watch", {}).get("pre_alert_days", 14),
+        "signin": signin,
+        "sources": [{"id": "unstop", "label": "Unstop"}] + ([{"id": "ik", "label": "InsideKampus"}] if use_ik else []),
     }
     data = {"meta": meta, "comps": comps, "extra": extra, "events": events, "watch": watch}
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")

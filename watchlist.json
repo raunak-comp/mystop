@@ -1,21 +1,189 @@
 {
-  "_readme": "Big annual competitions to watch. Each is looked up on Unstop by name every few hours (all editions, open or closed). 'search' is what gets typed into Unstop's search, 'match' is a regex the title must match, 'org' a regex the organiser must match. 'url' (optional) is an official page outside Unstop: it is checked for registration wording and for changes. You can also add names from the dashboard (Watchlist tab) without touching this file.",
-  "comps": [
-    {"name": "Tata Imagination Challenge", "by": "Tata Group", "search": "tata imagination challenge", "match": "^\\s*tata imagination challenge", "org": "tata"},
-    {"name": "L'Oréal Brandstorm", "by": "L'Oréal", "search": "loreal brandstorm", "match": "brandstorm", "org": "or.{1,2}al"},
-    {"name": "HUL L.I.M.E.", "by": "Hindustan Unilever", "search": "hul lime", "match": "\\bL\\.?I\\.?M\\.?E\\b", "org": "unilever"},
-    {"name": "HUL FinAce", "by": "Hindustan Unilever", "search": "hul finace", "match": "finace", "org": "unilever"},
-    {"name": "Reliance T.U.P. (The Ultimate Pitch)", "by": "Reliance Industries", "search": "reliance tup", "match": "T\\.?U\\.?P\\b", "org": "reliance"},
-    {"name": "Flipkart WiRED", "by": "Flipkart", "search": "flipkart wired", "match": "wired", "org": "flipkart"},
-    {"name": "Accenture Innovation Challenge", "by": "Accenture", "search": "accenture innovation challenge", "match": "innovation challenge", "org": "accenture"},
-    {"name": "Aditya Birla Group Stratos", "by": "Aditya Birla Group", "search": "stratos", "match": "stratos", "org": "aditya birla"},
-    {"name": "TVS Credit E.P.I.C", "by": "TVS Credit", "search": "tvs credit epic", "match": "E\\.?P\\.?I\\.?C", "org": "tvs credit"},
-    {"name": "Colgate Transcend", "by": "Colgate-Palmolive", "search": "colgate transcend", "match": "transcend", "org": "colgate"},
-    {"name": "Amazon Customer Excellence (ACE) Challenge", "by": "Amazon", "search": "amazon ace challenge", "match": "\\bACE\\b", "org": "amazon"},
-    {"name": "Samsung E.D.G.E.", "by": "Samsung", "search": "samsung edge", "match": "E\\.?D\\.?G\\.?E", "org": "samsung"},
-    {"name": "Marico Over The Wall", "by": "Marico", "search": "over the wall", "match": "over the wall", "org": "marico"},
-    {"name": "Tata Crucible Campus Quiz", "by": "Tata Group", "search": "tata crucible", "match": "crucible campus", "org": "tata"},
-    {"name": "Hult Prize", "by": "Hult Prize Foundation", "search": "hult prize", "match": "^\\s*hult prize", "url": "https://www.hultprize.org/", "note": "Enter through your college"},
-    {"name": "CFA Institute Research Challenge", "by": "CFA Institute", "search": "cfa institute research challenge", "match": "cfa institute research challenge", "url": "https://www.cfainstitute.org/societies/challenge", "note": "Enter through your university"}
-  ]
+ "_readme": "Big annual competitions to watch. Each is looked up on Unstop by name every few hours (all editions, open or closed). 'search' is what gets typed into Unstop's search, 'match' is a regex the title must match, 'org' a regex the organiser must match. 'url' (optional) is an official page outside Unstop: it is checked for registration wording and for changes. You can also add names from the dashboard (Watchlist tab) without touching this file. 'group' is 'india' (default) or 'global' and decides which section of the Watchlist tab it sits in. 'when' is one short line about the usual window, shown when the comp has no edition on Unstop.",
+ "comps": [
+  {
+   "name": "Tata Imagination Challenge",
+   "by": "Tata Group",
+   "search": "tata imagination challenge",
+   "match": "^\\s*tata imagination challenge",
+   "org": "tata",
+   "url": "https://www.tata.com/careers/programs/tata-imagination-challenge"
+  },
+  {
+   "name": "L'Oréal Brandstorm",
+   "by": "L'Oréal",
+   "search": "loreal brandstorm",
+   "match": "brandstorm",
+   "org": "or.{1,2}al",
+   "group": "global"
+  },
+  {
+   "name": "HUL L.I.M.E.",
+   "by": "Hindustan Unilever",
+   "search": "hul lime",
+   "match": "\\bL\\.?I\\.?M\\.?E\\b",
+   "org": "unilever"
+  },
+  {
+   "name": "HUL FinAce",
+   "by": "Hindustan Unilever",
+   "search": "hul finace",
+   "match": "finace",
+   "org": "unilever"
+  },
+  {
+   "name": "Reliance T.U.P. (The Ultimate Pitch)",
+   "by": "Reliance Industries",
+   "search": "reliance tup",
+   "match": "T\\.?U\\.?P\\b",
+   "org": "reliance"
+  },
+  {
+   "name": "Flipkart WiRED",
+   "by": "Flipkart",
+   "search": "flipkart wired",
+   "match": "wired",
+   "org": "flipkart"
+  },
+  {
+   "name": "Accenture Innovation Challenge",
+   "by": "Accenture",
+   "search": "accenture innovation challenge",
+   "match": "innovation challenge",
+   "org": "accenture"
+  },
+  {
+   "name": "Aditya Birla Group Stratos",
+   "by": "Aditya Birla Group",
+   "search": "stratos",
+   "match": "stratos",
+   "org": "aditya birla"
+  },
+  {
+   "name": "TVS Credit E.P.I.C",
+   "by": "TVS Credit",
+   "search": "tvs credit epic",
+   "match": "E\\.?P\\.?I\\.?C",
+   "org": "tvs credit"
+  },
+  {
+   "name": "Colgate Transcend",
+   "by": "Colgate-Palmolive",
+   "search": "colgate transcend",
+   "match": "transcend",
+   "org": "colgate"
+  },
+  {
+   "name": "Amazon Customer Excellence (ACE) Challenge",
+   "by": "Amazon",
+   "search": "amazon ace challenge",
+   "match": "\\bACE\\b",
+   "org": "amazon"
+  },
+  {
+   "name": "Samsung E.D.G.E.",
+   "by": "Samsung",
+   "search": "samsung edge",
+   "match": "E\\.?D\\.?G\\.?E",
+   "org": "samsung"
+  },
+  {
+   "name": "Marico Over The Wall",
+   "by": "Marico",
+   "search": "over the wall",
+   "match": "over the wall",
+   "org": "marico"
+  },
+  {
+   "name": "Tata Crucible Campus Quiz",
+   "by": "Tata Group",
+   "search": "tata crucible",
+   "match": "crucible campus",
+   "org": "tata"
+  },
+  {
+   "name": "Hult Prize",
+   "by": "Hult Prize Foundation",
+   "search": "hult prize",
+   "match": "^\\s*hult prize",
+   "url": "https://www.hultprize.org/",
+   "note": "Enter through your college",
+   "group": "global",
+   "when": "Campus Rounds Run from September, Enter Through Your College Chapter"
+  },
+  {
+   "name": "CFA Institute Research Challenge",
+   "by": "CFA Institute",
+   "search": "cfa institute research challenge",
+   "match": "cfa institute research challenge",
+   "url": "https://www.cfainstitute.org/societies/challenge",
+   "note": "Enter through your university",
+   "group": "global",
+   "when": "Runs September to May, Your College Enters a Team Through the Local CFA Society"
+  },
+  {
+   "name": "Global Case Competition at Harvard",
+   "by": "Harvard GCC",
+   "group": "global",
+   "search": "global case competition harvard",
+   "match": "global case competition at harvard",
+   "url": "https://www.caseleague.org/competitions/6-global-case-competition-at-harvard",
+   "open_regex": "applications? (are )?open|register now|registration (is )?open",
+   "when": "Expected February to March, Online Rounds Then a Final in Boston",
+   "note": "Open to Undergraduates"
+  },
+  {
+   "name": "Undergrad Case Competition World Cup",
+   "by": "Management Consulted",
+   "group": "global",
+   "search": "undergrad case competition world cup",
+   "match": "case competition world cup",
+   "url": "https://managementconsulted.com/case-competition/",
+   "open_regex": "world cup[^.]{0,200}(register|apply) (now|here|today)",
+   "when": "Apply by Mid September, Fully Virtual, Teams of 4 to 5",
+   "note": "Fully Online"
+  },
+  {
+   "name": "Schneider Go Green",
+   "by": "Schneider Electric",
+   "group": "global",
+   "search": "schneider go green",
+   "match": "go green",
+   "org": "schneider",
+   "url": "https://www.gogreencompetition.com/",
+   "when": "Registration Ran June to August in 2026, Teams of up to 4",
+   "note": "Any Degree, Age 18 to 30"
+  },
+  {
+   "name": "HSBC India Business Case Programme",
+   "by": "HSBC India",
+   "group": "global",
+   "search": "hsbc business case",
+   "match": "hsbc.{0,30}(business case|case programme|case competition)",
+   "url": "https://internshala.com/competitions/hsbc-india-business-case-programme-2026-27/",
+   "when": "Registration Ran July to 6 October in 2026, Winners Go On to the Asia Pacific Round",
+   "note": "Undergraduates, Team of 4 from One College"
+  },
+  {
+   "name": "CME Group University Trading Challenge",
+   "by": "CME Group",
+   "group": "global",
+   "search": "cme university trading challenge",
+   "match": "university trading challenge",
+   "org": "cme",
+   "url": "https://www.cmegroup.com/events/university-trading-challenge.html",
+   "when": "Usually Opens Around August, a Month of Simulated Futures Trading",
+   "note": "Needs a Faculty Advisor"
+  },
+  {
+   "name": "Red Bull Basement",
+   "by": "Red Bull",
+   "group": "global",
+   "search": "red bull basement",
+   "match": "red bull basement",
+   "url": "https://www.redbull.com/int-en/events/red-bull-basement",
+   "when": "Usually Opens in the Second Half of the Year, Idea Pitch with a World Final",
+   "note": "Country Rounds First"
+  }
+ ]
 }

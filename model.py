@@ -168,6 +168,8 @@ class Model:
         i = cfg["internship"]
         self.i_reward = [rx(p.replace("{CUE}", "(?:%s)" % i["cue"])) for p in i["reward_patterns"]]
         self.i_not = rx(i["not_reward"])
+        self.i_ppo = rx(r"\bPPOs?\b|pre[- ]placement (offers?|opportunit)|\bjob offers?\b|full[- ]time (offer|role)|placement offer")
+        self.i_ppi = rx(r"\bPPIs?\b|\bPPEs?\b|pre[- ]placement|interview")
         self.i_strong = rx(i["strong"])
 
         self.niches = [{**n, "_re": rx(n["re"]), "_title": rx(n["title"]) if n.get("title") else None} for n in cfg["niches"]]
@@ -514,6 +516,16 @@ class Model:
                     if any(r.search(s) for r in self.i_reward) and not self.i_not.search(s):
                         intern, intern_note = 1, s[:220]
                         break
+        # which kind of chance: a job offer (PPO), an interview (PPI) or an internship
+        intern_kind = None
+        if intern:
+            if any(p.get("pre_placement_opportunity") for p in prizes):
+                intern_kind = "ppo"
+            elif any(p.get("pre_placement_internship") for p in prizes):
+                intern_kind = "ppi"
+            else:
+                blob = (prize_text + " " + overall) if intern == 2 else (intern_note or "")
+                intern_kind = "ppo" if self.i_ppo.search(blob) else "ppi" if self.i_ppi.search(blob) else "intern"
         i_pts = 0
         if intern:
             i_pts = cfg["internship"]["score_confirmed" if intern == 2 else "score_mentioned"]
@@ -584,7 +596,7 @@ class Model:
             "cats": cats, "loc": loc, "mode": region, "city": ", ".join(x for x in [city, state] if x) or None,
             "need": need, "inCity": in_city, "conf": mode_conf, "strict": strict, "ev": ev, "travelPaid": travel_paid,
             "gEv": g_ev if g_pts > 0 else [], "gPts": g_pts,
-            "niches": niches, "intern": intern, "internNote": intern_note,
+            "niches": niches, "intern": intern, "internNote": intern_note, "internKind": intern_kind, "src": "unstop",
             "prize": cash, "prizeEst": prize_est,
             "prizeTxt": overall[:140] if re.search(r"\d", overall) or len(overall) > 40 else None,
             "rounds": n_rounds, "rd": [{"t": r["t"], "ty": r["ty"], "s": r["s"], "e": r["e"], "m": r["m"]} for r in rounds][:12],
