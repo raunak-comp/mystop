@@ -1,5 +1,17 @@
-# MyStop sign-in
-# Paste the firebaseConfig block from Firebase below these lines, exactly as Firebase shows it.
-# While nothing is pasted here, MyStop works without sign-in and keeps everything in the browser.
-# These values are meant to be public. Your data is protected by the Firestore rules in README.md.
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBugMR29pWEszEU72T93jHs9T4XYMDaY6E",
+  authDomain: "mystop-92d40.firebaseapp.com",
+  projectId: "mystop-92d40",
+  storageBucket: "mystop-92d40.firebasestorage.app",
+  messagingSenderId: "986382940147",
+  appId: "1:986382940147:web:18f6456e48a29f5497c486"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
