@@ -46,10 +46,13 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  /* A phone with "Desktop site" switched on: the page is shown again in a frame as wide as the phone, scaled up to fill the screen */
+  /* The Android app on a phone whose browser is set to "Desktop site": the page is shown again in a frame as wide as the phone, scaled up to fill the screen.
+     The clipping box and the opacity are both needed. Without them Chrome on Android adopts a frame that exactly fills the screen as the page's own scroller
+     and hands it the wide layout again, on and off, which made the view flip between phone and desktop. */
   html.deskfix, html.deskfix body { height: 100%; overflow: hidden; touch-action: manipulation; }
-  html.deskfix body > :not(#deskFrame) { display: none !important; }
-  #deskFrame { position: fixed; left: 0; top: 0; border: 0; transform-origin: 0 0; touch-action: manipulation; background: var(--bg); }
+  html.deskfix body > :not(#deskWrap) { display: none !important; }
+  #deskWrap { position: fixed; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; background: var(--bg); touch-action: manipulation; }
+  #deskFrame { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; opacity: .999; touch-action: manipulation; }
   body { background: var(--bg); color: var(--tx); font: 14px/1.5 "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: -.006em; font-feature-settings: "cv11", "calt"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
   button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
   button { cursor: pointer; }
@@ -929,15 +932,19 @@ const DATA = /*__DATA__*/null;
   "use strict";
   const $ = id => document.getElementById(id);
 
-  // ------------------------------------------------------------------ phones with "Desktop site" switched on
-  // The browser then ignores the page's own width and lays it out about 980 px wide, zoomed out, in the app as well as in the browser.
-  // The page is loaded again inside a frame that is as wide as the phone really is and scaled up to fill the screen.
+  // ------------------------------------------------------------------ the Android app on a phone set to "Desktop site"
+  // With that switch on, Chrome ignores the page's own width and lays it out about 980 px wide, zoomed out, and the app is drawn by Chrome.
+  // In the browser that is what the person asked for, so nothing is done there. In the app the phone layout is the only one that makes sense,
+  // so the page is loaded again inside a frame that is as wide as the phone really is and scaled up to fill the screen.
   // Inside the frame every width rule and every measurement sees the phone's true width, so the phone layout comes back untouched.
   const FRAMED = window.name === "mystopFrame";
+  const APP_ID = "io.github.raunakcomp.mystop";
+  const inApp = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches
+    || document.referrer.indexOf("android-app://" + APP_ID) === 0;
   const realW = () => Math.min(...[screen.width, window.outerWidth].filter(x => x > 0));
   const deskOnPhone = () => {
     const w = realW(), h = Math.min(...[screen.height, window.outerHeight].filter(x => x > 0));
-    return !FRAMED && w > 0 && h > 0 && Math.min(w, h) < 600        // a phone-sized screen. Tablets and computers are left alone
+    return !FRAMED && inApp() && w > 0 && h > 0 && Math.min(w, h) < 600   // a phone-sized screen. Tablets are left alone
       && navigator.maxTouchPoints > 0
       && !/Android|Mobile|iPhone|iPad|iPod/i.test(navigator.userAgent);   // and a browser that says it is a computer
   };
@@ -945,22 +952,27 @@ const DATA = /*__DATA__*/null;
     const vv = window.visualViewport;
     alert(["MyStop screen check", "page " + window.innerWidth + " x " + window.innerHeight, "window " + window.outerWidth + " x " + window.outerHeight,
       "screen " + screen.width + " x " + screen.height, "ratio " + window.devicePixelRatio + ", zoom " + (vv ? vv.scale.toFixed(3) : "?"),
-      "touch " + navigator.maxTouchPoints + ", app " + matchMedia("(display-mode: standalone)").matches, "fix " + deskOnPhone(), navigator.userAgent].join("\n"));
+      "touch " + navigator.maxTouchPoints + ", app " + inApp() + ", from " + (document.referrer || "nowhere"), "fix " + deskOnPhone(), navigator.userAgent].join("\n"));
   }
   if (deskOnPhone()) {
     document.documentElement.classList.add("deskfix");
-    const f = document.createElement("iframe");
+    const wrap = document.createElement("div"), f = document.createElement("iframe");
+    wrap.id = "deskWrap";
     f.id = "deskFrame"; f.name = "mystopFrame"; f.title = "MyStop"; f.setAttribute("allow", "clipboard-write; web-share");
+    let last = "";
     const fit = () => {
       const k = Math.max(1, window.innerWidth / realW());
-      f.style.width = (window.innerWidth / k) + "px"; f.style.height = (window.innerHeight / k) + "px";
+      const w = Math.round(window.innerWidth / k), h = Math.round(window.innerHeight / k), now = w + "x" + h + "x" + k.toFixed(4);
+      if (now === last) return;
+      last = now;
+      f.style.width = w + "px"; f.style.height = h + "px";
       f.style.transform = k > 1.001 ? "scale(" + k + ")" : "none";
     };
     fit();
     f.src = location.href;
-    document.body.appendChild(f);
+    wrap.appendChild(f);
+    document.body.appendChild(wrap);
     addEventListener("resize", fit);
-    if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
     if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener("change", () => setTimeout(fit, 250));
     return;
   }
