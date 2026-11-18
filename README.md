@@ -11,7 +11,7 @@ cd unstop-radar
 python radar.py --serve        # then open http://localhost:8000
 ```
 
-Leave it running. It refreshes from Unstop every 6 hours (`--auto 3` to change, `--auto 0` to turn off) and whenever you press **Refresh from Unstop**. A refresh takes about a minute; the first one a little longer.
+Leave it running. It refreshes from Unstop every 3 hours (`--auto 6` to change, `--auto 0` to turn off) and whenever you press **Refresh from Unstop**. A refresh takes about a minute; the first one a little longer.
 
 Other ways to run it:
 
@@ -42,20 +42,24 @@ Organiser logos load from Unstop's servers, so they need internet; without it ea
 ### Discover
 Every open comp as a card, scored 0 to 100. One card per row, and every card has the same blocks at the same widths, so the columns line up down the page: organiser, time left and the bookmark on top, then the title, then one line of tags (internship chance first, why you can't enter, fits your course), then a single strip with the prize band and entry fee, Registered, Score, Details, Hide, Apply and Track. A long title takes a second line and the card grows by that one line, nothing else moves. Team size and the stages sit under Details.
 
+**Views.** Two rows of one-tap views sit above the list. The first is by priority: Everything I Can Do, High Priority, Medium, Low. The second is by type: one view for each comp type you picked, Everything Else, Other B-Schools, and All with the rejected ones included. A small copy button in the corner of every card copies the comp's name, organiser, deadline, prize, team size and link as plain text, ready to paste in a chat.
+
+**Ranked for each person.** Signed out, everyone sees the same general list. After the first sign-in a person answers three short questions: course, comp types and city. Business types keep the business ranking described below. Someone who picks mostly tech types gets a tech ranking instead (IITs, NITs, IIITs and BITS on top, tech domains count), where business case comps rank lower and are never hidden, and coding contests are no longer hidden by default. A picked type adds a few points. Comps run only by other B-schools (MDI, Great Lakes, IMT, IMI and similar) sit in their own view, out of the main list, unless a company brand or another known organiser is behind them. NIT, IIIT and Delhi tech campuses count on the business list only for a case, B-plan or simulation comp.
+
 Every filter applies together, and each one that is on shows as a chip above the list that you can remove on its own. **Sort By** orders by score, deadline, prize, fewest or most registered, fewest rounds, internship first or newest.
 
 - **My List.** Three switches that use your own marks: Only Starred, Hide Registered, Show Hidden.
 - **Prize & Internship.** A minimum prize pool, and internship chances: any, confirmed in the prizes, PPI (interview) or PPO (job offer). A solid amber flag on a card means the chance is written into the prize list, an outlined one means it is only mentioned in the description.
 - **Participants & Rounds.** Registrations at most and at least, and a cap on rounds.
 - **Circuits.** DU Circuit, IIMs IITs & Premier, Corporate & Global, Others.
-- **Categories.** Case, strategy & pitch, quizzes, simulations & mock stock (trading games, auctions, bidding wars, crisis and business simulations), writing & research, debates & MUNs.
-- **Participation** (solo OK or team), **Entry Fee** (free or paid) and **Platforms** (Unstop, InsideKampus).
+- **Categories.** The comp type, the same one shown as a tag on each card: simulations & mock stock, case & strategy, B-plan & pitch, hackathons, cybersecurity & CTF, data & AI, coding contests, robotics, design, research, quizzes, debates & MUNs, writing, sports & gaming, arts & culture.
+- **Participation** (solo OK or team) and **Entry Fee** (free or paid).
 - **Fits My Course.** The course in your profile maps to domains (BBA to marketing, finance, consulting and so on, B.Tech to tech, product and analytics). Matching comps carry a Fits flag, and the profile dialog lists the domains for the course you pick.
 
 - **Eligibility.** On your own computer the profile is filled in from `config.json`. On the public link everyone sets their own under Profile. Comps you can't enter disappear from every view: wrong course or batch, school-only, women-only, MBA-only, limited to a list of colleges that does not include yours, or same-college teams if you said you cannot form one.
 - **Where it happens.** The reader labels every sentence that has in-person wording: must attend, optional, vague, negated ("no travel needed"), about offline as a case topic, or only the judging being offline. The verdict and the sentences are under "Why NN?" on each card.
   - IIM comps are strict: any in-person wording at all rejects them.
-  - Delhi, Gurugram, Noida and the rest of NCR are kept. Anything else must be fully online.
+  - In-person comps in your own city are kept (Delhi NCR counts Delhi, Gurugram, Noida and the rest of NCR). Anything else must be fully online. One switch under "Where It Happens" chooses between **Online and Nearby** and **Everything**, and **Fine Tune** under it holds the separate tick-boxes.
   - "Unclear" and "brand-run with an in-person stage" are separate buckets, switched off by default. Tick them under "Where it happens" to see them.
 - **Organiser.** One tick-box per group: IIM, IIT, FMS Delhi, ISB, top B-schools (XLRI, SPJIMR, MDI, IIFT …), NMIMS & Christ, DU top colleges, St. Xavier's, BITS Pilani, Ashoka & liberal-arts universities, Masters' Union, strategy firms (McKinsey / Bain / BCG …), Big 4 & Accenture, banks and finance firms, any other known brand. A group with nothing open shows 0.
 - **Format.** Coding contests, hackathons and pure-tech comps (robotics, CTFs, data-science contests) are hidden by default. A business comp that only touches tech (an AI-themed case, a fintech pitch) stays. Untick "Hide coding contests & hackathons" to see them. "Case, strategy and pitch comps only" narrows further by removing quizzes and cultural events. The title words that mark a comp as coding are in `config.json` under `format.coding_title`.
@@ -99,7 +103,7 @@ The folder is ready to go on GitHub as it is. `.gitignore` keeps `cache/` and `m
 
 That commit starts the first run. About four minutes later the dashboard is live at `https://YOUR-USERNAME.github.io/mystop/`.
 
-After that `.github/workflows/refresh.yml` pulls fresh data from Unstop four times a day (6 am, noon, 6 pm, midnight IST) and after every change to the repository, then republishes. If Unstop cannot be reached, it publishes the `dashboard.html` stored in the repository instead.
+After that `.github/workflows/refresh.yml` pulls fresh data from Unstop every three hours (6 am, 9 am, noon and so on, IST) and after every change to the repository, then republishes. If Unstop cannot be reached, it publishes the `dashboard.html` stored in the repository instead.
 
 What is different on the GitHub link:
 
@@ -107,7 +111,7 @@ What is different on the GitHub link:
 - There is no Refresh button, the schedule does it. For an extra refresh press Run workflow on the Actions tab.
 - A comp can be added to the tracker by link only while it is open on Unstop.
 - To follow another flagship comp, add it to `watchlist.json` in the repository.
-- The profile in `config.json` is only the default on your own computer. On the public link every visitor starts with an empty profile and fills in their own.
+- The profile in `config.json` is only the default on your own computer. On the public link a visitor who is not signed in sees one general list: every comp that can be done online, scored, with nothing assumed about course or city. Right after the first sign-in MyStop asks three short questions (course, comp types, city) and ranks the list for that person. Each question can be skipped.
 
 GitHub pauses scheduled runs after 60 days without a commit and emails you first. One click on the Actions tab turns them back on.
 
@@ -132,17 +136,47 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['state', 'ts', 'name'])
+        && request.resource.data.state is string
+        && request.resource.data.state.size() < 300000;
+    }
+    match /tracked/{uid} {
+      allow read: if true;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['ids'])
+        && request.resource.data.ids is list
+        && request.resource.data.ids.size() <= 80;
     }
     match /public/tracked {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
   }
 }
 ```
 
-What the rules mean: each person can read and write only their own record. `public/tracked` holds nothing but competition numbers, so the scheduled refresh can keep a registered comp up to date after it leaves Unstop's open list.
+What the rules mean:
+
+- `users`: each person can read, change and delete only their own record, and a record cannot grow past a fixed size.
+- `tracked`: each person has their own short list of competition numbers (80 at most) that only they can change. It holds nothing else, and anyone can read it, so the scheduled refresh can keep a registered comp up to date after it leaves Unstop's open list. The refresh ignores anything that is not a plain number and stops at 300 numbers in total.
+- `public/tracked`: the shared list used before version 13. Nobody can write to it any more. It is only read until the new lists exist.
+
+Keep these three settings as they are, they are what stops misuse:
+
+1. **Authorized domains** (Authentication, Settings): only `YOUR-USERNAME.github.io` and the two `firebaseapp.com` / `web.app` entries Firebase adds itself. Remove `localhost` if it is listed.
+2. **Plan**: stay on the free Spark plan and do not add a card. With no card, heavy use can only pause sign-in for the day, it can never cost money.
+3. **Rules**: whenever this README changes the rules above, paste the new ones and press **Publish**.
+
+## Terms, privacy and deleting data
+
+- **Terms and Privacy** opens from the foot of every page and from the account menu. Before the first sign-in a person ticks that they are 18 or older and accept the terms. Using MyStop without signing in needs no agreement, because nothing leaves the browser.
+- **Delete My Data** in the account menu erases the account record, the tracked list and the sign-in itself. **Erase This Browser's Data** on the Terms page clears a browser that never signed in.
+- The page carries a Content Security Policy: only its own script and Google's sign-in files may run, so text from a listing can never run as code.
+- The refresh identifies itself to Unstop as `MyStop/1.0` with a link to this repository, and reads only the public listing pages that Unstop's `robots.txt` allows.
+- MyStop is unofficial. If Unstop or an organiser asks for a listing to be removed, do it promptly.
 
 Good to know:
 
@@ -152,8 +186,7 @@ Good to know:
 
 ## Other sources
 
-- **InsideKampus** (`insidekampus.com`, InsideIIM's board) is read on every refresh and its open comps are scored and listed next to Unstop's, marked under Platforms. Most of its comps are for MBA students and are hidden for an undergraduate profile. Switch it off with `"insidekampus": false` under `sources` in `config.json`.
-- **A comp never shows twice.** Unstop always comes first. An InsideKampus listing is added only when Unstop does not have that comp, so the two platforms never overlap. A listing is left out when its link opens Unstop (or Dare2Compete, the old name of Unstop), or when its title names the same comp as an open Unstop listing and the organiser or the registration deadline agrees. Filler words such as Challenge or Case do not count, and a different edition number (2025 against 2026) is treated as a different comp. Every listing left out is printed in the run log with the Unstop comp it matched, and the count shows under Platforms.
+- **InsideKampus** is switched off from version 13 (`sources.insidekampus` in `config.json`). MyStop reads Unstop only.
 - **Official pages** of corporate and international challenges do not share a format, so they are watched instead of listed: give a watchlist entry a `url` and each refresh checks that page for registration wording and for changes. `group` set to `global` puts the entry in the International section and `when` is the one line shown about its usual window.
 
 ## Files

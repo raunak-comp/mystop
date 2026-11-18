@@ -12,6 +12,7 @@ and writes a self-contained dashboard.html.
 Needs only Python 3.8+ (standard library, nothing to install, no API keys).
 """
 import argparse
+import base64
 import concurrent.futures as cf
 import datetime as dt
 import hashlib
@@ -37,7 +38,9 @@ API = "https://unstop.com/api/public"
 LIST_URL = API + "/opportunity/search-result?opportunity=competitions&oppstatus=open&per_page={pp}&page={p}"
 SEARCH_URL = API + "/opportunity/search-result?opportunity=competitions&per_page=30&searchTerm={q}"
 DETAIL_URL = API + "/competition/{id}"
-UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+# Says plainly who is asking. Unstop's robots.txt allows /api/public/ and this reads nothing else.
+UA = "MyStop/1.0 (personal competition tracker; +https://github.com/raunak-comp/mystop)"
+TRACK_PER_USER, TRACK_TOTAL = 80, 300  # how many tracked comp numbers one account, and all accounts together, can ask the refresh to follow
 IK_API = "https://api.insidekampus.com/graphql"
 IK_QUERY = """query Q($input: CompetitionMasterPaginatedListInput!) { getFilteredCompetitions(CompetitionMasterPaginatedListInput: $input) { total data {
  _id slug title description eligibility timelines rewards registrationStart registrationEnd noOfParticipants externalLink
@@ -319,18 +322,58 @@ def read_signin():
 
 
 def cloud_tracked(signin):
-    """Ids that signed-in users track. Lets a comp stay up to date after it leaves the open list."""
+    """Comp numbers that signed-in people track, so a comp stays up to date after it leaves the open list.
+    Each account keeps its own short list (tracked/<uid>), which nobody else can write to. Only plain comp numbers are accepted."""
     if not signin:
         return []
+    base = "https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/" % urllib.parse.quote(signin["projectId"])
+    key = "key=" + urllib.parse.quote(signin["apiKey"])
+    ok = lambda v: isinstance(v, str) and v.isdigit() and 4 <= len(v) <= 9  # noqa: E731
+    ids, seen = [], set()
+
+    def take(values, cap):
+        n = 0
+        for v in values or []:
+            v = v.get("stringValue") if isinstance(v, dict) else None
+            if ok(v) and n < cap:
+                n += 1
+                if v not in seen:
+                    seen.add(v)
+                    ids.append(int(v))
+
     try:
-        url = "https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/public/tracked?key=%s" % (
-            urllib.parse.quote(signin["projectId"]), urllib.parse.quote(signin["apiKey"]))
-        doc = json.loads(http_get(url, tries=2, timeout=20))
-        vals = (((doc.get("fields") or {}).get("ids") or {}).get("arrayValue") or {}).get("values") or []
-        return [int(v["stringValue"]) for v in vals if str(v.get("stringValue", "")).isdigit()][-400:]
+        doc = json.loads(http_get(base + "tracked?pageSize=300&" + key, tries=2, timeout=20))
+        for d in (doc.get("documents") or [])[:300]:
+            take((((d.get("fields") or {}).get("ids") or {}).get("arrayValue") or {}).get("values"), TRACK_PER_USER)
     except Exception as e:  # noqa: BLE001
-        log(f"  ! shared tracked list not read: {str(e)[:80]}")
-        return []
+        log(f"  ! tracked lists not read: {str(e)[:80]}")
+    if not ids:
+        # the shared list used before v13, read only until every account has written its own
+        try:
+            doc = json.loads(http_get(base + "public/tracked?" + key, tries=1, timeout=20))
+            take(((((doc.get("fields") or {}).get("ids") or {}).get("arrayValue") or {}).get("values") or [])[-TRACK_TOTAL:], TRACK_TOTAL)
+        except Exception:  # noqa: BLE001
+            pass
+    return ids[:TRACK_TOTAL]
+
+
+def csp_for(html, signin):
+    """The browser rule list for the page. Only the page's own script may run (named by its fingerprint), plus Google's sign-in files.
+    Anything else that tries to run as code, such as text slipped into a listing, is refused by the browser."""
+    hashes = " ".join("'sha256-%s'" % base64.b64encode(hashlib.sha256(m.encode("utf-8")).digest()).decode()
+                      for m in re.findall(r"<script>(.*?)</script>", html, re.S))
+    auth = signin.get("authDomain") if signin else None
+    frames = "https://*.firebaseapp.com https://*.web.app https://accounts.google.com" + (" https://" + auth if auth and re.fullmatch(r"[A-Za-z0-9.-]+", auth) else "")
+    return "; ".join([
+        "default-src 'none'",
+        "script-src " + hashes + " https://www.gstatic.com https://apis.google.com",
+        "style-src 'unsafe-inline'",
+        "img-src https: data:",
+        "font-src data:",
+        "connect-src 'self' https://*.googleapis.com https://www.gstatic.com",
+        "frame-src " + frames,
+        "base-uri 'none'", "form-action 'none'", "object-src 'none'",
+    ])
 
 
 def load_cached():
@@ -584,6 +627,9 @@ def build(cfg, items, details, now, offline=False):
         "roundTypes": {t["id"]: t["label"] for t in cfg["round_types"]},
         "tiers": cfg["scoring"]["tiers"], "preAlertDays": cfg.get("watch", {}).get("pre_alert_days", 14),
         "signin": signin, "dupes": dupes,
+        "types": [{"id": t["id"], "label": t["label"], "tag": t.get("tag") or t["label"], "fam": t.get("fam", "gen")} for t in cfg.get("types", [])],
+        "typeScore": (cfg.get("tech_track") or {}).get("type_score", 5),
+        "regions": (cfg.get("regions") or {}).get("list", []), "homeRegion": (cfg.get("regions") or {}).get("home", "delhi-ncr"),
         "sources": [{"id": "unstop", "label": "Unstop"}] + ([{"id": "ik", "label": "InsideKampus"}] if use_ik else []),
     }
     data = {"meta": meta, "comps": comps, "extra": extra, "events": events, "watch": watch}
@@ -592,7 +638,9 @@ def build(cfg, items, details, now, offline=False):
     fonts = ROOT / "fonts.css"  # Inter, embedded so the dashboard needs no network
     art = ROOT / "assets.css"  # banner photos, embedded for the same reason
     tpl = tpl.replace("/*__FONTS__*/", (fonts.read_text("utf-8") if fonts.exists() else "") + (art.read_text("utf-8") if art.exists() else ""))
-    (ROOT / "dashboard.html").write_text(tpl.replace("/*__DATA__*/null", payload), "utf-8")
+    html = tpl.replace("/*__DATA__*/null", payload)
+    with open(ROOT / "dashboard.html", "w", encoding="utf-8", newline="\n") as f:
+        f.write(html.replace("__CSP__", csp_for(html, signin)))
     write_json(ROOT / "data.json", data, indent=1)
     return comps, added + watch_events
 
@@ -724,7 +772,7 @@ if __name__ == "__main__":
     ap.add_argument("--offline", action="store_true", help="rebuild from cache, no network")
     ap.add_argument("--serve", action="store_true", help="serve the dashboard; saves your tracker to my/state.json")
     ap.add_argument("--port", type=int, default=8000)
-    ap.add_argument("--auto", type=float, default=6, help="with --serve: refresh every N hours (0 = never)")
+    ap.add_argument("--auto", type=float, default=3, help="with --serve: refresh every N hours (0 = never)")
     ap.add_argument("--open", action="store_true", help="open the dashboard in your browser")
     a = ap.parse_args()
     if a.serve:

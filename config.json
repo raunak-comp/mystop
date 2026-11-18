@@ -73,32 +73,23 @@
   },
   {
    "id": "bschool",
-   "label": "Top B-schools (XLRI, SPJIMR, MDI, IIFT…)",
+   "label": "Top B-schools (XLRI, SPJIMR, IIFT, JBIMS…)",
    "score": 26,
    "match": [
     "\\bXLRI\\b",
     "SPJIMR|S\\.? ?P\\.? jain institute",
-    "management development institute|\\bMDI\\b",
     "indian institute of foreign trade|\\bIIFT\\b",
     "jamnalal bajaj|\\bJBIMS\\b",
     "\\bSIBM\\b.{0,20}pune|symbiosis institute of business management.{0,20}pune",
-    "\\bSCMHRD\\b",
     "tata institute of social sciences|\\bTISS\\b",
-    "\\bIMT\\b.*ghaziabad|institute of management technology.*ghaziabad",
-    "\\bXIMB\\b|xavier institute of management",
-    "international management institute|\\bIMI\\b",
-    "great lakes",
-    "goa institute of management",
     "\\bMICA\\b",
-    "\\bTAPMI\\b|t\\.? ?a\\.? pai management",
-    "\\bIRMA\\b|institute of rural management",
     "bocconi",
     "\\bNITIE\\b",
     "delhi school of economics|\\bDSE\\b"
    ],
    "boost": [
     {
-     "match": "XLRI|SPJIMR|S\\.? ?P\\.? jain|\\bMDI\\b|management development institute|\\bIIFT\\b|foreign trade|\\bJBIMS\\b|jamnalal",
+     "match": "XLRI|SPJIMR|S\\.? ?P\\.? jain|\\bIIFT\\b|foreign trade|\\bJBIMS\\b|jamnalal",
      "score": 34
     }
    ]
@@ -222,6 +213,89 @@
     "\\btetr\\b",
     "mesa school",
     "\\bBITSoM\\b|bits school of management"
+   ]
+  },
+  {
+   "id": "bschool2",
+   "label": "Other B-schools (MDI, Great Lakes, IMT, IMI…)",
+   "score": 0,
+   "_note": "Good B-schools that many undergraduates have not heard of. They keep their points, and the page keeps them out of the main list in their own Other B-Schools view. A comp that also carries a company brand or another known organiser stays in the main list.",
+   "match": [
+    "management development institute|\\bMDI\\b",
+    "\\bSCMHRD\\b",
+    "\\bIMT\\b.*(ghaziabad|hyderabad|nagpur)|institute of management technology",
+    "\\bXIMB\\b|xavier institute of management",
+    "international management institute|\\bIMI\\b",
+    "great lakes|\\bGLIM\\b",
+    "goa institute of management",
+    "\\bTAPMI\\b|t\\.? ?a\\.? pai management",
+    "\\bIRMA\\b|institute of rural management",
+    "\\bLBSIM\\b|lal bahadur shastri institute of management",
+    "\\bFORE\\b school",
+    "\\bBIMTECH\\b|birla institute of management technology",
+    "k\\.? ?j\\.? somaiya institute of management",
+    "welingkar",
+    "\\bLIBA\\b|loyola institute of business",
+    "\\bNIBM\\b|national institute of bank management",
+    "\\bSIMSREE\\b|sydenham institute of management",
+    "\\bIFMR\\b",
+    "jaipuria institute of management",
+    "\\bFIIB\\b|fortune institute of international business"
+   ],
+   "boost": [
+    {
+     "match": "\\bSCMHRD\\b|\\bIMT\\b.*ghaziabad|institute of management technology.*ghaziabad|\\bXIMB\\b|xavier institute of management|international management institute|\\bIMI\\b|great lakes|goa institute of management|\\bTAPMI\\b|t\\.? ?a\\.? pai management|\\bIRMA\\b|institute of rural management",
+     "score": 26
+    },
+    {
+     "match": "\\bMDI\\b|management development institute",
+     "score": 34
+    }
+   ]
+  },
+  {
+   "id": "nit",
+   "label": "NIT",
+   "business_when": ["case", "bplan", "sim"],
+   "score": 14,
+   "match": [
+    "\\bNITs?\\b",
+    "national institute of technology",
+    "\\bMNNIT\\b|\\bMNIT\\b|\\bVNIT\\b|\\bSVNIT\\b|\\bMANIT\\b|\\bNITK\\b"
+   ],
+   "boost": [
+    {
+     "match": "trichy|tiruchirappalli|surathkal|karnataka|warangal|rourkela|calicut",
+     "score": 20
+    }
+   ]
+  },
+  {
+   "id": "iiit",
+   "label": "IIIT",
+   "business_when": ["case", "bplan", "sim"],
+   "score": 14,
+   "match": [
+    "\\bIIITs?\\b|\\bIIITM\\b|\\bIIITDM\\b|\\bIIITD\\b|\\bIIITH\\b|\\bIIITB\\b",
+    "(indian|international) institute of information technology",
+    "indraprastha institute of information technology"
+   ],
+   "boost": [
+    {
+     "match": "delhi|indraprastha|hyderabad|bangalore|bengaluru|allahabad|prayagraj",
+     "score": 20
+    }
+   ]
+  },
+  {
+   "id": "delhitech",
+   "label": "NSUT, DTU & Delhi tech",
+   "business_when": ["case", "bplan", "sim"],
+   "score": 20,
+   "match": [
+    "delhi technological university|\\bDTU\\b",
+    "netaji subhas university|\\bNSUT\\b|\\bNSIT\\b",
+    "indira gandhi delhi technical university|\\bIGDTUW\\b"
    ]
   },
   {
@@ -890,6 +964,263 @@
    "text": "hackathon|build (a|your)|prototype|github"
   }
  ],
+ "types": [
+  {
+   "id": "sim",
+   "label": "Simulations & mock stock",
+   "tag": "Simulation",
+   "fam": "biz"
+  },
+  {
+   "id": "case",
+   "label": "Case & strategy",
+   "tag": "Case Comp",
+   "fam": "biz",
+   "sub": [
+    "case_competition"
+   ],
+   "sub_pts": 3,
+   "title": "case (study|competition|challenge|comp|analysis|solving|battle|war|quest)|\\bcase\\b|case-?a-?thon|casathon|\\bstrategy|strategi|consult|business (challenge|strategy|problem|battle|war|simulation)|boardroom|board room|equity research|\\bM&A\\b|valuation|go[- ]to[- ]market|\\bGTM\\b|teardown|turnaround|crisis",
+   "text": "case (study|competition|challenge)|business case|case solving|case-based",
+   "tags": "Case Study|Management Consulting|Strategy"
+  },
+  {
+   "id": "bplan",
+   "label": "B-plan, pitch & ideathon",
+   "tag": "B-Plan & Pitch",
+   "fam": "biz",
+   "title": "b[- ]?plan|business plan|business model|\\bpitch|ideathon|idea[- ]?(thon|tion|challenge|pitch|fest|storm)|\\bideas?\\b|start-?up|shark tank|entrepreneur|venture|elevator|innovat",
+   "text": "business plan|b-plan|pitch deck|pitch your|ideathon|startup idea|business idea|business model",
+   "tags": "Business Plan|Entrepreneurship|Startup fair"
+  },
+  {
+   "id": "biz",
+   "label": "Other business challenges",
+   "tag": "Business",
+   "fam": "biz",
+   "_note": "No title words of its own. A comp lands here through `type_fallback` when it reads as a business comp but is not clearly a case, a pitch or a simulation."
+  },
+  {
+   "id": "hack",
+   "label": "Hackathons",
+   "tag": "Hackathon",
+   "fam": "tech",
+   "title": "hackathon|hack[- ]?a[- ]?thon|\\bhack\\w*|buildathon|build[- ]?a[- ]?thon|makeathon|make[- ]?a[- ]?thon|appathon|devfest|vibe ?cod|codefest|code ?fest",
+   "text": "hackathon"
+  },
+  {
+   "id": "ctf",
+   "label": "Cybersecurity & CTF",
+   "tag": "Security & CTF",
+   "fam": "tech",
+   "title": "\\bCTF\\b|capture the flag|cyber|ethical hack|infosec|forensic|\\bOSINT\\b|cryptograph|bug bount|\\bsecurity\\b",
+   "tags": "Cyber Security"
+  },
+  {
+   "id": "data",
+   "label": "Data, AI & ML",
+   "tag": "Data & AI",
+   "fam": "tech",
+   "title": "data ?(science|thon|analytics|analysis|viz|visuali[sz]ation|quest|sprint|hack|storm)|datathon|\\bML\\b|machine learning|\\bAI\\b|artificial intelligence|gen ?ai|\\bLLMs?\\b|prompt|deep learning|kaggle|\\banalytics\\b|\\bNLP\\b|computer vision|agentic",
+   "text": "dataset|machine learning|data (analysis|analytics|science)",
+   "tags": "AI Engineering|Applied AI|Artificial Intelligence|Agentic AI|Data Scien|Data Analytics|Machine Learning"
+  },
+  {
+   "id": "code",
+   "label": "Coding contests",
+   "tag": "Coding",
+   "fam": "tech",
+   "title": "\\bcod(e|ing|athon|er)s?\\b|programming|\\bDSA\\b|algorithm|\\bdebug|competitive programming|code ?(relay|golf|wars?|sprint|rush|clash|quest|storm)|bug (hunt|bash)|\\bSQL\\b|\\bpython\\b|\\bjava\\b|C\\+\\+|web ?dev|app ?dev|full[- ]?stack|front[- ]?end|open ?source",
+   "text": "coding (contest|competition|challenge|round)|competitive programming|hackerrank|codeforces|leetcode|codechef",
+   "tags": "Software Development",
+   "sub": [
+    "online_coding_challenge"
+   ],
+   "sub_pts": 1
+  },
+  {
+   "id": "robo",
+   "label": "Robotics & hardware",
+   "tag": "Robotics",
+   "fam": "tech",
+   "title": "robo|drone|aero ?model|aerial|glider|\\bIoT\\b|embedded|circuit|electronics|hardware|line follower|\\bmaze\\b|\\bbots?\\b|rover|rocket|arduino|\\bCAD\\b|bridge (design|building|making)|\\bVLSI\\b|\\bPCB\\b|hovercraft|\\bRC\\b|mechatron",
+   "text": "\\brobot|\\bdrone|arduino|\\bsensor",
+   "tags": "Robotics Engineer|Electronics Engineer|Mechanical Engineer"
+  },
+  {
+   "id": "design",
+   "label": "Design & UI/UX",
+   "tag": "Design",
+   "fam": "gen",
+   "title": "UI ?/? ?UX|\\bUX\\b|\\bUI\\b|figma|design(athon| challenge| sprint| contest| competition|ing)|logo|poster (design|making)|graphic|web ?design|canva|product design",
+   "text": "figma|UI/UX|design (a|an|the|your)",
+   "tags": "UI/UX|Graphic Design|Product Design"
+  },
+  {
+   "id": "research",
+   "label": "Research, papers & projects",
+   "tag": "Research",
+   "fam": "gen",
+   "title": "paper presentation|research|\\bpapers?\\b|poster presentation|symposium|conference|thesis|science (fair|exhibition|expo)|project (expo|exhibition|presentation|competition|showcase|display)|model (making|exhibition|presentation)|working model|\\bexpo\\b|technical presentation",
+   "text": "paper presentation|research paper|abstract submission|poster presentation|call for papers",
+   "tags": "Conference|Presentation"
+  },
+  {
+   "id": "quiz",
+   "label": "Quizzes & olympiads",
+   "tag": "Quiz",
+   "fam": "gen",
+   "title": "quiz|trivia|crossword|olympiad|\\bMCQ|aptitude|treasure hunt|puzzle|riddle|sudoku|spell ?bee|\\blogic|brain|reasoning|\\bIQ\\b|scavenger",
+   "tags": "Online Quiz",
+   "text": "\\bquiz|\\bMCQs?\\b|multiple[- ]choice"
+  },
+  {
+   "id": "debate",
+   "label": "Debates, MUNs & speaking",
+   "tag": "Debate",
+   "fam": "gen",
+   "niches": [
+    "debate"
+   ],
+   "title": "debate|\\bMUN\\b|model united|parliament|\\bmoot|elocution|extempore|public speaking|speech|declamation|group discussion|\\bGD\\b|turncoat|\\bJAM\\b|orat",
+   "text": "\\bdebat|model united nations|\\bMUN\\b|parliamentary"
+  },
+  {
+   "id": "write",
+   "label": "Writing & content",
+   "tag": "Writing",
+   "fam": "gen",
+   "title": "essay|article|writing|\\bblog|journal|policy brief|copywrit|caption|slogan|story|poetry|\\bpoem|script|content creat",
+   "text": "\\bessay|\\barticle|word limit|\\d+ words",
+   "tags": "Article Writing|Literary|Content Writing"
+  },
+  {
+   "id": "game",
+   "label": "Sports & gaming",
+   "tag": "Sports & Gaming",
+   "fam": "gen",
+   "title": "e-?sports|bgmi|valorant|free fire|\\bfifa\\b|chess|cricket|football|futsal|badminton|basketball|volleyball|table tennis|kabaddi|athletic|marathon|tug of war|carrom|gaming|clash royale|sports|ludo|pubg|minecraft|rubik|arm wrestling|tekken|\\bCOD\\b|tournament",
+   "text": "e-?sports|knockout|\\bmatches\\b",
+   "tags": "Online Gaming & Esports"
+  },
+  {
+   "id": "creative",
+   "label": "Arts, culture & media",
+   "tag": "Arts & Culture",
+   "fam": "gen",
+   "title": "photo|film|video|\\breels?\\b|dance|music|sing|\\bband|\\bart\\b|painting|sketch|rangoli|fashion|drama|theatre|nukkad|stand[- ]?up|meme|cosplay|talent|cultural|mehndi|face paint|anchoring|beatbox|\\brap\\b|open mic|ad[- ]?mad|advertis|doodle",
+   "text": "photograph|short film|\\bdance|\\bsing(ing|er)"
+  }
+ ],
+ "type_fallback": {
+  "_note": "Used only when no type matched a comp by name, tag or description: its strongest domain decides the type.",
+  "startup": "bplan", "quiz": "quiz", "debate": "debate", "tech": "code", "creative": "creative", "culture": "game",
+  "marketing": "biz", "finance": "biz", "consulting": "biz", "bizgen": "biz", "product": "biz", "ops": "biz", "hr": "biz", "econ": "biz", "analytics": "biz", "social": "biz"
+ },
+ "tech_track": {
+  "_note": "The second scoring ladder, used for people who pick hackathons, coding and other tech formats in their profile. Organiser points per group (a group not listed counts for `other_groups_mult` of its normal points) and domain points per niche. Company brands count the same on both ladders.",
+  "groups": {
+   "iit": {
+    "score": 32,
+    "boost": "bombay|delhi|madras|chennai|kanpur|kharagpur|roorkee|guwahati|techkriti|shaastra|techfest|kshitij|tryst",
+    "boost_score": 38
+   },
+   "nit": {
+    "score": 24,
+    "boost": "trichy|tiruchirappalli|surathkal|karnataka|warangal|rourkela|calicut",
+    "boost_score": 30
+   },
+   "iiit": {
+    "score": 24,
+    "boost": "delhi|indraprastha|hyderabad|bangalore|bengaluru|allahabad|prayagraj",
+    "boost_score": 32
+   },
+   "bits": 34,
+   "delhitech": 28,
+   "premier": 24,
+   "newage": 24,
+   "iim": 22,
+   "isb": 18,
+   "fms": 18
+  },
+  "other_groups_mult": 0.5,
+  "domains": {
+   "tech": 10,
+   "analytics": 8,
+   "product": 6,
+   "startup": 4
+  },
+  "type_score": 5
+ },
+ "regions": {
+  "_note": "City clusters for the profile. Each row is id, label, state and the words that mean that place. A person picks a city, and an in-person comp counts as reachable when its venue (or, with no venue listed, its organiser) matches the words of that cluster.",
+  "home": "delhi-ncr",
+  "list": [
+   ["delhi-ncr", "Delhi NCR", "Delhi", "delhi|gurgaon|gurugram|noida|ghaziabad|faridabad"],
+   ["mumbai", "Mumbai", "Maharashtra", "mumbai|bombay|thane|powai"],
+   ["pune", "Pune", "Maharashtra", "pune|pimpri|chinchwad"],
+   ["nagpur", "Nagpur", "Maharashtra", "nagpur"],
+   ["nashik", "Nashik", "Maharashtra", "nashik"],
+   ["bengaluru", "Bengaluru", "Karnataka", "bengaluru|bangalore"],
+   ["mangaluru", "Mangaluru & Manipal", "Karnataka", "mangaluru|mangalore|manipal|udupi|surathkal"],
+   ["mysuru", "Mysuru", "Karnataka", "mysuru|mysore"],
+   ["hyderabad", "Hyderabad", "Telangana", "hyderabad|secunderabad"],
+   ["warangal", "Warangal", "Telangana", "warangal"],
+   ["chennai", "Chennai", "Tamil Nadu", "chennai|madras"],
+   ["coimbatore", "Coimbatore", "Tamil Nadu", "coimbatore"],
+   ["trichy", "Tiruchirappalli", "Tamil Nadu", "tiruchirappalli|trichy"],
+   ["vellore", "Vellore", "Tamil Nadu", "vellore"],
+   ["kolkata", "Kolkata", "West Bengal", "kolkata|calcutta|howrah|salt lake"],
+   ["kharagpur", "Kharagpur", "West Bengal", "kharagpur"],
+   ["ahmedabad", "Ahmedabad & Gandhinagar", "Gujarat", "ahmedabad|gandhinagar"],
+   ["surat", "Surat", "Gujarat", "surat"],
+   ["vadodara", "Vadodara", "Gujarat", "vadodara|baroda"],
+   ["chandigarh", "Chandigarh Tricity", "Chandigarh", "chandigarh|mohali|panchkula"],
+   ["ludhiana", "Ludhiana", "Punjab", "ludhiana"],
+   ["amritsar", "Amritsar", "Punjab", "amritsar"],
+   ["jalandhar", "Jalandhar & Phagwara", "Punjab", "jalandhar|phagwara"],
+   ["jaipur", "Jaipur", "Rajasthan", "jaipur"],
+   ["jodhpur", "Jodhpur", "Rajasthan", "jodhpur"],
+   ["udaipur", "Udaipur", "Rajasthan", "udaipur"],
+   ["kota", "Kota", "Rajasthan", "\\bkota\\b"],
+   ["pilani", "Pilani", "Rajasthan", "pilani"],
+   ["lucknow", "Lucknow", "Uttar Pradesh", "lucknow"],
+   ["kanpur", "Kanpur", "Uttar Pradesh", "kanpur"],
+   ["varanasi", "Varanasi", "Uttar Pradesh", "varanasi|banaras"],
+   ["prayagraj", "Prayagraj", "Uttar Pradesh", "prayagraj|allahabad"],
+   ["agra", "Agra", "Uttar Pradesh", "\\bagra\\b"],
+   ["meerut", "Meerut", "Uttar Pradesh", "meerut"],
+   ["indore", "Indore", "Madhya Pradesh", "indore"],
+   ["bhopal", "Bhopal", "Madhya Pradesh", "bhopal"],
+   ["gwalior", "Gwalior", "Madhya Pradesh", "gwalior"],
+   ["kochi", "Kochi", "Kerala", "kochi|cochin|ernakulam"],
+   ["trivandrum", "Thiruvananthapuram", "Kerala", "thiruvananthapuram|trivandrum"],
+   ["kozhikode", "Kozhikode", "Kerala", "kozhikode|calicut"],
+   ["vizag", "Visakhapatnam", "Andhra Pradesh", "visakhapatnam|vizag"],
+   ["vijayawada", "Vijayawada & Guntur", "Andhra Pradesh", "vijayawada|guntur|amaravati"],
+   ["tirupati", "Tirupati", "Andhra Pradesh", "tirupati"],
+   ["bhubaneswar", "Bhubaneswar & Cuttack", "Odisha", "bhubaneswar|cuttack"],
+   ["rourkela", "Rourkela", "Odisha", "rourkela"],
+   ["guwahati", "Guwahati", "Assam", "guwahati"],
+   ["patna", "Patna", "Bihar", "patna"],
+   ["ranchi", "Ranchi", "Jharkhand", "ranchi"],
+   ["jamshedpur", "Jamshedpur", "Jharkhand", "jamshedpur"],
+   ["dhanbad", "Dhanbad", "Jharkhand", "dhanbad"],
+   ["dehradun", "Dehradun", "Uttarakhand", "dehradun"],
+   ["roorkee", "Roorkee & Haridwar", "Uttarakhand", "roorkee|haridwar"],
+   ["sonipat", "Sonipat", "Haryana", "sonipat|sonepat"],
+   ["rohtak", "Rohtak", "Haryana", "rohtak"],
+   ["kurukshetra", "Kurukshetra", "Haryana", "kurukshetra"],
+   ["raipur", "Raipur & Bhilai", "Chhattisgarh", "raipur|bhilai"],
+   ["goa", "Goa", "Goa", "\\bgoa\\b|panaji|panjim|vasco|margao"],
+   ["shimla", "Shimla", "Himachal Pradesh", "shimla"],
+   ["mandi", "Mandi", "Himachal Pradesh", "\\bmandi\\b"],
+   ["jammu", "Jammu", "Jammu and Kashmir", "jammu"],
+   ["srinagar", "Srinagar", "Jammu and Kashmir", "srinagar"],
+   ["shillong", "Shillong", "Meghalaya", "shillong"],
+   ["puducherry", "Puducherry", "Puducherry", "puducherry|pondicherry"]
+  ]
+ },
  "watch": {
   "_note": "Named flagship comps live in watchlist.json.",
   "recheck_hours": 6,
@@ -897,6 +1228,6 @@
  },
  "sources": {
   "_note": "Extra places to pull competitions from, next to Unstop. Set one to false to switch it off.",
-  "insidekampus": true
+  "insidekampus": false
  }
 }

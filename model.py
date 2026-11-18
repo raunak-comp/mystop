@@ -179,6 +179,15 @@ class Model:
         self.sim_title, self.sim_text, self.sim_score = rx(sim.get("title") or r"simulat|mock stock"), rx(sim.get("text") or r"mock stock"), sim.get("score", 0)
         # a round typed "sim" only makes the whole comp a simulation when its name says so (a "treasure hunt" or "numbers game" round does not)
         self.sim_round = rx(sim.get("round") or r"simulat|trading|bidding|auction|mock stock|war ?room")
+        # comp types (case, hackathon, quiz ...): one comp can carry several, the first is its main one
+        self.types = [{**t, "_t": rx(t["title"]) if t.get("title") else None, "_g": rx(t["tags"]) if t.get("tags") else None,
+                       "_x": rx(t["text"]) if t.get("text") else None} for t in cfg.get("types", [])]
+        # the second ladder: how the same organisers and domains count for someone who competes in tech
+        tt = cfg.get("tech_track") or {}
+        self.tech_groups, self.tech_other, self.tech_domains = tt.get("groups") or {}, tt.get("other_groups_mult", 0.5), tt.get("domains") or {}
+        self.group_by_id = {g["id"]: g for g in self.groups}
+        self.regions = [(r[0], rx(r"\b(?:%s)\b" % r[3])) for r in (cfg.get("regions") or {}).get("list", [])]
+        self.type_fallback = {k: v for k, v in (cfg.get("type_fallback") or {}).items() if not k.startswith("_")}
 
     # ------------------------------------------------------------------ helpers
     def brand_hit(self, s):
@@ -326,7 +335,7 @@ class Model:
         n_rounds = len(real_rounds) or None
 
         # organiser groups ------------------------------------------------
-        cats, prestige, prestige_label = [], 0, None
+        cats, prestige, prestige_label, gated = [], 0, None, []
         for g in self.groups:
             if any(u in cats for u in g.get("unless", [])):
                 continue
@@ -336,9 +345,14 @@ class Model:
                     if br.search(org_blob):
                         s = max(s, bs)
                 cats.append(g["id"])
+                if g.get("business_when"):
+                    # a tech campus: on the business ladder it only counts when the comp itself is a business format
+                    gated.append((s, g["label"], set(g["business_when"])))
+                    continue
                 if s > prestige:
                     prestige, prestige_label = s, g["label"]
 
+        p_groups = prestige
         cc = cfg["corporate"]
         tier = org.get("tier")
         is_college = bool(cats) or bool(self.college_like.search(org_name)) or str((det.get("organisation") or {}).get("organisation_type")) in ("2", "3", "5", "7")
@@ -381,6 +395,32 @@ class Model:
                     if org_brand and f["score"] > prestige:
                         prestige, prestige_label = f["score"], f["label"]
                     break
+
+        # tech ladder: the same organiser, weighed for someone who does hackathons and coding contests
+        pt, pt_label = 0, None
+        for cid in cats:
+            g = self.group_by_id.get(cid)
+            if not g:
+                continue
+            ts = self.tech_groups.get(cid)
+            if isinstance(ts, dict):
+                tv = ts.get("score", 0)
+                if ts.get("boost") and re.search(ts["boost"], org_blob, re.I):
+                    tv = ts.get("boost_score", tv)
+            elif ts is not None:
+                tv = ts
+            else:
+                tv = int(round(g["score"] * self.tech_other))
+            if tv > pt:
+                pt, pt_label = tv, g["label"]
+        if is_college:
+            if prestige > p_groups and p_groups:
+                pt, pt_label = pt + (prestige - p_groups), f"{pt_label or prestige_label} × brand"
+            elif prestige > p_groups:
+                pt, pt_label = max(pt, prestige), prestige_label
+        elif prestige > pt:
+            pt, pt_label = prestige, prestige_label
+        pt = min(pt, 44)
 
         # global: evidence points, not just the word in the title ------------
         prizes = it.get("prizes") or det.get("prizes") or []
@@ -444,6 +484,9 @@ class Model:
         # where would you have to go: sentence place > listed venue > organiser
         home = self.place(ev_place) if ev_place else self.place(f"{city} {state}") if city else self.place(org_blob)
         in_city = ev_place or city or None
+        # the same question for any city: which cluster would you have to be in
+        rg_src = ev_place or (f"{city} {state}" if city else org_blob)
+        rg = next((rid for rid, m in self.regions if m.search(rg_src or "")), None) if need != "none" else None
         if need == "none":
             loc = "online"
         elif home:
@@ -483,7 +526,7 @@ class Model:
         niches = [n["id"] for _, n in niche_scores]
         biz = max([n.get("business", 0) for _, n in niche_scores] or [0])
         if biz:
-            why.append(["Business niche: " + next(n["label"] for _, n in niche_scores if n.get("business", 0) == biz), biz])
+            why.append(["Business niche: " + next(n["label"] for _, n in niche_scores if n.get("business", 0) == biz), biz, "dom"])
 
         # format: prestige only counts in full for substantive comps --------
         fmt, mult, mult_label = 0, 1.0, None
@@ -503,11 +546,56 @@ class Model:
             if mult < 1:
                 prestige = int(round(prestige * mult))
                 prestige_label = f"{prestige_label} (×{mult:g}: {mult_label})"
-            why.insert(0, [prestige_label, prestige])
+            why.insert(0, [prestige_label, prestige, "org"])
         if fmt:
-            why.append(["Case / pitch / challenge format", fmt])
+            why.append(["Case / pitch / challenge format", fmt, "type"])
         if sim_pts:
-            why.append(["Simulation / mock stock / trading format", sim_pts])
+            why.append(["Simulation / mock stock / trading format", sim_pts, "type"])
+        wt = []
+        if pt:
+            if mult < 1:
+                pt = int(round(pt * mult))
+                pt_label = f"{pt_label} (×{mult:g}: {mult_label})"
+            wt.append([pt_label, pt, "org"])
+        dom_t = max([self.tech_domains.get(n, 0) for n in niches] or [0])
+        if dom_t:
+            wt.append(["Tech domain: " + next(n["label"] for _, n in niche_scores if self.tech_domains.get(n["id"], 0) == dom_t), dom_t, "dom"])
+
+        # comp types: title words count most, then Unstop's own tags and subtype, then round names and the description
+        tags_blob = " | ".join(tag_items)
+        rt_blob = " | ".join(r["t"] for r in rounds)
+        tscore, weak = {}, {}
+        for t in self.types:
+            v = 0
+            if t["_t"] and t["_t"].search(title):
+                v += 3
+            if t["_g"] and t["_g"].search(tags_blob):
+                v += 2
+            if t.get("sub") and it.get("subtype") in t["sub"]:
+                v += t.get("sub_pts", 2)
+            if t["_t"] and rt_blob and t["_t"].search(rt_blob):
+                v += 1
+            if t["_x"] and t["_x"].search(body[:1500]):
+                v += 1
+            if any(n in niches for n in t.get("niches", [])):
+                v += 1
+            if t["id"] == "sim" and is_sim:
+                v += 3
+            if v >= 3:
+                tscore[t["id"]] = v
+            elif v == 2:
+                weak[t["id"]] = v
+        if is_code and not any(t.get("fam") == "tech" and t["id"] in tscore for t in self.types):
+            tscore["code"] = 3
+        order = [t["id"] for t in self.types]
+        types = sorted(tscore, key=lambda k: (-tscore[k], order.index(k) if k in order else 99))
+        if is_sim:      # a simulation stays under Simulations even when it is also a case comp, as it always did
+            types = ["sim"] + [k for k in types if k != "sim"]
+        types = types[:3]
+        if not types and weak:      # nothing clear: the best partial match (a tag, or the description plus the domain)
+            types = [max(weak, key=lambda k: (weak[k], -order.index(k)))]
+        if not types:               # still nothing: the strongest domain decides
+            types = [self.type_fallback[n] for n in niches if n in self.type_fallback][:1] or ["other"]
 
         # internship: only when it is a reward, read per sentence ------------
         prize_text = " ".join(" ".join(str(p.get(k) or "") for k in ("rank", "others")) for p in prizes)
@@ -589,7 +677,18 @@ class Model:
             pen += sc["school_only_penalty"]
             why.append(["School students only", sc["school_only_penalty"]])
 
+        gs, g_label = max(((s_, l_) for s_, l_, when in gated if when & set(types)), default=(0, None))
+        if gs:
+            gv = int(round(gs * mult))
+            if gv > prestige:
+                row = [g_label + (f" (×{mult:g}: {mult_label})" if mult < 1 else ""), gv, "org"]
+                if prestige:
+                    why[0] = row
+                else:
+                    why.insert(0, row)
+                prestige = gv
         score = max(0, min(100, prestige + biz + fmt + sim_pts + i_pts + p_pts + r_pts + g_reg + pen))
+        score_t = max(0, min(100, pt + dom_t + i_pts + p_pts + r_pts + g_reg + pen))
         tier_lbl = "high" if score >= sc["tiers"]["high"] else "medium" if score >= sc["tiers"]["medium"] else "low"
 
         deadline = parse_dt(lr.get("end_regn_dt") or it.get("end_date") or det.get("end_date"))
@@ -604,7 +703,7 @@ class Model:
             "id": it["id"], "t": title, "url": it.get("seo_url") or det.get("seo_url") or "https://unstop.com/" + (it.get("public_url") or ""),
             "org": org_name, "fest": (fest.get("name") or "").strip() or None,
             "cats": cats, "loc": loc, "mode": region, "city": ", ".join(x for x in [city, state] if x) or None,
-            "need": need, "inCity": in_city, "conf": mode_conf, "strict": strict, "ev": ev, "travelPaid": travel_paid,
+            "need": need, "inCity": in_city, "rg": rg, "conf": mode_conf, "strict": strict, "ev": ev, "travelPaid": travel_paid,
             "gEv": g_ev if g_pts > 0 else [], "gPts": g_pts,
             "niches": niches, "intern": intern, "internNote": intern_note, "internKind": intern_kind, "src": "unstop",
             "prize": cash, "prizeEst": prize_est,
@@ -616,6 +715,7 @@ class Model:
             "listed": listed.isoformat() if listed else None,
             "elig": elig, "el": el, "g": gender[0] if len(gender) == 1 else None, "restr": allowed[:60], "restrN": len(allowed),
             "score": int(round(score)), "tier": tier_lbl, "why": why, "sub": it.get("subtype") or None, "case": bool(fmt), "sim": is_sim,
+            "types": types, "ty": types[0], "st": int(round(score_t)), "wt": wt, "tb": fmt + sim_pts, "soft": mult < 1,
             "logo": it.get("logoUrl2") or (it.get("organisation") or {}).get("logoUrl2") or (it.get("organisation") or {}).get("logoUrl") or None,
             "code": bool(("tech" in niches and not biz) or (self.coding_title.search(title) and ("tech" in niches or not biz))),
         }

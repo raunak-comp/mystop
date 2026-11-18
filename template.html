@@ -2,6 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="__CSP__">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>MyStop: Your Personal Launchpad</title>
@@ -263,7 +264,8 @@
   .none { padding: 26px 20px; border: 1px dashed var(--line-2); border-radius: 16px; color: var(--tx-3); text-align: center; grid-column: 1 / -1; }
 
   /* competitions */
-  .viewsM { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+  .viewsM { display: grid; gap: 8px; margin: 0 0 18px; }
+  .vrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; min-width: 0; } .vsep { flex: none; width: 1px; height: 18px; margin: 0 4px; background: var(--line-3); }
   .viewsM button { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 13px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--card); color: var(--tx-2); font-size: 13px; font-weight: 600; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
   .viewsM button:hover { border-color: var(--line-3); color: var(--tx); }
   .viewsM button em { font-style: normal; font-size: 12px; font-weight: 600; color: var(--tx-3); font-variant-numeric: tabular-nums; }
@@ -294,6 +296,10 @@
   .c-top .due { flex: none; }
   .row .ib.star { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--fill); color: var(--tx-3); }
   .row .ib.star:hover { color: #e7a417; }
+  .row .ib.cpy { flex: none; width: 32px; height: 32px; border-radius: 10px; color: var(--tx-3); } .row .ib.cpy:hover { color: var(--tx); }
+  .ftune { margin-top: 6px; } .ftune > summary { display: flex; align-items: center; gap: 4px; padding: 6px 8px; font-size: 12.5px; font-weight: 600; color: var(--tx-3); cursor: pointer; list-style: none; } .ftune > summary::-webkit-details-marker { display: none; }
+  .fs .ftune > summary > .i { transition: transform .2s var(--ease); transform: none; } .fs .ftune[open] > summary > .i { transform: rotate(180deg); }
+  .seg.wide.reach button { padding: 0 6px; font-size: 12px; }
   .row .ib.star[aria-pressed="true"] { background: #fdf0d3; }
   [data-theme="dark"] .row .ib.star[aria-pressed="true"] { background: rgba(231,164,23,.18); }
   .c-o > a.t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 1px; font-size: 17px; line-height: 1.3; }
@@ -649,6 +655,19 @@
   .fld.chk .opt { padding: 0; } .fld.chk .opt:hover { background: none; }
   .dlg-f { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
   .dlg-f .btn:first-child { margin-right: auto; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chipk { position: relative; cursor: pointer; } .chipk input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .chipk span { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--card); color: var(--tx-2); font-size: 12.5px; font-weight: 600; white-space: nowrap; transition: background .12s, color .12s, border-color .12s; }
+  .chipk input:checked + span { background: var(--chip-on); border-color: var(--chip-on); color: #fff; }
+  .chipk input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .dlg .sustep { display: block; margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-strong); }
+  [data-theme="dark"] .dlg .sustep { color: var(--accent); }
+  .legal { max-height: min(60vh, 520px); overflow-y: auto; margin: 0 -6px; padding: 0 6px; }
+  .legal h3 { margin: 16px 0 4px; font-size: 14px; font-weight: 700; } .legal h3:first-child { margin-top: 0; }
+  .legal p { margin: 0 0 6px; font-size: 13.5px; line-height: 1.55; color: var(--tx-2); } .legal a { color: var(--accent-strong); font-weight: 600; } [data-theme="dark"] .legal a { color: var(--accent); }
+  .btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; } .btn.danger:hover { filter: brightness(1.06); }
+  .am .lk { display: flex; gap: 14px; justify-content: center; margin-top: 12px; font-size: 12.5px; } .am .lk .link { color: var(--tx-3); font-weight: 500; } .am .lk .link:hover { color: var(--tx); }
+  .foot.lg2 { max-width: none; margin-top: 26px; }
   #toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); display: flex; gap: 16px; align-items: center; max-width: calc(100vw - 24px); padding: 12px 18px; border-radius: 14px; background: #0c2050; color: #fff; box-shadow: var(--shadow); font-size: 13.5px; font-weight: 500; z-index: 80; animation: toast .3s var(--ease); }
   @keyframes toast { from { opacity: 0; transform: translate(-50%, 10px); } }
   #toast button { background: none; border: 0; color: #7fb6ff; font-weight: 700; padding: 0; }
@@ -690,8 +709,9 @@
     .evr .pill { height: 26px; padding: 0 10px; font-size: 12px; }
     .pslide { padding: 22px 22px 48px; min-height: 204px; } .pnav { left: 22px; right: 12px; } .promo h3 { font-size: 22px; }
     .ql { grid-template-columns: 1fr 1fr; }
-    .viewsM { flex-wrap: nowrap; overflow-x: auto; margin: 0 -14px 16px; padding: 0 14px 2px; scrollbar-width: none; }
-    .viewsM::-webkit-scrollbar { display: none; }
+    .viewsM { margin: 0 0 16px; }
+    .vrow { flex-wrap: nowrap; overflow-x: auto; margin: 0 -14px; padding: 0 14px 2px; scrollbar-width: none; }
+    .vrow::-webkit-scrollbar { display: none; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .stat { padding: 12px 14px; } .stat b { font-size: 24px; }
     .tools { flex-wrap: wrap; }
@@ -719,7 +739,7 @@
     .tabbar { left: 50%; right: auto; width: min(540px, calc(100% - 20px)); transform: translateX(-50%); }
   }
   @media (min-width: 620px) and (max-width: 860px) {
-    .viewsM { flex-wrap: wrap; overflow: visible; margin: 0 0 16px; padding: 0; }
+    .vrow { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
     .stats, .ql { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
   @media (max-width: 480px) {
@@ -763,7 +783,7 @@
 
     <section class="page" id="v-home"></section>
     <section class="page" id="v-discover" hidden>
-      <div class="hero"><h2>Competitions</h2><p>Every open comp scored for you, minus coding contests and anything you can't enter or reach from Delhi</p></div>
+      <div class="hero"><h2>Competitions</h2><p id="heroLine"></p></div>
       <div class="viewsM" id="viewsM" role="group" aria-label="Views"></div>
       <div class="stats" id="stats"></div>
       <div class="disc">
@@ -797,6 +817,12 @@
     <label class="fld"><span>College</span><input class="field" type="text" id="pfCollege" placeholder="Shaheed Sukhdev College of Business Studies (SSCBS)" autocomplete="off">
       <small>Use the name Unstop uses, with the short form in brackets</small></label>
     <label class="fld"><span>Course</span><select id="pfCourse"></select><span class="pf-fit" id="pfFit"></span></label>
+    <div class="fld"><span>What You Compete In</span><div class="chips" id="pfTypes"></div><small>Each one gets its own view and a few extra points. Leave it empty to go by your course</small></div>
+    <div class="two">
+      <label class="fld"><span>State</span><select id="pfState"></select></label>
+      <label class="fld"><span>City</span><select id="pfCity"></select></label>
+    </div>
+    <div class="fld chk"><label class="opt"><input type="checkbox" id="pfReach"><span class="lbl">I Can Travel for In-Person Comps<small>Left unticked, you see online comps and the ones in your city</small></span></label></div>
     <div class="two">
       <label class="fld"><span>Graduating Year</span><select id="pfYear"></select></label>
       <label class="fld"><span>Gender</span><select id="pfGender"><option value="">Prefer Not to Say</option><option value="F">Woman</option><option value="M">Man</option><option value="O">Other</option></select></label>
@@ -808,6 +834,78 @@
       <button class="btn primary" type="submit">Save Profile</button>
     </div>
   </form>
+</dialog>
+<dialog id="setupDlg" aria-labelledby="suT">
+  <form class="dlg" method="dialog" id="setupForm">
+    <small class="sustep" id="suStep"></small>
+    <h2 id="suT"></h2>
+    <p id="suP"></p>
+    <div id="su1"><label class="fld"><span>Course</span><select id="suCourse"></select></label></div>
+    <div id="su2" hidden><div class="chips" id="suTypes"></div></div>
+    <div id="su3" hidden>
+      <div class="two">
+        <label class="fld"><span>State</span><select id="suState"></select></label>
+        <label class="fld"><span>City</span><select id="suCity"></select></label>
+      </div>
+      <div class="fld chk"><label class="opt"><input type="checkbox" id="suReach"><span class="lbl">I Can Travel for In-Person Comps<small>Left unticked, you see online comps and the ones in your city</small></span></label></div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn ghost" type="button" id="suSkip">Skip</button>
+      <button class="btn" type="button" id="suBack" hidden>Back</button>
+      <button class="btn primary" type="submit" id="suNext">Next</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="agreeDlg" aria-labelledby="agT">
+  <div class="dlg">
+    <h2 id="agT">Before You Sign In</h2>
+    <p>Signing in saves your profile, stars and registrations to your account, with your Google name and email, so they follow you to every device</p>
+    <div class="fld chk"><label class="opt"><input type="checkbox" id="agOk"><span class="lbl">I Am 18 or Older and I Accept the Terms and Privacy Notice<small>Under 18? MyStop works fully without signing in <button class="link" type="button" data-act="legal">Read the Terms</button></small></span></label></div>
+    <div class="dlg-f">
+      <button class="btn" type="button" data-close="agreeDlg">Cancel</button>
+      <button class="btn primary" type="button" id="agGo" disabled>Continue with Google</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="delDlg" aria-labelledby="dlT">
+  <div class="dlg">
+    <h2 id="dlT">Delete My Data</h2>
+    <p>This erases your profile, stars and registrations from your account and from this device, and removes your sign-in. It cannot be undone</p>
+    <div class="dlg-f">
+      <button class="btn" type="button" data-close="delDlg">Cancel</button>
+      <button class="btn danger" type="button" id="delGo">Delete Everything</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="legalDlg" aria-labelledby="lgT">
+  <div class="dlg">
+    <h2 id="lgT">Terms and Privacy</h2>
+    <p>Version 1, November 2026</p>
+    <div class="legal" tabindex="0">
+      <h3>What MyStop Is</h3>
+      <p>MyStop is a free, unofficial student project. It is not run by, endorsed by or affiliated with Unstop or any organiser. Listings, logos and names belong to their owners, and every comp links to its original page.</p>
+      <h3>No Guarantees</h3>
+      <p>Scores, eligibility, dates, prizes and the in-person check are worked out by automatic rules and can be wrong or out of date. Always read the original listing before you register, pay or travel. MyStop is provided as it is, with no warranty, and is not responsible for a missed deadline, a wrong detail or any loss that follows from using it.</p>
+      <h3>What Is Stored</h3>
+      <p>Without signing in, your profile, stars, hidden comps and registrations stay in this browser and are sent nowhere.</p>
+      <p>If you sign in with Google, the same list is saved in a Google Firebase database under your account, together with your Google name and email address, so it follows you across devices. The numbers of the comps you registered for are also kept in a separate list that holds nothing else, so the refresh can keep those comps up to date.</p>
+      <p>Nothing is sold, shared or used for advertising. There is no tracking and no analytics.</p>
+      <h3>Who Can Sign In</h3>
+      <p>Sign-in is for people aged 18 or older. If you are younger, use MyStop without signing in.</p>
+      <h3>Your Controls</h3>
+      <p>Delete My Data in the account menu erases your account record and your sign-in. The button below erases everything saved in this browser.</p>
+      <h3>Fair Use</h3>
+      <p>Do not try to break, overload or misuse the site or anyone else's data.</p>
+      <h3>Contact and Removal</h3>
+      <p>For questions, corrections or a request to remove a listing, organisers and Unstop included, open an issue at <a href="https://github.com/raunak-comp/mystop/issues" target="_blank" rel="noopener">github.com/raunak-comp/mystop</a>. Removal requests are acted on promptly.</p>
+      <h3>Changes and Law</h3>
+      <p>These terms can change, and the current version is always here. Indian law applies.</p>
+    </div>
+    <div class="dlg-f">
+      <button class="btn ghost" type="button" id="lgErase">Erase This Browser's Data</button>
+      <button class="btn primary" type="button" data-close="legalDlg">Close</button>
+    </div>
+  </div>
 </dialog>
 <div id="toast" hidden role="status"><span id="toastT"></span><button id="toastB" hidden>Undo</button></div>
 
@@ -826,6 +924,8 @@ const DATA = /*__DATA__*/null;
   .replace(/([:,])\s*,/g, "$1").replace(/^[,\s]+|[,\s]+$/g, "");
   const escA = s => String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
   const esc = s => escA(tidy(s));
+  // only web links ever go into an href, whatever a listing says
+  const link = u => /^https?:\/\//i.test(String(u || "")) ? escA(u) : "#";
   // Labels, buttons, chips and short facts are shown in Title Case. Small joining words stay lower case.
 const MINOR = new Set("a an the and or but nor of to for in on at by from with as per vs am pm".split(" "));
 const tc = s => String(s == null ? "" : s).replace(/&[#\w]+;|[A-Za-z][A-Za-z']*/g, (w, i, str) => {
@@ -893,6 +993,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
     layers: '<path d="m12.830 2.180a2 2 0 0 0-1.660 0L2.600 6.080a1 1 0 0 0 0 1.830l8.580 3.910a2 2 0 0 0 1.660 0l8.580-3.900a1 1 0 0 0 0-1.830Z"/><path d="m22 17.650-9.170 4.160a2 2 0 0 1-1.660 0L2 17.650"/><path d="m22 12.650-9.170 4.160a2 2 0 0 1-1.660 0L2 12.650"/>',
     tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.420 0l6.580-6.580a2.426 2.426 0 0 0 0-3.420z"/><circle cx="7.500" cy="7.500" r=".500" fill="currentColor"/>',
+    copy: '<rect x="9" y="9" width="12" height="12" rx="2.500"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
     inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.450 5.110 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.450-6.890A2 2 0 0 0 16.760 4H7.240a2 2 0 0 0-1.790 1.110z"/>'
   };
   const I = (n, s) => `<svg class="i" width="${s || 16}" height="${s || 16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
@@ -900,19 +1001,22 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   // ------------------------------------------------------------------ data
   const PREM = new Set(["iim", "iit", "fms", "isb", "bschool", "nmims", "xaviers", "bits", "liberal", "newage", "premier"]), CORPS = new Set(["mbb", "big4", "fin", "corp", "global"]);
   const CIRCS = [{ id: "du", label: "DU Circuit" }, { id: "prem", label: "IIMs, IITs & Premier" }, { id: "corp", label: "Corporate & Global" }, { id: "other", label: "Others" }];
-  const KINDS = [{ id: "case", label: "Case, Strategy & Pitch" }, { id: "quiz", label: "Quizzes" }, { id: "sim", label: "Simulations & Mock Stock" }, { id: "write", label: "Writing & Research" }, { id: "debate", label: "Debates & MUNs" }, { id: "other", label: "Everything Else" }];
-  const CIRC = Object.fromEntries(CIRCS.map(x => [x.id, x.label])), KIND = Object.fromEntries(KINDS.map(x => [x.id, x.label]));
+  // comp types come from config.json. Every comp has exactly one main type (c.ty), so type views never overlap
+  const TYPES = (META.types || []).concat([{ id: "other", label: "Everything else", tag: "", fam: "gen" }]), TYPE = Object.fromEntries(TYPES.map(x => [x.id, x]));
+  const TYPEIDS = TYPES.map(x => x.id), TECHT = new Set(TYPES.filter(x => x.fam === "tech").map(x => x.id)), BIZT = new Set(TYPES.filter(x => x.fam === "biz").map(x => x.id));
+  const REGIONS = META.regions || [], REGION = Object.fromEntries(REGIONS.map(r => [r[0], { id: r[0], label: r[1], state: r[2] }])), HOME = META.homeRegion || "delhi-ncr";
+  const STATES = [...new Set(REGIONS.map(r => r[2]))].sort();
+  const CIRC = Object.fromEntries(CIRCS.map(x => [x.id, x.label]));
   const SRCS = META.sources || [{ id: "unstop", label: "Unstop" }], SRC = Object.fromEntries(SRCS.map(x => [x.id, x.label]));
   const prep = c => {
     c.sid = String(c.id); c.src = c.src || "unstop";
     const cs = c.cats || [], nn = c.niches || [], ttl = c.t || "";
     c.circ = [cs.some(x => x === "du" || x === "du_top") && "du", cs.some(x => PREM.has(x)) && "prem", cs.some(x => CORPS.has(x)) && "corp"].filter(Boolean);
     if (!c.circ.length) c.circ = ["other"];
-    c.kinds = [c.case && "case", (nn.includes("quiz") || /\bquiz/i.test(ttl)) && "quiz",
-      (c.sim || /simulat|trading (game|challenge|contest|league)|mock (stock|trading)|stock market (game|challenge)|bidding|auction/i.test(ttl)) && "sim",
-      /essay|article|writing|research|\bpapers?\b|\bblog|journal|report\b|poster|policy brief/i.test(ttl) && "write",
-      (nn.includes("debate") || /debate|\bmun\b|model united|parliament|moot/i.test(ttl)) && "debate"].filter(Boolean);
-    if (!c.kinds.length) c.kinds = ["other"];
+    if (!TYPE[c.ty]) c.ty = c.case ? "case" : "other";
+    if (!c.types) c.types = [c.ty];
+    // a lesser-known B-school on its own. With a company brand or another known organiser next to it, the comp stays in the main list
+    c.b2 = cs.includes("bschool2") && !cs.some(x => x !== "bschool2" && x !== "org");
     c.fit = c.fit || [];
     c.dlMs = ms(c.dl);
     c.daysLeft = c.dlMs == null ? null : (c.dlMs - NOW) / DAY;
@@ -932,13 +1036,13 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     { id: "online", label: "Fully Online", cls: "g", tag: "Online" },
     { id: "delhi", label: "In Person in Delhi", cls: "a", tag: "Delhi" },
     { id: "ncr", label: "In Person in NCR", note: "Gurugram, Noida and around", cls: "a", tag: "NCR" },
-    { id: "check", label: "Unclear In-Person Part", note: "Optional or vague wording, off by default", cls: "w", tag: "In Person Unclear" },
-    { id: "corp", label: "Brand-Run, City Not Stated", note: "Usually a finale outside Delhi, off by default", cls: "w", tag: "In-Person Stage" },
-    { id: "flag", label: "Rejected, a Round Is in Person", note: "Listed online but a sentence requires attendance", cls: "b", tag: "In-Person Round" },
-    { id: "travel", label: "Rejected, Needs Travel", note: "Offline or hybrid outside Delhi NCR", cls: "b", tag: "Needs Travel" }
+    { id: "near", label: "In Person in Your City", cls: "a", tag: "Your City" },
+    { id: "check", label: "Unclear In-Person Part", note: "Optional or vague wording", cls: "w", tag: "In Person Unclear" },
+    { id: "corp", label: "Brand-Run, City Not Stated", note: "Usually a finale in another city", cls: "w", tag: "In-Person Stage" },
+    { id: "flag", label: "A Round Is in Person", note: "Listed online but a sentence requires attendance", cls: "b", tag: "In-Person Round" },
+    { id: "travel", label: "Needs Travel", note: "Offline or hybrid in another city", cls: "b", tag: "Needs Travel" }
   ];
   const LOC = Object.fromEntries(LOCS.map(l => [l.id, l]));
-  const REACH = new Set(["online", "delhi", "ncr"]);
   const CAT = Object.fromEntries(META.groups.map(g => [g.id, g.label]));
   const CATS = { iim: "IIM", iit: "IIT", fms: "FMS Delhi", isb: "ISB", bschool: "Top B-School", nmims: "NMIMS / Christ", du_top: "DU Top College", du: "DU", xaviers: "St. Xavier's", bits: "BITS Pilani", liberal: "Liberal Arts", newage: "New-Age School", premier: "Premier Institute", mbb: "Strategy Firm", big4: "Big 4", fin: "Finance Firm", corp: "Brand", global: "Global" };
   const NICHE = Object.fromEntries(META.niches.map(n => [n.id, n.label]));
@@ -984,7 +1088,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const b = BLANK();
     if (!o || typeof o !== "object") return b;
     Object.assign(b, o); b.v = 2;
-    b.profile = o.profile && (o.profile.course || o.profile.college || o.profile.cleared) ? Object.assign(NOPROFILE(), o.profile) : BLANK().profile;
+    b.profile = o.profile && (o.profile.course || o.profile.college || o.profile.cleared || o.profile.setup) ? Object.assign(NOPROFILE(), o.profile) : BLANK().profile;
     ["star", "hide", "tracked", "read"].forEach(k => { if (!b[k] || typeof b[k] !== "object" || Array.isArray(b[k])) b[k] = {}; });
     if (!Array.isArray(b.watch)) b.watch = [];
     b.look = b.look === "dark" ? "dark" : "light"; delete b.theme;
@@ -1011,7 +1115,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   // ------------------------------------------------------------------ account: Google sign-in, one copy of your data per account
   // Switched on by signin.txt (the Firebase web config). Signed out, everything stays in this browser as before.
   const CLOUD = SERVED && META.signin && META.signin.apiKey ? META.signin : null;
-  const cloud = { state: CLOUD ? "wait" : "off", timer: null, db: null, stop: null, sent: new Set() };
+  const cloud = { state: CLOUD ? "wait" : "off", timer: null, db: null, stop: null, sent: null };
   let U = null;
   const firstName = () => U ? (U.name || U.email || "You").split(/[\s@]/)[0] : "";
   const loadJs = src => new Promise((ok, no) => { const el = document.createElement("script"); el.src = src; el.onload = ok; el.onerror = () => no(new Error("blocked")); document.head.appendChild(el); });
@@ -1022,7 +1126,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       if (!firebase.apps.length) firebase.initializeApp(CLOUD);
       cloud.db = firebase.firestore();
       firebase.auth().onAuthStateChanged(onUser);
-    } catch (e) { cloud.state = "off"; acctPaint(); }
+    } catch (e) { cloud.state = "off"; acctPaint(); maybeSetup(); }
   }
   const rich = o => !!(Object.keys(o.tracked).length || Object.keys(o.star).length || Object.keys(o.hide).length || o.watch.length);
   // What was done on this device before signing in is added to the account, never dropped.
@@ -1037,7 +1141,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   async function onUser(u) {
     if (cloud.stop) { cloud.stop(); cloud.stop = null; }
     U = u ? { uid: u.uid, name: u.displayName || "", email: u.email || "", photo: u.photoURL || "" } : null;
-    if (!U) { cloud.state = "out"; renderAll(); return; }
+    if (!U) { cloud.state = "out"; cloud.sent = null; renderAll(); maybeSetup(); return; }
     cloud.state = "sync"; acctPaint();
     try {
       if (P.uid && P.uid !== U.uid) P = Object.assign(BLANK(), { look: P.look });
@@ -1051,14 +1155,26 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       P.uid = U.uid;
       if (!P.ts) P.ts = Date.now();
       storeLocal();
-      if (dirty) await cloudPush(); else cloud.state = "ok";
+      if (agreed() && !P.terms) { P.terms = { v: 1, at: Date.now() }; dirty = true; }
+      if (dirty) await cloudPush(); else { cloud.state = "ok"; shareTracked(); }
       cloud.stop = userDoc().onSnapshot(d => {
         const v = d.exists ? d.data() : null;
         if (!v || !v.state || (d.metadata && d.metadata.hasPendingWrites) || (v.ts || 0) <= (P.ts || 0)) return;
         P = adopt(JSON.parse(v.state)); P.uid = U.uid; storeLocal(); applyTheme(); recheck(); renderAll();
       }, () => {});
     } catch (e) { cloud.state = "err"; }
-    applyTheme(); recheck(); renderAll();
+    applyTheme(); recheck(); renderAll(); maybeSetup();
+  }
+  // Comp numbers only, in a short list of your own that nobody else can write to. The refresh reads it so a registered comp stays up to date after it leaves the open list
+  function shareTracked() {
+    if (!U || !cloud.db) return;
+    const ids = Object.keys(P.tracked).filter(id => /^\d{4,9}$/.test(id)).slice(-80), sig = U.uid + ":" + ids.join(",");
+    if (sig === cloud.sent) return;
+    cloud.sent = sig;
+    cloud.db.collection("tracked").doc(U.uid).set({ ids }).catch(() => {
+      // database rules from before this version only know the old shared list
+      if (ids.length) cloud.db.collection("public").doc("tracked").set({ ids: firebase.firestore.FieldValue.arrayUnion(...ids) }, { merge: true }).catch(() => {});
+    });
   }
   async function cloudPush() {
     if (!U || !cloud.db) return;
@@ -1066,14 +1182,14 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     try {
       await userDoc().set({ state: JSON.stringify(P), ts: P.ts || Date.now(), name: U.name });
       cloud.state = "ok";
-      // comp numbers only, so the refresh keeps a registered comp up to date after it leaves the open list
-      const ids = Object.keys(P.tracked).filter(id => /^\d+$/.test(id) && !cloud.sent.has(id));
-      if (ids.length) { ids.forEach(id => cloud.sent.add(id)); cloud.db.collection("public").doc("tracked").set({ ids: firebase.firestore.FieldValue.arrayUnion(...ids) }, { merge: true }).catch(() => {}); }
+      shareTracked();
     } catch (e) { cloud.state = "err"; }
     acctPaint();
   }
   async function signIn() {
     if (!CLOUD || !window.firebase) return toast("Sign-in is still loading, try again in a moment");
+    // nothing goes to an account before the person has said yes to the terms and to being 18 or older
+    if (!agreed()) { $("agOk").checked = false; $("agGo").disabled = true; return openDlg("agreeDlg"); }
     try {
       const prov = new firebase.auth.GoogleAuthProvider(); prov.setCustomParameters({ prompt: "select_account" });
       await firebase.auth().signInWithPopup(prov);
@@ -1083,12 +1199,40 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       toast(/popup-blocked/.test(c) ? "Allow pop-ups for this site, then sign in again" : /unauthorized-domain/.test(c) ? "This link is not on the Firebase authorised domains list yet" : /operation-not-allowed/.test(c) ? "Google sign-in is not switched on in Firebase yet" : "Sign-in did not go through, try again");
     }
   }
+  const agreed = () => { try { return localStorage.getItem("mystop.terms") === "1" || !!P.terms; } catch (e) { return !!P.terms; } };
+  const emptyDevice = () => { P = Object.assign(BLANK(), { look: P.look }); try { localStorage.removeItem("unstopRadar.v2"); localStorage.removeItem("unstopRadar.v1"); } catch (e) {} };
+  // Delete My Data: the account record, the tracked list and the sign-in itself, then this device
+  async function wipe() {
+    if (!U || !cloud.db) return;
+    const btn = $("delGo"); btn.disabled = true; btn.textContent = "Deleting…"; suAsked = true;
+    let gone = false, authGone = false;
+    try {
+      if (cloud.stop) { cloud.stop(); cloud.stop = null; }
+      clearTimeout(cloud.timer);
+      const uid = U.uid, me = firebase.auth().currentUser;
+      await cloud.db.collection("users").doc(uid).delete();
+      gone = true;
+      await cloud.db.collection("tracked").doc(uid).delete().catch(() => {});
+      try { await me.delete(); authGone = true; }
+      catch (e) {
+        // Google asks for a fresh sign-in before it removes an account
+        if (/requires-recent-login/.test((e && e.code) || "")) { await me.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider()); await me.delete(); authGone = true; }
+      }
+    } catch (e) {}
+    btn.disabled = false; btn.textContent = "Delete Everything";
+    closeDlg("delDlg");
+    if (!gone) return toast("Could not reach your account, nothing was deleted");
+    try { localStorage.removeItem("mystop.terms"); } catch (e) {}
+    emptyDevice();
+    if (!authGone) { try { await firebase.auth().signOut(); } catch (e) {} }
+    recheck(); renderAll();
+    toast(authGone ? "Your data and your sign-in are deleted" : "Your data is deleted. Sign in once more and delete again to remove the sign-in too");
+  }
   async function signOut() {
-    $("acctMenu").hidden = true;
+    $("acctMenu").hidden = true; suAsked = true;
     try { if (cloud.state === "sync") await cloudPush(); await firebase.auth().signOut(); } catch (e) {}
     // the account keeps everything, this device goes back to empty
-    P = Object.assign(BLANK(), { look: P.look });
-    try { localStorage.removeItem("unstopRadar.v2"); } catch (e) {}
+    emptyDevice();
     recheck(); renderAll(); toast("Signed out, your data stays in your account");
   }
   const GI = '<svg class="gi" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.500c3.540 0 6.710 1.220 9.210 3.600l6.850-6.850C35.900 2.380 30.470 0 24 0 14.620 0 6.510 5.380 2.560 13.220l7.980 6.190C12.430 13.720 17.740 9.500 24 9.500z"/><path fill="#4285F4" d="M46.980 24.550c0-1.570-.150-3.090-.380-4.550H24v9.020h12.940c-.580 2.960-2.260 5.480-4.780 7.180l7.730 6c4.510-4.180 7.090-10.360 7.090-17.650z"/><path fill="#FBBC05" d="M10.530 28.590c-.480-1.450-.760-2.990-.760-4.590s.270-3.140.760-4.590l-7.980-6.190C.920 16.460 0 20.120 0 24c0 3.880.920 7.540 2.560 10.780l7.970-6.190z"/><path fill="#34A853" d="M24 48c6.480 0 11.930-2.130 15.890-5.810l-7.730-6c-2.150 1.450-4.920 2.300-8.160 2.300-6.260 0-11.570-4.220-13.470-9.910l-7.980 6.190C6.510 42.620 14.620 48 24 48z"/></svg>';
@@ -1098,7 +1242,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (!U) { m.hidden = true; el.innerHTML = `<button class="btn primary" data-act="signin" title="Sign in with Google to keep your comps on every device">${GI}Sign In</button>`; return; }
     const st = cloud.state, line = st === "err" ? "Could not reach your account, changes stay on this device for now" : st === "sync" ? "Saving to your account…" : "Saved to your account, the same on every device";
     el.innerHTML = `<button class="me" data-act="acct" aria-expanded="${!m.hidden}" title="Your Account">${U.photo ? `<img src="${escA(U.photo)}" alt="" referrerpolicy="no-referrer">` : `<span class="ava">${escA(firstName().slice(0, 1).toUpperCase())}</span>`}<span class="me-t"><b>${escA(firstName())}</b><small>${st === "err" ? "Sync Failed" : st === "sync" ? "Saving…" : "Synced"}</small></span>${I("chev", 15)}</button>`;
-    m.innerHTML = `<b>${escA(U.name || firstName())}</b><small>${escA(U.email)}</small><p class="${st}">${I(st === "err" ? "alert" : st === "sync" ? "refresh" : "check", 15)}<span>${line}</span></p><button class="btn" data-act="profile">Edit Profile</button><button class="btn ghost" data-act="signout">Sign Out</button>`;
+    m.innerHTML = `<b>${escA(U.name || firstName())}</b><small>${escA(U.email)}</small><p class="${st}">${I(st === "err" ? "alert" : st === "sync" ? "refresh" : "check", 15)}<span>${line}</span></p><button class="btn" data-act="profile">Edit Profile</button><button class="btn ghost" data-act="signout">Sign Out</button><span class="lk"><button class="link" data-act="legal">Terms and Privacy</button><button class="link" data-act="wipe">Delete My Data</button></span>`;
   }
   function push() { fetch("api/state", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(P) }).catch(() => {}); }
   function applyTheme() { document.documentElement.dataset.theme = P.look; $("themeBtn").innerHTML = I(P.look === "dark" ? "sun" : "moon", 19); }
@@ -1136,36 +1280,87 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (c.sameOrg && p.sameTeam === false && (c.tmin || 1) > 1) why.push("One-College Teams Only");
     return why;
   }
-  const recheck = () => { const mine = domainsFor(P.profile.course); Object.values(BY).forEach(c => { c.inel = ineligible(c); c.fit = (c.niches || []).filter(n => mine.includes(n)); }); };
+  // ---- what makes the list yours: the types you compete in, your course and your city
+  const TYPEDEF = { bSchools: ["case", "sim", "bplan"], engineering: ["hack", "code", "data"], arts: ["quiz", "debate", "write"], law: ["debate", "write", "case"], medicine: ["quiz", "research", "case"], general: ["case", "hack", "quiz"] };
+  const streamOf = course => (COURSE[course] || {}).stream || "";
+  const typesFor = course => TYPEDEF[streamOf(course)] || TYPEDEF.bSchools;
+  const pickedTypes = () => Array.isArray(P.profile.types) ? P.profile.types.filter(t => TYPE[t] && t !== "other") : [];
+  // nothing known about the person yet (not signed in, or setup skipped): one general list, no course or city assumed
+  const general = () => !(P.profile.course || P.profile.college || pickedTypes().length);
+  const myTypes = () => { const pk = pickedTypes(); return pk.length ? TYPEIDS.filter(t => pk.includes(t)) : general() ? TYPEDEF.general : typesFor(P.profile.course); };
+  // two ways to rank the same comps. Tech formats picked (or an engineering course with nothing picked) means the tech ranking, everyone else gets the business one
+  const ladderFor = (types, course) => { const t = types.filter(x => TECHT.has(x)).length, b = types.filter(x => BIZT.has(x)).length; return t !== b ? (t > b ? "tech" : "biz") : streamOf(course) === "engineering" ? "tech" : "biz"; };
+  const ladder = () => ladderFor(pickedTypes(), P.profile.course);
+  const wantsCode = () => general() || ladder() === "tech" || pickedTypes().some(t => TECHT.has(t));
+  // a profile saved before cities existed keeps the Delhi NCR reach it always had
+  const regionId = () => { const p = P.profile; return p.region != null ? (REGION[p.region] ? p.region : "") : (p.course || p.college) ? HOME : ""; };
+  const reachAll = () => P.profile.reach === "all";
+  const locsNow = () => { const r = regionId(); return LOCS.filter(l => r === HOME ? l.id !== "near" : l.id !== "delhi" && l.id !== "ncr" && (r || l.id !== "near")); };
+  const reachNow = () => { const r = regionId(); return r === HOME ? ["online", "delhi", "ncr"] : r ? ["online", "near"] : ["online"]; };
+  const cityShort = () => { const r = REGION[regionId()]; return r ? r.label : ""; };
+  function locFor(c, r) {
+    const l = c.loc0;
+    if (l === "online" || r === HOME || !l) return l;
+    if (r && c.rg === r) return "near";
+    if (l === "delhi" || l === "ncr") return c.need === "unclear" ? "check" : /offline|hybrid/.test(c.mode || "") ? "travel" : "flag";
+    return l;
+  }
+  function personal(c, ctx) {
+    if (c.s0 == null) { c.s0 = c.score || 0; c.why0 = c.why || []; c.loc0 = c.loc; }
+    const tech = ctx.lad === "tech" && c.st != null;
+    let sc = tech ? c.st : c.s0; const why = (tech ? c.wt || [] : c.why0).slice();
+    const hit = (c.types || []).find(t => ctx.pk.has(t));
+    // the business ranking already rewards case and simulation formats, so a picked type adds points only where nothing did
+    if (hit && (tech || !(c.tb > 0))) { sc += ctx.ts; why.push(["A type you picked: " + TYPE[hit].label, ctx.ts, "type"]); }
+    c.score = Math.max(0, Math.min(100, sc)); c.why = why;
+    c.tier = c.score >= META.tiers.high ? "high" : c.score >= META.tiers.medium ? "medium" : "low";
+    if (c.loc0) c.loc = locFor(c, ctx.r);
+    c.inel = ineligible(c); c.fit = (c.niches || []).filter(n => ctx.mine.includes(n));
+    return c;
+  }
+  const ctxNow = () => ({ lad: ladder(), pk: new Set(pickedTypes()), ts: META.typeScore || 5, r: regionId(), mine: domainsFor(P.profile.course) });
+  function recheck() {
+    const ctx = ctxNow(), city = cityShort();
+    Object.values(BY).forEach(c => personal(c, ctx));
+    LOC.near.label = "In Person in " + (city || "Your City"); LOC.near.tag = city || "Your City";
+    LOC.travel.note = "Offline or hybrid " + (city ? "outside " + city : "in another city");
+    LOC.corp.note = "Usually a finale " + (city ? "outside " + city : "in another city");
+    PRESETS = presets();
+    const sig = JSON.stringify([ctx.lad, [...ctx.pk], ctx.r, reachAll(), P.profile.course || "", general()]);
+    if (sig !== tuned) { tuned = sig; if (typeof S !== "undefined") S = Object.assign(DEFAULTS(), { q: S.q }); }
+  }
+  let tuned = null;
   const profileSet = () => !!(P.profile.course || P.profile.college);
   const courseShort = () => ((COURSE[P.profile.course] || {}).label || P.profile.course || "").split(" / ")[0];
 
   // ------------------------------------------------------------------ discover: state + filters
   const DEFAULTS = () => ({
-    q: "", sort: "score", tier: [], cats: [], catsAll: false, loc: ["online", "delhi", "ncr"],
+    q: "", sort: "score", tier: [], cats: [], catsAll: false, loc: reachAll() ? locsNow().map(l => l.id) : reachNow(),
     niches: [], nichesAll: false, intern: 0, minPrize: 0, maxRounds: 0, maxReg: 0, minReg: 0, first: [],
-    circ: [], kinds: [], src: [], team: "", fee: "", fit: false,
-    hideCode: true, eligOnly: true, dl: 0, isNew: false, starred: false, showHidden: false, hideTracked: false
+    circ: [], ty: [], b2: "", src: [], team: "", fee: "", fit: false,
+    hideCode: !wantsCode(), eligOnly: true, dl: 0, isNew: false, starred: false, showHidden: false, hideTracked: false
   });
-  const PRESETS = [
-    { id: "all", label: "Everything I can do", set: {} },
-    { id: "high", label: "High Priority", set: { tier: ["high"] } },
-    { id: "case", label: "Case Comps only", set: { kinds: ["case"] } },
-    { id: "sim", label: "Simulations & mock stock", set: { kinds: ["sim"] } },
-    { id: "iim", label: "IIM, fully online", set: { cats: ["iim"], loc: ["online"] } },
-    { id: "iit", label: "IIT, online or Delhi", set: { cats: ["iit"], loc: ["online", "delhi"] } },
-    { id: "bs", label: "Top B-schools", set: { cats: ["fms", "isb", "bschool", "nmims"] } },
-    { id: "du", label: "DU & new-age", set: { cats: ["du_top", "du", "newage"] } },
-    { id: "firms", label: "Consulting & finance", set: { cats: ["mbb", "big4", "fin"] } },
-    { id: "corp", label: "Corporate, low effort", set: { cats: ["corp"], maxRounds: 3, maxReg: 3000 } },
-    { id: "intern", label: "Internship, PPI or PPO", set: { intern: 1 } },
-    { id: "prize", label: "₹1 lakh+ prize", set: { minPrize: 100000, sort: "prize" } },
-    { id: "week", label: "Closing this week", set: { dl: 7, sort: "dl" } },
-    { id: "every", label: "All 651, incl. rejected", set: { loc: LOCS.map(l => l.id), eligOnly: false, hideCode: false } }
-  ];
-  PRESETS[PRESETS.length - 1].label = `All ${COMPS.length}, incl. rejected`;
-  let S = DEFAULTS(), shown = 40, TAB = "home", fOpen = true;
-  const OPEN = new Set(), SEC = { tier: false, cats: false, niches: false, first: false, deadline: false };
+  // Views that do not overlap. Row 1 splits your list by priority, row 2 splits the same list by type, and both add up to "Everything I Can Do"
+  function presets() {
+    const mt = myTypes(), rest = TYPEIDS.filter(t => !mt.includes(t));
+    return [
+      { id: "all", row: 1, label: "Everything I can do", set: {} },
+      { id: "high", row: 1, label: "High Priority", set: { tier: ["high"] } },
+      { id: "medium", row: 1, label: "Medium", set: { tier: ["medium"] } },
+      { id: "low", row: 1, label: "Low", set: { tier: ["low"] } }
+    ].concat(mt.map(t => ({ id: "ty-" + t, row: 2, label: TYPE[t].label, set: { ty: [t] } })), [
+      { id: "ty-rest", row: 2, label: "Everything else", set: { ty: rest } },
+      { id: "b2", row: 3, label: "Other B-schools", tip: "MDI, Great Lakes, IMT, IMI and similar, kept out of your main list", set: { b2: "only" } },
+      { id: "every", row: 3, label: `All ${COMPS.length}, incl. rejected`, set: { loc: locsNow().map(l => l.id), eligOnly: false, hideCode: false, b2: "all" } },
+      // not shown as views, Home links to them
+      { id: "week", row: 0, label: "Closing this week", set: { dl: 7, sort: "dl" } },
+      { id: "intern", row: 0, label: "Internship, PPI or PPO", set: { intern: 1 } }
+    ]);
+  }
+  let PRESETS = [];
+  var S = DEFAULTS(), shown = 40, TAB = "home", fOpen = true;
+  let fineOpen = false;
+  const OPEN = new Set(), SEC = { kinds: false, tier: false, cats: false, niches: false, first: false, deadline: false };
 
   const has = (arr, sel, all) => !sel.length || (all ? sel.every(x => arr.includes(x)) : sel.some(x => arr.includes(x)));
   const TESTS = {
@@ -1176,7 +1371,9 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     niches: c => has(c.niches, S.niches, S.nichesAll),
     intern: c => !S.intern || (S.intern === 1 ? c.intern >= 1 : S.intern === 2 ? c.intern === 2 : c.internKind === (S.intern === 3 ? "ppo" : "ppi")),
     circ: c => has(c.circ, S.circ, false),
-    kinds: c => has(c.kinds, S.kinds, false),
+    ty: c => !S.ty.length || S.ty.includes(c.ty),
+    // lesser-known B-schools sit in their own view. A search, or ticking that organiser, still finds them
+    b2: c => S.b2 === "all" || !!S.q || S.cats.includes("bschool2") || (S.b2 === "only") === !!c.b2,
     src: c => !S.src.length || S.src.includes(c.src),
     team: c => !S.team || (S.team === "solo" ? (c.tmin || 1) <= 1 : (c.tmax || 1) > 1),
     fee: c => !S.fee || (S.fee === "free" ? c.fee == null : c.fee != null),
@@ -1252,7 +1449,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (S.minReg) add("minReg", NUM(S.minReg) + "+ Registered");
     if (S.maxRounds) add("maxRounds", S.maxRounds === 1 ? "1 Round Only" : "Up to " + S.maxRounds + " Rounds");
     S.circ.forEach(v => add("circ:" + v, CIRC[v]));
-    S.kinds.forEach(v => add("kinds:" + v, KIND[v]));
+    if (S.ty.length > 3) add("ty", S.ty.length + " Categories"); else S.ty.forEach(v => add("ty:" + v, TYPE[v].label));
+    if (S.b2) add("b2", S.b2 === "only" ? "Other B-Schools Only" : "Incl. Other B-Schools");
     if (S.team) add("team", S.team === "solo" ? "Solo OK" : "Team Comps");
     if (S.fee) add("fee", S.fee === "free" ? "Free Entry" : "Paid Entry");
     S.src.forEach(v => add("src:" + v, "On " + (SRC[v] || v)));
@@ -1263,7 +1461,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     S.first.forEach(v => add("first:" + v, "Round 1: " + (RT[v] || v)));
     if (S.dl) add("dl", "Closes in " + S.dl + " Days");
     if (S.isNew) add("isNew", "New Listings");
-    if (!S.hideCode) add("hideCode", "Coding Comps Shown");
+    if (S.hideCode !== d.hideCode) add("hideCode", S.hideCode ? "Coding Comps Hidden" : "Coding Comps Shown");
     return out;
   }
   function clearChip(k) {
@@ -1277,6 +1475,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const catsUsed = META.groups.filter(g => g.always || COMPS.some(c => c.cats.includes(g.id)));
     const nichesUsed = META.niches.filter(n => COMPS.some(c => c.niches.includes(n.id)));
     const firstUsed = FIRST.filter(f => COMPS.some(c => c.first === f.id));
+    const typesUsed = TYPES.filter(t => COMPS.some(c => c.ty === t.id)), city = cityShort(), all = reachAll();
     const ae = document.activeElement, fb = $("fbody");
     const focusSel = ae && fb.contains(ae) ? ["k", "v", "t", "sel", "seg", "pick", "val"].filter(k => ae.dataset[k] != null).map(k => `[data-${k}="${ae.dataset[k]}"]`).join("") : "";
     const cut = facet("eligOnly", c => c.inel.length > 0), code = facet("hideCode", c => !!c.code);
@@ -1299,13 +1498,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
          <div class="frow"><span>Min Registered</span>${sel("minReg", [[0, "Any"], [25, "25+"], [100, "100+"], [500, "500+"], [1000, "1,000+"], [5000, "5,000+"]])}</div>
          <div class="frow"><span>Max Rounds</span>${sel("maxRounds", [[0, "Any"], [1, "1 only"], [2, "Up to 2"], [3, "Up to 3"], [4, "Up to 4"]])}</div>`) +
       sec("circ", "Circuits", S.circ.length, checks("circ", CIRCS, id => facet("circ", c => c.circ.includes(id)))) +
-      sec("kinds", "Categories", S.kinds.length || !S.hideCode, checks("kinds", KINDS, id => facet("kinds", c => c.kinds.includes(id))) +
+      sec("kinds", "Categories", S.ty.length || S.hideCode !== d.hideCode, checks("ty", typesUsed, id => facet("ty", c => c.ty === id)) +
         toggle("hideCode", "Hide Coding Contests & Hackathons", null, code ? `${code} Hidden` : "None in This View")) +
       sec("team", "Participation", S.team, pick("team", [["", "All", nT("")], ["solo", "Solo", nT("solo")], ["team", "Team", nT("team")]])) +
       sec("fee", "Entry Fee", S.fee, pick("fee", [["", "All", nF("")], ["free", "Free", nF("free")], ["paid", "Paid", nF("paid")]])) +
-      sec("loc", "Where It Happens", JSON.stringify([...S.loc].sort()) !== JSON.stringify([...d.loc].sort()), checks("loc", LOCS, id => facet("loc", c => c.loc === id))) +
-      sec("src", "Platforms", S.src.length, checks("src", SRCS, id => facet("src", c => c.src === id)) +
-        (SRCS.length > 1 ? `<span class="fnote">A comp never shows twice. Unstop comes first, and InsideKampus only adds comps that Unstop does not have${(META.dupes || []).length ? ", " + plural(META.dupes.length, "listing") + " left out today" : ""}</span>` : "")) +
+      sec("loc", "Where It Happens", JSON.stringify([...S.loc].sort()) !== JSON.stringify([...d.loc].sort()),
+        `<span class="seg wide reach" role="group" aria-label="How Far You Can Go"><button data-reach="near" aria-pressed="${!all}" title="${city ? "Online comps plus in-person ones in " + esc(city) : "Online comps only. Add your city in the profile to see in-person ones near you"}">${city ? "Online and Nearby" : "Online Only"}</button><button data-reach="all" aria-pressed="${all}" title="Also show in-person comps in other cities">Everything</button></span>` +
+        `<details class="ftune"${fineOpen || JSON.stringify([...S.loc].sort()) !== JSON.stringify([...d.loc].sort()) ? " open" : ""} data-fine="1"><summary>Fine Tune${I("chev", 13)}</summary>${checks("loc", locsNow(), id => facet("loc", c => c.loc === id))}</details>`) +
+      (SRCS.length < 2 ? "" : sec("src", "Platforms", S.src.length, checks("src", SRCS, id => facet("src", c => c.src === id)) +
+        (SRCS.length > 1 ? `<span class="fnote">A comp never shows twice. Unstop comes first, and InsideKampus only adds comps that Unstop does not have${(META.dupes || []).length ? ", " + plural(META.dupes.length, "listing") + " left out today" : ""}</span>` : ""))) +
       sec("tier", "Priority", S.tier.length, checks("tier", TIERS, id => facet("tier", c => c.tier === id))) +
       sec("cats", "Organiser, in Detail", S.cats.length, checks("cats", catsUsed, id => facet("cats", c => c.cats.includes(id))), seg("catsAll")) +
       sec("niches", "Domain", S.niches.length, checks("niches", nichesUsed, id => facet("niches", c => c.niches.includes(id))), seg("nichesAll")) +
@@ -1327,7 +1528,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   }
   function logo(c) {
     let h = 0; for (const ch of String(c.org || c.t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-    return `<span class="lg" style="--lh:${HUES[h % HUES.length]}"><b>${esc(mono(c))}</b>${c.logo ? `<img src="${escA(c.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}</span>`;
+    return `<span class="lg" style="--lh:${HUES[h % HUES.length]}"><b>${esc(mono(c))}</b>${c.logo ? `<img src="${escA(c.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</span>`;
   }
   const shortOrg = o => { const m = String(o || "").match(/\(([A-Z][A-Za-z&.]{1,9})\),?\s*(.*)$/); return m ? (m[1] + " " + m[2]).trim() : String(o || ""); };
   const pill = (cls, txt, title) => `<span class="pill${cls ? " t-" + cls : ""}"${title ? ` title="${esc(title)}"` : ""}><i></i>${esc(tc(txt))}</span>`;
@@ -1365,15 +1566,14 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   }
   const TYC = { quiz: "q", deck: "d", live: "l", video: "v", build: "b", sim: "s", other: "o", info: "o" };
   const IKL = { ppo: "PPO Chance", ppi: "PPI Chance", intern: "Internship Chance" };
-  const KINDTAG = { case: "Case Comp", quiz: "Quiz", sim: "Simulation", write: "Writing", debate: "Debate" };
-  const kindOf = c => c.kinds.includes("sim") ? "sim" : c.kinds.find(k => k !== "other");
+  const typeTag = c => { const t = TYPE[c.ty]; return t && t.tag ? t : null; };
   function row(c) {
     const id = c.sid, star = !!P.star[id], hid = !!P.hide[id], trk = !!P.tracked[id], open = OPEN.has(id);
     const pl = [];
     const cat = c.cats.filter(x => x !== "org" && !(x === "corp" && c.cats.some(y => ["mbb", "big4", "fin"].includes(y))))[0];
     if (cat) pl.push(pill("a", CATS[cat] || CAT[cat] || cat, CAT[cat]));
-    const kd = kindOf(c);
-    if (kd) pl.push(pill("v", KINDTAG[kd], KIND[kd]));
+    const kd = typeTag(c);
+    if (kd) pl.push(pill("v", kd.tag, kd.label));
     pl.push(pill(LOC[c.loc].cls, LOC[c.loc].tag, LOC[c.loc].label));
     if (c.isNew) pl.push(pill("", "New"));
     const fl = [];
@@ -1386,8 +1586,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const due = deadline(c);
     return `<article class="row${hid ? " dim" : ""}" id="c-${id}">
       <div class="c-h">${logo(c)}<div class="c-o">
-        <div class="c-top"><b title="${esc(c.org)}">${esc(shortOrg(c.org))}</b>${due}<button class="ib star" data-star="${id}" aria-pressed="${star}" title="${star ? "Remove from Starred" : "Star It, It Then Waits in Starred"}" aria-label="Star">${I("bookmark", 17)}</button></div>
-        <a class="t" href="${escA(c.url)}" target="_blank" rel="noopener" title="${esc(c.t)}">${esc(c.t)}</a>
+        <div class="c-top"><b title="${esc(c.org)}">${esc(shortOrg(c.org))}</b>${due}<button class="ib cpy" data-copy="${id}" title="Copy the Details to Send to a Friend" aria-label="Copy Details">${I("copy", 15)}</button><button class="ib star" data-star="${id}" aria-pressed="${star}" title="${star ? "Remove from Starred" : "Star It, It Then Waits in Starred"}" aria-label="Star">${I("bookmark", 17)}</button></div>
+        <a class="t" href="${link(c.url)}" target="_blank" rel="noopener" title="${esc(c.t)}">${esc(c.t)}</a>
         <span class="pills">${fl.join("")}${pl.join("")}</span></div></div>
       <div class="c-m">${prize}
         <div class="c-n" title="Registered so far"><b>${c.reg ? NUM(c.reg) : "N/A"}</b><small>Registered</small></div>
@@ -1395,7 +1595,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
         <div class="c-a">${due}
           <button class="ib exp" data-open="${id}" aria-expanded="${open}" title="Score, Location Check and Stages" aria-label="Details">${I("chev", 17)}</button>
           <button class="ib" data-hide="${id}" aria-pressed="${hid}" title="${hid ? "Unhide" : "Hide for Now"}" aria-label="${hid ? "Unhide" : "Hide for Now"}">${I(hid ? "eye" : "eyeoff", 17)}</button>
-          <a class="btn ap" href="${escA(c.url)}" target="_blank" rel="noopener" title="Opens on ${esc(SRC[c.src] || "Unstop")}">Apply${I("up", 13)}</a>
+          <a class="btn ap" href="${link(c.url)}" target="_blank" rel="noopener" title="Opens on ${esc(SRC[c.src] || "Unstop")}">Apply${I("up", 13)}</a>
           <button class="btn trackb${trk ? " on" : ""}" data-track="${id}" title="${trk ? "Registered, Click to Remove" : "Add to My Registrations"}">${I(trk ? "check" : "plus", 14)}${trk ? "Registered" : "Track"}</button></div></div>
       ${open ? why(c) : ""}</article>`;
   }
@@ -1430,6 +1630,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     $("closeFilters").textContent = `Show ${plural(list.length, "Result")}`;
     $("pgS").textContent = `${plural(list.length, "result")}${S.q ? " for “" + S.q + "”" : ""}`;
     $("v-discover").classList.toggle("nof", !fOpen);
+    $("heroLine").textContent = general() ? (reachAll() ? "Every open comp, scored. " : "Every open comp you can do online, scored. ") + (CLOUD && !U ? "Sign in" : "Set up your profile") + " to get a list ranked for your course and city"
+      : "Every open comp scored for you, minus " + (DEFAULTS().hideCode ? "coding contests and " : "") + "anything you can't enter" + (reachAll() ? "" : cityShort() ? " or reach from " + cityShort() : " or that needs you there in person");
     renderFilters();
     renderViews();
   }
@@ -1445,7 +1647,10 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   }
   function renderViews() {
     const ap = TAB === "discover" ? activePreset() : null;
-    $("viewsM").innerHTML = PRESETS.map(p => `<button data-preset="${p.id}" aria-pressed="${p.id === ap}">${esc(tc(p.label))}<em>${countFor(p.set)}</em></button>`).join("");
+    const btn = p => `<button data-preset="${p.id}" aria-pressed="${p.id === ap}"${p.tip ? ` title="${esc(p.tip)}"` : ""}>${esc(tc(p.label))}<em>${countFor(p.set)}</em></button>`;
+    const r3 = PRESETS.filter(p => p.row === 3 && (p.id !== "b2" || COMPS.some(c => c.b2)));
+    $("viewsM").innerHTML = `<div class="vrow" role="group" aria-label="By Priority">${PRESETS.filter(p => p.row === 1).map(btn).join("")}</div>` +
+      `<div class="vrow" role="group" aria-label="By Type">${PRESETS.filter(p => p.row === 2).map(btn).join("")}<i class="vsep"></i>${r3.map(btn).join("")}</div>`;
   }
 
   // ------------------------------------------------------------------ tracker
@@ -1584,7 +1789,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       if (c.loc && LOC[c.loc]) m.push(`<span>${esc(LOC[c.loc].tag)}</span>`);
       if (t.team) m.push(`<span class="tm" title="Your team for this comp">${I("users", 13)}${esc(t.team)}</span>`);
       return `<article class="reg${t.hidden ? " off" : ""}" id="t-${id}">
-        <div class="reg-h">${logo(c)}<div class="rh"><a class="t" href="${escA(c.url)}" target="_blank" rel="noopener">${esc(c.t)}${I("up", 13)}</a><div class="meta">${m.join("")}</div>${nx}</div>
+        <div class="reg-h">${logo(c)}<div class="rh"><a class="t" href="${link(c.url)}" target="_blank" rel="noopener">${esc(c.t)}${I("up", 13)}</a><div class="meta">${m.join("")}</div>${nx}</div>
           <div class="acts"><span class="seg" role="group" aria-label="My Priority">${[1, 2, 3].map(p => `<button data-pri="${id}" data-val="${p}" aria-pressed="${t.pri === p}">${PRI[p]}</button>`).join("")}</span>
             <button class="btn sm ghost" data-later="${id}" title="${t.hidden ? "Put It Back in Your Active List" : "Hide for Now, Nothing Is Deleted"}">${I(t.hidden ? "eye" : "eyeoff", 13)}${t.hidden ? "Unhide" : "Hide for Now"}</button></div></div>
         ${steps}
@@ -1630,9 +1835,9 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
         ln = `Registration Closes <b>${fD(c.dlMs)}</b>, ${tc(rel(c.dlMs))}`;
         if (c.inel.length) c.inel.forEach(r => chips.push(chip("b", r))); else chips.push(chip("g", "You Can Enter"));
       } else if (o.last) {
-        const late = o.exp && o.exp < NOW - 45 * DAY, ran = ms(o.last.rs) ? `<a href="${escA(o.last.url)}" target="_blank" rel="noopener" title="${esc(o.last.t)}">${fRange(ms(o.last.rs), ms(o.last.re))}</a>` : "";
+        const late = o.exp && o.exp < NOW - 45 * DAY, ran = ms(o.last.rs) ? `<a href="${link(o.last.url)}" target="_blank" rel="noopener" title="${esc(o.last.t)}">${fRange(ms(o.last.rs), ms(o.last.re))}</a>` : "";
         cls = late ? "late" : "soon"; state = late ? "Overdue" : o.exp ? "Expected " + new Date(o.exp).toLocaleDateString("en-IN", { month: "short", year: "numeric" }) : "Closed";
-        ln = late ? `Was Due Around <b>${fD(o.exp)}</b> and Is Not Listed Yet` : o.exp ? `Opens Around <b>${fD(o.exp)}</b>${ran ? ", Last Ran " + ran : ""}` : `Last Edition Was <a href="${escA(o.last.url)}" target="_blank" rel="noopener">${esc(o.last.t)}</a>`;
+        ln = late ? `Was Due Around <b>${fD(o.exp)}</b> and Is Not Listed Yet` : o.exp ? `Opens Around <b>${fD(o.exp)}</b>${ran ? ", Last Ran " + ran : ""}` : `Last Edition Was <a href="${link(o.last.url)}" target="_blank" rel="noopener">${esc(o.last.t)}</a>`;
         if (o.lastRec) o.lastRec.inel.forEach(r => chips.push(chip("b", r, "Going by the Last Edition")));
       } else if (w.url) {
         const pg = w.page || {}, live = pg.ok && pg.open;
@@ -1643,9 +1848,9 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
         ln = w.unstop_ok === false ? "Unstop Search Failed on the Last Check" : esc(w.when || "No Edition on Unstop Under This Name");
       }
       if (w.note) chips.push(chip("n", w.note));
-      if (w.url) { const pg = w.page || {}; if (pg.ok && pg.open) chips.push(chip("g", "Site Shows Registration")); chips.push(`<a class="pill" href="${escA(w.url)}" target="_blank" rel="noopener">Official Site${I("up", 11)}</a>`); }
+      if (w.url) { const pg = w.page || {}; if (pg.ok && pg.open) chips.push(chip("g", "Site Shows Registration")); chips.push(`<a class="pill" href="${link(w.url)}" target="_blank" rel="noopener">Official Site${I("up", 11)}</a>`); }
       return `<article class="w ${cls}" id="w-${escA(w.name)}"><div><h3>${esc(w.name)}<span class="pill t-${{ open: "g", soon: "a", late: "w" }[cls] || "n"}">${esc(tc(state))}</span>${w.by ? `<small>${esc(w.by)}</small>` : ""}</h3><p>${ln}</p>${chips.length ? `<div class="chips">${chips.join("")}</div>` : ""}</div>
-        <div class="acts">${c ? `<a class="btn sm ghost" href="${escA(c.url)}" target="_blank" rel="noopener">Open${I("up", 12)}</a><button class="btn sm${P.tracked[c.id] ? " on" : ""}" data-track="${c.id}">${I(P.tracked[c.id] ? "check" : "plus", 13)}${P.tracked[c.id] ? "Registered" : "Track"}</button>` : ""}${w.mine ? `<button class="btn sm ghost" data-unwatch="${escA(w.name)}">Remove</button>` : ""}</div></article>`;
+        <div class="acts">${c ? `<a class="btn sm ghost" href="${link(c.url)}" target="_blank" rel="noopener">Open${I("up", 12)}</a><button class="btn sm${P.tracked[c.id] ? " on" : ""}" data-track="${c.id}">${I(P.tracked[c.id] ? "check" : "plus", 13)}${P.tracked[c.id] ? "Registered" : "Track"}</button>` : ""}${w.mine ? `<button class="btn sm ghost" data-unwatch="${escA(w.name)}">Remove</button>` : ""}</div></article>`;
     };
     const glob = items.filter(o => o.w.group === "global"), ind = items.filter(o => o.w.group !== "global");
     const html = (ind.length ? `<h3 class="wsec">Indian Flagships<small>${ind.length}</small></h3>` + ind.map(wcard).join("") : "") + (glob.length ? `<h3 class="wsec">International<small>${glob.length}</small></h3>` + glob.map(wcard).join("") : "");
@@ -1731,7 +1936,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   function renderHome(anim) {
     const picks = listFor({}).filter(c => !P.tracked[c.id] && (c.daysLeft == null || c.daysLeft > .5)).sort(SORTS.score);
     const pickCard = c => {
-      const kd = kindOf(c), kind = kd ? ["v", KINDTAG[kd]] : ["a", "Competition"];
+      const kd = typeTag(c), kind = kd ? ["v", kd.tag] : ["a", "Competition"];
       const second = c.intern ? `<span class="fl int${c.intern === 2 ? " sure" : ""}">${I("briefcase", 12)}${IKL[c.internKind] || "Internship Chance"}</span>` : LOC[c.loc] ? pill(LOC[c.loc].cls, LOC[c.loc].tag) : "";
       return `<article class="pick"><div class="pk-h">${logo(c)}<div class="pk-b"><small>${esc(shortOrg(c.org))}</small><button class="t" data-go="${c.id}" title="${esc(c.t)}"><span>${esc(c.t)}</span></button></div><span class="pk-s ${c.tier}" title="Priority Score ${c.score} of 100"><b>${c.score}</b><small>Score</small></span></div>
         <span class="pills pk-t">${pill(kind[0], kind[1])}${second}</span>
@@ -1759,9 +1964,10 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const regPanel = `<section><div class="sec-h"><h2>My Registrations</h2><button class="va" data-tab="tracker">View All${I("arrow", 16)}</button></div>
       ${regs.length ? `<p class="rg-sum">${regs.length} Active, ${dueSoon ? dueSoon + " Due in the Next 7 Days" : "Nothing Due in the Next 7 Days"}</p><div class="evs">${regs.slice(0, 5).map(regRow).join("")}</div>${regs.length > 5 ? `<button class="va rg-more" data-tab="tracker">${regs.length - 5} More in My Registrations${I("arrow", 16)}</button>` : ""}`
         : `<div class="rg-empty">${I("cal", 26)}<b>${nAll ? "Nothing Active Right Now" : "Nothing Registered Yet"}</b><span>${nAll ? "Everything you registered for is under Hidden or Finished" : "Press Track on a comp you registered for. Its stages, dates and reminders then show up here"}</span><button class="btn primary sm" data-tab="${nAll ? "tracker" : "discover"}">${nAll ? "Open My Registrations" : "Find Competitions"}</button></div>`}</section>`;
-    const nFor = id => listFor(PRESETS.find(p => p.id === id).set).length;
+    const nFor = id => listFor(PRESETS.find(p => p.id === id).set).length, top = PRESETS.find(p => p.row === 2);
+    const many = t => /^(Case Comp|Hackathon|Simulation|Debate)$/.test(t) ? t + "s" : t === "Quiz" ? "Quizzes" : t;
     const glance = (n, label, attr, tip) => `<button ${attr} title="${tip}"><b>${n}</b>${label}</button>`;
-    const nudge = CLOUD && cloud.state === "out" ? `<div class="nudge">${I("user", 18)}<span>Sign in with Google and your comps follow you to every device</span><button class="btn primary sm" data-act="signin">${GI}Sign In</button></div>`
+    const nudge = CLOUD && cloud.state === "out" ? `<div class="nudge">${I("user", 18)}<span>Sign in with Google for a list ranked for your course and city, saved on every device</span><button class="btn primary sm" data-act="signin">${GI}Sign In</button></div>`
       : !profileSet() ? `<div class="nudge">${I("user", 18)}<span>Add your college and course so MyStop hides what you can't enter</span><button class="btn primary sm" data-act="profile">Set Up Profile</button></div>` : "";
     const ws = (DATA.watch || []).map(watchInfo), wOpen = ws.filter(o => o.open).sort((a, b) => (a.open.dlMs || 9e15) - (b.open.dlMs || 9e15))[0], wNext = ws.filter(o => !o.open && o.exp && o.exp > NOW).sort((a, b) => a.exp - b.exp)[0];
     // the banner rotates through one comp per angle, each angle showing its true number one
@@ -1799,9 +2005,10 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       <div class="hg b">${regPanel}
         <section>${promo}
           <h2 class="ql-h">At a Glance</h2>
-          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor("case"), "Case Comps", 'data-preset="case"', "Case, Strategy and Pitch Comps")}</div></section></div>
+          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor(top.id), esc(tc(many(TYPE[top.set.ty[0]].tag || top.label))), `data-preset="${top.id}"`, esc(tc(top.label)))}</div></section></div>
       <div class="hg a"><section><div class="sec-h"><h2>Your Top Picks</h2><button class="va" data-preset="high">View All${I("arrow", 16)}</button></div>
-          <div class="picks">${picks.slice(0, 4).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section></div>`;
+          <div class="picks">${picks.slice(0, 4).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section></div>
+      <p class="foot lg2">${LEGAL}</p>`;
   }
 
   // ------------------------------------------------------------------ navigation + chrome
@@ -1854,33 +2061,120 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
 
   // ------------------------------------------------------------------ profile dialog
   const dlg = $("profileDlg");
+  const openDlg = id => { const d = $(id); if (d.open) return; if (d.showModal) d.showModal(); else d.setAttribute("open", ""); };
+  const closeDlg = id => { const d = $(id); if (d.close) d.close(); else d.removeAttribute("open"); };
+  const courseOpts = cur => {
+    const ug = COURSES.slice(0, 22), pg = COURSES.slice(22, 37), oth = COURSES.slice(37);
+    const og = (label, arr) => `<optgroup label="${label}">${arr.map(c => `<option value="${c[0]}"${cur === c[0] ? " selected" : ""}>${esc(tc(c[1]))}</option>`).join("")}</optgroup>`;
+    return '<option value="">Choose…</option>' + og("Undergraduate", ug) + og("Postgraduate", pg) + og("Other", oth);
+  };
+  const typeChips = on => TYPES.filter(t => t.id !== "other").map(t => `<label class="chipk"><input type="checkbox" value="${t.id}"${on.includes(t.id) ? " checked" : ""}><span>${esc(tc(t.label))}</span></label>`).join("");
+  const chipsOf = id => [...$(id).querySelectorAll("input:checked")].map(x => x.value);
+  // state first, then the city clusters of that state. "Another City" means online comps only
+  function placeFill(stId, cityId, state, region) {
+    $(stId).innerHTML = '<option value="">Choose…</option>' + STATES.map(x => `<option${x === state ? " selected" : ""}>${esc(x)}</option>`).join("") + `<option value="other"${state === "other" ? " selected" : ""}>Another State</option>`;
+    const fill = () => { const st = $(stId).value, list = REGIONS.filter(r => r[2] === st); $(cityId).innerHTML = (list.length ? '<option value="">Choose…</option>' : "") + list.map(r => `<option value="${r[0]}"${r[0] === region ? " selected" : ""}>${esc(r[1])}</option>`).join("") + '<option value="-">Another City</option>'; $(cityId).disabled = !st; };
+    $(stId).onchange = fill; fill();
+  }
+  const placeRead = (stId, cityId) => { const st = $(stId).value, c = $(cityId).value; return { state: st, region: REGION[c] ? c : "" }; };
   function openProfile() {
-    const p = P.profile, ug = COURSES.slice(0, 22), pg = COURSES.slice(22, 37), oth = COURSES.slice(37);
-    const og = (label, arr) => `<optgroup label="${label}">${arr.map(c => `<option value="${c[0]}"${p.course === c[0] ? " selected" : ""}>${esc(tc(c[1]))}</option>`).join("")}</optgroup>`;
-    $("pfCourse").innerHTML = '<option value="">Choose…</option>' + og("Undergraduate", ug) + og("Postgraduate", pg) + og("Other", oth);
+    const p = P.profile, r = REGION[regionId()];
+    $("pfCourse").innerHTML = courseOpts(p.course);
     const y0 = new Date(NOW).getFullYear();
     $("pfYear").innerHTML = '<option value="">Choose…</option>' + Array.from({ length: 8 }, (_, i) => y0 + i).map(y => `<option${String(p.year) === String(y) ? " selected" : ""}>${y}</option>`).join("");
     $("pfAcct").innerHTML = !CLOUD || cloud.state === "wait" || cloud.state === "off" ? "" : U ? `<span><b>Signed in as ${escA(U.name || U.email)}</b>Saved to your account, the same on every device</span>` : `<span><b>Only saved in this browser</b>Sign in and it follows you to every device</span><button class="btn primary sm" type="button" data-act="signin">${GI}Sign In</button>`;
     paintFit();
+    $("pfTypes").innerHTML = typeChips(pickedTypes());
+    placeFill("pfState", "pfCity", r ? r.state : p.state || "", r ? r.id : "");
+    $("pfReach").checked = reachAll();
     $("pfCollege").value = p.college || ""; $("pfGender").value = p.gender || ""; $("pfTeam").checked = p.sameTeam !== false;
-    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+    openDlg("profileDlg");
   }
   const paintFit = () => { const m = domainsFor($("pfCourse").value); $("pfFit").innerHTML = m.length ? "<i>Domains matched to this course, shown as Fits on the cards</i>" + m.map(n => `<span class="pill t-a">${esc(tc(NICHE[n] || n))}</span>`).join("") : ""; };
   $("pfCourse").addEventListener("change", paintFit);
-  const closeProfile = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); };
+  const closeProfile = () => closeDlg("profileDlg");
   $("profileForm").addEventListener("submit", e => {
     e.preventDefault();
-    P.profile = { college: $("pfCollege").value.trim(), course: $("pfCourse").value, year: $("pfYear").value, gender: $("pfGender").value, sameTeam: $("pfTeam").checked };
+    P.profile = Object.assign({}, P.profile, { college: $("pfCollege").value.trim(), course: $("pfCourse").value, year: $("pfYear").value, gender: $("pfGender").value, sameTeam: $("pfTeam").checked,
+      types: chipsOf("pfTypes"), reach: $("pfReach").checked ? "all" : "near", setup: 1 }, placeRead("pfState", "pfCity"));
+    delete P.profile.cleared;
     save(); recheck(); closeProfile(); renderAll();
     const n = COMPS.filter(c => c.inel.length).length;
     toast(`Profile saved, ${plural(n, "comp")} you can't enter ${n === 1 ? "is" : "are"} hidden`);
   });
   $("pfCancel").addEventListener("click", closeProfile);
-  $("pfClear").addEventListener("click", () => { P.profile = Object.assign(NOPROFILE(), { cleared: 1 }); save(); recheck(); closeProfile(); renderAll(); });
-  dlg.addEventListener("click", e => { if (e.target === dlg) closeProfile(); });
+  $("pfClear").addEventListener("click", () => { P.profile = Object.assign(NOPROFILE(), { cleared: 1, setup: 1 }); save(); recheck(); closeProfile(); renderAll(); });
+  document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) { if (d.id === "setupDlg") setupDone(false); else closeDlg(d.id); } }));
+
+  // ------------------------------------------------------------------ first visit: three questions, all skippable
+  const SU = [["What Are You Studying?", "Your course decides which comps you can enter and how they are ranked"], ["What Do You Compete In?", "Pick the formats you go for. Each gets its own view and ranks a little higher"], ["Where Are You?", "Online comps always show. Your city adds the in-person ones near you"]];
+  let suStep = 0, suAsked = false, suTouched = false;
+  const FORCE = /[?&]setup\b/.test(location.search);
+  function suPaint() {
+    [1, 2, 3].forEach(n => { $("su" + n).hidden = n !== suStep + 1; });
+    $("suStep").textContent = `Step ${suStep + 1} of 3`; $("suT").textContent = SU[suStep][0]; $("suP").textContent = SU[suStep][1];
+    $("suBack").hidden = suStep === 0; $("suNext").textContent = suStep === 2 ? "Finish" : "Next";
+    if (suStep === 1 && !suTouched) $("suTypes").innerHTML = typeChips(pickedTypes().length ? pickedTypes() : typesFor($("suCourse").value));
+  }
+  function openSetup() {
+    const p = P.profile, r = REGION[regionId()];
+    suStep = 0; suTouched = false;
+    $("suCourse").innerHTML = courseOpts(p.course);
+    placeFill("suState", "suCity", r ? r.state : p.state || "", r ? r.id : "");
+    $("suReach").checked = reachAll();
+    suPaint(); openDlg("setupDlg");
+  }
+  function setupDone(keep) {
+    if (keep) P.profile = Object.assign({}, P.profile, { course: $("suCourse").value, types: chipsOf("suTypes"), reach: $("suReach").checked ? "all" : "near", setup: 1 }, placeRead("suState", "suCity"));
+    else P.profile.setup = 1;
+    delete P.profile.cleared;
+    save(); recheck(); if ($("setupDlg").open) closeDlg("setupDlg"); renderAll();
+    if (keep) toast("All set, your list is now tailored to you");
+  }
+  function maybeSetup() {
+    if (suAsked || document.querySelector("dialog[open]")) return;
+    // where sign-in is on, the questions come right after the first sign-in. Signed out, everyone sees the same general list
+    if (CLOUD && !U && !FORCE) return;
+    if (!FORCE && (MINE || P.profile.setup || profileSet())) return;
+    suAsked = true; openSetup();
+  }
+  $("suTypes").addEventListener("change", () => { suTouched = true; });
+  $("suBack").addEventListener("click", () => { suStep = Math.max(0, suStep - 1); suPaint(); });
+  $("suSkip").addEventListener("click", () => setupDone(false));
+  $("setupDlg").addEventListener("cancel", e => { e.preventDefault(); setupDone(false); });
+  $("setupForm").addEventListener("submit", e => { e.preventDefault(); if (suStep < 2) { suStep++; suPaint(); } else setupDone(true); });
+
+  // ------------------------------------------------------------------ terms, sign-in consent, delete, copy
+  $("agOk").addEventListener("change", e => { $("agGo").disabled = !e.target.checked; });
+  $("agGo").addEventListener("click", () => { try { localStorage.setItem("mystop.terms", "1"); } catch (e) {} P.terms = { v: 1, at: Date.now() }; closeDlg("agreeDlg"); signIn(); });
+  $("delGo").addEventListener("click", wipe);
+  $("lgErase").addEventListener("click", () => {
+    if ($("lgErase").dataset.sure !== "1") { $("lgErase").dataset.sure = "1"; $("lgErase").textContent = "Press Again to Erase"; setTimeout(() => { $("lgErase").dataset.sure = ""; $("lgErase").textContent = "Erase This Browser's Data"; }, 4000); return; }
+    try { localStorage.removeItem("mystop.terms"); } catch (e) {}
+    emptyDevice(); $("lgErase").dataset.sure = ""; $("lgErase").textContent = "Erase This Browser's Data"; closeDlg("legalDlg"); recheck(); renderAll();
+    toast(U ? "This browser is empty. Your account still has your data until you sign out or delete it" : "Everything saved in this browser is erased");
+  });
+  // A plain block of text for a chat: name, organiser, last date, the basics and the link
+  async function copyComp(id) {
+    const c = BY[id] || rec(id); if (!c) return;
+    const place = c.inCity || (c.city || "").split(",")[0], l0 = c.loc0 || c.loc;
+    const bits = [c.prize ? (c.prizeEst ? "Prize around " : "Prize ") + inr(c.prize) : "",
+      c.tmax ? (c.tmax === 1 ? "Solo" : "Team of " + (c.tmin && c.tmin !== c.tmax ? c.tmin + " to " + c.tmax : c.tmax)) : "",
+      l0 === "online" ? "Online" : l0 === "check" ? "May have an in-person part" : "In person" + (place ? " in " + tidy(place) : ""),
+      c.fee == null ? "Free entry" : c.fee > 0 ? inr(c.fee) + " entry" : "Paid entry"].filter(Boolean);
+    const text = ["*" + tidy(c.t) + "*", tidy(c.org), c.dlMs ? "Register by " + fD(c.dlMs) + ", " + fT(c.dlMs) : "", bits.join(", "), /^https?:/i.test(c.url || "") ? c.url : ""].filter(Boolean).join("\n");
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); try { ok = document.execCommand("copy"); } catch (e2) {} ta.remove();
+    }
+    toast(ok ? "Copied, paste it in a chat" : "Could not copy on this browser");
+  }
 
   // ------------------------------------------------------------------ events
-  document.addEventListener("toggle", e => { const s = e.target.dataset && e.target.dataset.sec; if (s) SEC[s] = e.target.open; }, true);
+  document.addEventListener("error", e => { const t = e.target; if (t && t.tagName === "IMG" && t.closest && t.closest(".lg")) t.remove(); }, true);
+  document.addEventListener("toggle", e => { const d = e.target.dataset || {}; if (d.sec) SEC[d.sec] = e.target.open; if (d.fine) fineOpen = e.target.open; }, true);
   document.addEventListener("change", e => {
     const t = e.target, d = t.dataset;
     if (d.k) { const a = S[d.k], v = d.v; t.checked ? a.push(v) : a.splice(a.indexOf(v), 1); update(); }
@@ -1906,6 +2200,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (e.target.id === "scrim") { document.body.classList.remove("fopen"); return; }
     const b = e.target.closest("button"); if (!b) return;
     const d = b.dataset;
+    if (d.close) return closeDlg(d.close);
     if (b.id === "bell") togglePanel();
     else if (b.id === "readAll") { P.readAll = NOW; P.read = {}; save(); renderBell(); }
     else if (d.n != null) { const n = NOTIFS[+d.n]; P.read[n.key] = 1; save(); togglePanel(false); if (n.id) goComp(n.id); else if (n.watch) { setTab("watch"); flash(document.getElementById("w-" + n.watch)); } else renderBell(); }
@@ -1920,6 +2215,10 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     else if (d.act === "theme") { P.look = P.look === "dark" ? "light" : "dark"; applyTheme(); save(); }
     else if (d.act === "filters") { if (window.innerWidth <= 1240) document.body.classList.toggle("fopen"); else { fOpen = !fOpen; $("v-discover").classList.toggle("nof", !fOpen); } }
     else if (d.seg) { e.preventDefault(); S[d.seg] = d.val === "1"; update(); }
+    else if (d.reach) { P.profile.reach = d.reach === "all" ? "all" : "near"; save(); recheck(); S.loc = DEFAULTS().loc; update(); }
+    else if (d.copy) copyComp(d.copy);
+    else if (d.act === "legal") { $("acctMenu").hidden = true; openDlg("legalDlg"); }
+    else if (d.act === "wipe") { $("acctMenu").hidden = true; openDlg("delDlg"); }
     else if (d.preset) { const q = TAB === "discover" && S.q !== jumpQ ? S.q : ""; S = Object.assign(DEFAULTS(), JSON.parse(JSON.stringify(PRESETS.find(p => p.id === d.preset).set)), { q }); $("q").value = q; shown = 40; if (TAB !== "discover") setTab("discover"); else renderDiscover(true); }
     else if (d.open) { const id = d.open; OPEN.has(id) ? OPEN.delete(id) : OPEN.add(id); if (TAB === "saved") renderSaved(); else renderDiscover(); }
     else if (d.star) { const id = d.star; if (P.star[id]) { delete P.star[id]; save(); renderAll(); toast("Removed from Starred", () => { P.star[id] = 1; save(); renderAll(); }); } else { P.star[id] = 1; save(); renderAll(); toast("Starred, find it under Starred"); } }
@@ -1954,7 +2253,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   });
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { if (!$("np").hidden) { togglePanel(false); $("bell").focus(); } document.body.classList.remove("fopen"); }
-    else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "") && !dlg.open) { e.preventDefault(); if (TAB !== "discover") setTab("discover"); $("q").focus(); }
+    else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "") && !document.querySelector("dialog[open]")) { e.preventDefault(); if (TAB !== "discover") setTab("discover"); $("q").focus(); }
   });
   document.addEventListener("submit", async e => {
     if (e.target.id === "addForm") {
@@ -1969,7 +2268,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       try {
         const r = await fetch("api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: raw }) }), j = await r.json();
         if (!r.ok) throw new Error(j.error || "Lookup Failed");
-        j.closed = !(j.dl && Date.parse(j.dl) > NOW); BY[j.id] = prep(j); j.inel = ineligible(j);
+        j.closed = !(j.dl && Date.parse(j.dl) > NOW); BY[j.id] = personal(prep(j), ctxNow());
         track(String(j.id), snapOf(j)); renderAll(); toast("Tracking " + j.t);
       } catch (err) { toast(err.message); btn.disabled = false; btn.textContent = "Track"; }
     } else if (e.target.id === "watchForm") {
@@ -1986,7 +2285,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   const gen = new Date(META.generated);
   $("syncLine").textContent = `${COMPS.length} Open Comps, Synced ${fD(+gen)} at ${fT(+gen)}`;
   document.querySelector(".sync-card b").textContent = SRCS.length > 1 ? "Live from " + SRCS.map(x => x.label).join(" & ") : "Live from Unstop";
-  $("foot").innerHTML = "Scored by the rules in <b>config.json</b>, so open the listing before you commit";
+  const LEGAL = 'MyStop is an unofficial student project and is not affiliated with Unstop. Scores and details come from automatic rules and can be wrong, so open the listing before you commit <button class="link" data-act="legal">Terms and Privacy</button>';
+  $("foot").innerHTML = LEGAL;
   const rb = $("refresh");
   rb.innerHTML = I("refresh", 19);
   const busy = on => { rb.disabled = on; $("refresh2").disabled = on; rb.classList.toggle("spin", on); rb.title = on ? "Refreshing from Unstop, about a minute" : "Refresh from Unstop"; };
@@ -2022,6 +2322,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     recheck();
     renderAll(true);
     cloudInit();
+    if (!CLOUD) maybeSetup();
   }
   boot();
 })();
