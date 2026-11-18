@@ -265,10 +265,19 @@
 
   /* competitions */
   .viewsM { display: grid; gap: 8px; margin: 0 0 18px; }
-  .vrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; min-width: 0; } .vsep { flex: none; width: 1px; height: 18px; margin: 0 4px; background: var(--line-3); }
+  .vrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; min-width: 0; }
+  .viewsM.measure .vrow { flex-wrap: nowrap; } .viewsM.measure button { flex: none; }
+  .viewsM.just .vrow { flex-wrap: nowrap; } .viewsM.just button { flex: 1 1 auto; justify-content: center; min-width: 0; }
+  .viewsM.d1 .vrow { gap: 7px; } .viewsM.d1 button { padding: 0 10px; gap: 7px; font-size: 12.5px; }
+  .viewsM.d2 .vrow { gap: 6px; } .viewsM.d2 button { padding: 0 8px; gap: 5px; font-size: 12px; } .viewsM.d2 button em { font-size: 11.5px; }
+  .ac.vw { gap: 8px; padding: 0 2px 0 3px; } .ac.vw .seg { padding: 2px; border-radius: 999px; background: rgba(255,255,255,.16); }
+  .ac.vw .seg button { height: 20px; padding: 0 9px; border-radius: 999px; color: rgba(255,255,255,.78); font-size: 11.5px; } .ac.vw .seg button:hover { color: #fff; }
+  .ac.vw .seg button[aria-pressed="true"] { background: #fff; color: #0d1b3e; box-shadow: none; }
+  .ac.vw .x { height: 28px; padding: 0 8px 0 2px; border: 0; background: none; color: #fff; font-size: 15px; line-height: 1; opacity: .7; } .ac.vw .x:hover { opacity: 1; }
   .viewsM button { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 13px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--card); color: var(--tx-2); font-size: 13px; font-weight: 600; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
   .viewsM button:hover { border-color: var(--line-3); color: var(--tx); }
   .viewsM button em { font-style: normal; font-size: 12px; font-weight: 600; color: var(--tx-3); font-variant-numeric: tabular-nums; }
+  .viewsM button.zero { color: var(--tx-3); } .viewsM button.zero em { opacity: .6; }
   .viewsM button[aria-pressed="true"] { background: var(--chip-on); border-color: var(--chip-on); color: #fff; } .viewsM button[aria-pressed="true"] em { color: rgba(255,255,255,.7); }
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 0 0 20px; }
   .stat { padding: 16px 18px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--sh-s); }
@@ -1325,7 +1334,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     LOC.near.label = "In Person in " + (city || "Your City"); LOC.near.tag = city || "Your City";
     LOC.travel.note = "Offline or hybrid " + (city ? "outside " + city : "in another city");
     LOC.corp.note = "Usually a finale " + (city ? "outside " + city : "in another city");
-    PRESETS = presets();
+    PRESETS = presets(); VIEW = Object.fromEntries(PRESETS.map(v => [v.id, v]));
     const sig = JSON.stringify([ctx.lad, [...ctx.pk], ctx.r, reachAll(), P.profile.course || "", general()]);
     if (sig !== tuned) { tuned = sig; if (typeof S !== "undefined") S = Object.assign(DEFAULTS(), { q: S.q }); }
   }
@@ -1337,26 +1346,33 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   const DEFAULTS = () => ({
     q: "", sort: "score", tier: [], cats: [], catsAll: false, loc: reachAll() ? locsNow().map(l => l.id) : reachNow(),
     niches: [], nichesAll: false, intern: 0, minPrize: 0, maxRounds: 0, maxReg: 0, minReg: 0, first: [],
-    circ: [], ty: [], b2: "", src: [], team: "", fee: "", fit: false,
+    circ: [], ty: [], b2: "", src: [], team: "", fee: "", fit: false, picks: [], pickAll: false, autoSort: "",
     hideCode: !wantsCode(), eligOnly: true, dl: 0, isNew: false, starred: false, showHidden: false, hideTracked: false
   });
-  // Views that do not overlap. Row 1 splits your list by priority, row 2 splits the same list by type, and both add up to "Everything I Can Do"
+  // The row of one-tap views. The first and the last choose the pool (your list, or every comp). The twelve between them can be lit together
   function presets() {
-    const mt = myTypes(), rest = TYPEIDS.filter(t => !mt.includes(t));
+    const t0 = myTypes()[0], r = regionId(), city = cityShort(), place = r === HOME ? "Delhi" : city;
+    const cat = (...g) => c => g.some(x => c.cats.includes(x));
+    const near = c => c.loc === "online" || (r === HOME ? c.loc === "delhi" : !!r && c.loc === "near");
     return [
-      { id: "all", row: 1, label: "Everything I can do", set: {} },
-      { id: "high", row: 1, label: "High Priority", set: { tier: ["high"] } },
-      { id: "medium", row: 1, label: "Medium", set: { tier: ["medium"] } },
-      { id: "low", row: 1, label: "Low", set: { tier: ["low"] } }
-    ].concat(mt.map(t => ({ id: "ty-" + t, row: 2, label: TYPE[t].label, set: { ty: [t] } })), [
-      { id: "ty-rest", row: 2, label: "Everything else", set: { ty: rest } },
-      { id: "b2", row: 3, label: "Other B-schools", tip: "MDI, Great Lakes, IMT, IMI and similar, kept out of your main list", set: { b2: "only" } },
-      { id: "every", row: 3, label: `All ${COMPS.length}, incl. rejected`, set: { loc: locsNow().map(l => l.id), eligOnly: false, hideCode: false, b2: "all" } },
-      // not shown as views, Home links to them
-      { id: "week", row: 0, label: "Closing this week", set: { dl: 7, sort: "dl" } },
-      { id: "intern", row: 0, label: "Internship, PPI or PPO", set: { intern: 1 } }
-    ]);
+      { id: "all", label: "Open to Me", tip: "Your full list. Clears every view and filter", set: {} },
+      { id: "high", label: "High Priority", tip: "Score " + META.tiers.high + " and above", test: c => c.tier === "high" },
+      { id: "ty-" + t0, ty: t0, label: t0 === "case" ? "Case Competitions" : TYPE[t0].label, tip: t0 === "case" ? "Case and strategy competitions" : "Your main competition type", test: c => c.ty === t0 },
+      { id: "iim", org: 1, label: "IIM Online", tip: "IIM competitions held fully online", test: c => c.cats.includes("iim") && c.loc === "online" },
+      { id: "iit", org: 1, label: place ? "IIT Online & " + place : "IIT Online", tip: "IIT competitions, online" + (place ? " or in " + place : ""), test: c => c.cats.includes("iit") && near(c) },
+      { id: "bs", org: 1, label: "Top B-Schools", tip: "FMS, ISB, XLRI, SPJIMR, IIFT, NMIMS and their peers", test: cat("fms", "isb", "bschool", "nmims") },
+      // kept out of the main list, so lighting this view is what lets them in
+      { id: "b2", org: 1, own: 1, label: "Other B-Schools", tip: "MDI, Great Lakes, IMT, IMI and similar. Shown only while this view is lit", test: c => !!c.b2 },
+      { id: "du", org: 1, label: "DU & New-Age", tip: "Delhi University colleges, Masters' Union and other new-age schools", test: cat("du_top", "du", "newage") },
+      { id: "firms", org: 1, label: "Consulting & Finance", tip: "Strategy firms, the Big 4, banks and finance firms", test: cat("mbb", "big4", "fin") },
+      { id: "corp", org: 1, label: "Low-Effort Corporate", tip: "Run by a company, 3 rounds or fewer, under 3,000 registered", test: c => c.cats.includes("corp") && (c.rounds == null || c.rounds <= 3) && !(c.reg > 3000) },
+      { id: "intern", label: "Internship & PPO", tip: "An internship, PPI or PPO chance on offer", test: c => c.intern >= 1 },
+      { id: "prize", label: "₹1 Lakh+ Prizes", tip: "Prize pool of ₹1 lakh or more", sort: "prize", test: c => c.prize >= 100000 },
+      { id: "week", label: "Closing This Week", tip: "Registration closes within 7 days", sort: "dl", test: c => c.daysLeft != null && c.daysLeft <= 7 },
+      { id: "every", label: `All ${COMPS.length} Listings`, tip: "Every open listing, with the ones you can't enter or reach", set: { loc: locsNow().map(l => l.id), eligOnly: false, hideCode: false, b2: "all" } }
+    ];
   }
+  let VIEW = {};
   let PRESETS = [];
   var S = DEFAULTS(), shown = 40, TAB = "home", fOpen = true;
   let fineOpen = false;
@@ -1373,8 +1389,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     circ: c => has(c.circ, S.circ, false),
     ty: c => !S.ty.length || S.ty.includes(c.ty),
     // lesser-known B-schools sit in their own view. A search, or ticking that organiser, still finds them
-    b2: c => S.b2 === "all" || !!S.q || S.cats.includes("bschool2") || (S.b2 === "only") === !!c.b2,
+    b2: c => S.b2 === "all" || !!S.q || S.cats.includes("bschool2") || (S.picks.includes("b2") && !!c.b2) || (S.b2 === "only") === !!c.b2,
     src: c => !S.src.length || S.src.includes(c.src),
+    picks: c => {
+      const on = S.picks.map(id => VIEW[id]).filter(v => v && v.test);
+      if (!on.length) return true;
+      if (!S.pickAll) return on.some(v => v.test(c));
+      const org = on.filter(v => v.org);
+      return (!org.length || org.some(v => v.test(c))) && on.every(v => v.org || v.test(c));
+    },
     team: c => !S.team || (S.team === "solo" ? (c.tmin || 1) <= 1 : (c.tmax || 1) > 1),
     fee: c => !S.fee || (S.fee === "free" ? c.fee == null : c.fee != null),
     minReg: c => !S.minReg || (c.reg || 0) >= S.minReg,
@@ -1407,14 +1430,20 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     new: (a, b) => (b.listed || "").localeCompare(a.listed || "") || b.score - a.score
   };
   function activePreset() {
-    const d = DEFAULTS();
-    const norm = o => JSON.stringify(Object.keys(d).filter(k => k !== "q" && k !== "showHidden").map(k => Array.isArray(o[k]) ? [...o[k]].sort() : o[k]));
-    const cur = norm(S), p = PRESETS.find(p => norm(Object.assign(DEFAULTS(), p.set)) === cur);
+    const d = DEFAULTS(), SKIP = ["q", "showHidden", "picks", "pickAll", "sort", "autoSort"];
+    const norm = o => JSON.stringify(Object.keys(d).filter(k => !SKIP.includes(k)).map(k => Array.isArray(o[k]) ? [...o[k]].sort() : o[k]));
+    const cur = norm(S), p = PRESETS.find(p => p.set && norm(Object.assign(DEFAULTS(), p.set)) === cur);
     return p ? p.id : null;
+  }
+  // "₹1 lakh+" and "Closing this week" bring their own order while they are the only lit view, as they always did
+  function autoSort() {
+    const one = S.picks.length === 1 ? VIEW[S.picks[0]] : null, want = (one && one.sort) || "";
+    if (want) { if (S.sort === "score" || S.sort === S.autoSort) { S.sort = want; S.autoSort = want; } }
+    else { if (S.autoSort && S.sort === S.autoSort) S.sort = "score"; S.autoSort = ""; }
   }
   function activeCount() {
     const d = DEFAULTS(); let n = 0;
-    Object.keys(d).forEach(k => { if (k === "q" || k === "sort" || k === "catsAll" || k === "nichesAll" || k === "showHidden") return; if (JSON.stringify(Array.isArray(S[k]) ? [...S[k]].sort() : S[k]) !== JSON.stringify(Array.isArray(d[k]) ? [...d[k]].sort() : d[k])) n++; });
+    Object.keys(d).forEach(k => { if (k === "q" || k === "sort" || k === "catsAll" || k === "nichesAll" || k === "showHidden" || k === "picks" || k === "pickAll" || k === "autoSort") return; if (JSON.stringify(Array.isArray(S[k]) ? [...S[k]].sort() : S[k]) !== JSON.stringify(Array.isArray(d[k]) ? [...d[k]].sort() : d[k])) n++; });
     return n;
   }
 
@@ -1438,6 +1467,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
   function chipsNow() {
     const d = DEFAULTS(), out = [], add = (k, l) => out.push([k, l]);
     if (S.q) add("q", "Search “" + S.q + "”");
+    const lit = S.picks.filter(id => VIEW[id]);
+    if (lit.length) add("picks", lit.length === 1 ? VIEW[lit[0]].label : lit.length + " Views");
     if (S.starred) add("starred", "Starred Only");
     if (S.hideTracked) add("hideTracked", "Not Registered Yet");
     if (S.showHidden) add("showHidden", "Hidden Ones Shown");
@@ -1508,7 +1539,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       (SRCS.length < 2 ? "" : sec("src", "Platforms", S.src.length, checks("src", SRCS, id => facet("src", c => c.src === id)) +
         (SRCS.length > 1 ? `<span class="fnote">A comp never shows twice. Unstop comes first, and InsideKampus only adds comps that Unstop does not have${(META.dupes || []).length ? ", " + plural(META.dupes.length, "listing") + " left out today" : ""}</span>` : ""))) +
       sec("tier", "Priority", S.tier.length, checks("tier", TIERS, id => facet("tier", c => c.tier === id))) +
-      sec("cats", "Organiser, in Detail", S.cats.length, checks("cats", catsUsed, id => facet("cats", c => c.cats.includes(id))), seg("catsAll")) +
+      sec("cats", "Organiser, in Detail", S.cats.length, checks("cats", catsUsed, id => id === "bschool2" ? COMPS.filter(c => c.cats.includes(id) && KEYS.every(k => k === "cats" || k === "b2" || TESTS[k](c))).length : facet("cats", c => c.cats.includes(id))), seg("catsAll")) +
       sec("niches", "Domain", S.niches.length, checks("niches", nichesUsed, id => facet("niches", c => c.niches.includes(id))), seg("nichesAll")) +
       sec("first", "Round 1 Asks For", S.first.length, checks("first", firstUsed, id => facet("first", c => c.first === id))) +
       sec("deadline", "Deadline & Freshness", S.dl || S.isNew,
@@ -1615,7 +1646,8 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       `<span class="grow"></span><label class="sortl" for="sort">Sort By</label><select id="sort" aria-label="Sort By">${SORTL.map(o => `<option value="${o[0]}"${S.sort === o[0] ? " selected" : ""}>${o[1]}</option>`).join("")}</select>` +
       `<button class="btn${ac ? " on" : ""}" data-act="filters">${I("sliders", 14)}Filters${ac ? `<span class="bc">${ac}</span>` : ""}</button>`;
     const chips = chipsNow();
-    $("achips").innerHTML = chips.map(x => `<button class="ac" data-clear="${escA(x[0])}" title="Remove This Filter">${esc(tc(x[1]))}<i>×</i></button>`).join("") + (chips.length > 1 ? '<button class="ac all" id="reset3">Reset All</button>' : "");
+    const mix = x => `<span class="ac vw" title="${esc(S.picks.filter(id => VIEW[id]).map(id => VIEW[id].label).join(", "))}"><span class="seg" role="group" aria-label="How the Lit Views Combine"><button data-seg="pickAll" data-val="0" aria-pressed="${!S.pickAll}" title="Show a comp that fits at least one lit view">Any</button><button data-seg="pickAll" data-val="1" aria-pressed="${!!S.pickAll}" title="Show only comps that fit every lit view. IIM, IIT and the other organiser views count as one">All</button></span>of ${esc(x[1])}<button class="x" data-clear="picks" title="Switch These Views Off" aria-label="Switch These Views Off">×</button></span>`;
+    $("achips").innerHTML = chips.map(x => x[0] === "picks" && S.picks.length > 1 ? mix(x) : `<button class="ac" data-clear="${escA(x[0])}" title="Remove This Filter">${esc(tc(x[1]))}<i>×</i></button>`).join("") + (chips.length > 1 ? '<button class="ac all" id="reset3">Reset All</button>' : "");
     let html = "", tier = null;
     const grouped = S.sort === "score";
     list.slice(0, shown).forEach(c => {
@@ -1624,14 +1656,15 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     });
     const L = $("list");
     L.className = anim ? "enter" : "";
-    L.innerHTML = list.length ? html : `<div class="empty">${I("search", 26)}<b>Nothing Matches</b><p>Loosen a filter or reset them all</p><p style="margin-top:14px"><button class="btn" id="reset2">Reset Filters</button></p></div>`;
+    L.innerHTML = list.length ? html : `<div class="empty">${I("search", 26)}<b>Nothing Matches</b><p>${S.pickAll && S.picks.length > 1 ? "No comp fits every lit view at once" : "Loosen a filter or reset them all"}</p><p style="margin-top:14px">${S.pickAll && S.picks.length > 1 ? '<button class="btn primary" data-seg="pickAll" data-val="0">Match Any Instead</button> ' : ""}<button class="btn" id="reset2">Reset Filters</button></p></div>`;
     $("more").hidden = list.length <= shown;
     $("more").textContent = `Show ${Math.min(40, Math.max(0, list.length - shown))} More`;
     $("closeFilters").textContent = `Show ${plural(list.length, "Result")}`;
     $("pgS").textContent = `${plural(list.length, "result")}${S.q ? " for “" + S.q + "”" : ""}`;
     $("v-discover").classList.toggle("nof", !fOpen);
-    $("heroLine").textContent = general() ? (reachAll() ? "Every open comp, scored. " : "Every open comp you can do online, scored. ") + (CLOUD && !U ? "Sign in" : "Set up your profile") + " to get a list ranked for your course and city"
-      : "Every open comp scored for you, minus " + (DEFAULTS().hideCode ? "coding contests and " : "") + "anything you can't enter" + (reachAll() ? "" : cityShort() ? " or reach from " + cityShort() : " or that needs you there in person");
+    const hc = DEFAULTS().hideCode, city = cityShort();
+    $("heroLine").textContent = general() ? (reachAll() ? "Every open competition, ranked. " : "Every open online competition, ranked. ") + (CLOUD && !U ? "Sign in" : "Set up your profile") + " to rank them for your course and city"
+      : "Every open competition, ranked for you. " + (hc ? "Coding contests and anything" : "Anything") + " you can't enter" + (reachAll() ? "" : city ? " or reach from " + city : " or that needs you there in person") + (hc ? " are" : " is") + " left out";
     renderFilters();
     renderViews();
   }
@@ -1646,12 +1679,43 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     $("pgS").textContent = plural(live.length, "starred comp");
   }
   function renderViews() {
-    const ap = TAB === "discover" ? activePreset() : null;
-    const btn = p => `<button data-preset="${p.id}" aria-pressed="${p.id === ap}"${p.tip ? ` title="${esc(p.tip)}"` : ""}>${esc(tc(p.label))}<em>${countFor(p.set)}</em></button>`;
-    const r3 = PRESETS.filter(p => p.row === 3 && (p.id !== "b2" || COMPS.some(c => c.b2)));
-    $("viewsM").innerHTML = `<div class="vrow" role="group" aria-label="By Priority">${PRESETS.filter(p => p.row === 1).map(btn).join("")}</div>` +
-      `<div class="vrow" role="group" aria-label="By Type">${PRESETS.filter(p => p.row === 2).map(btn).join("")}<i class="vsep"></i>${r3.map(btn).join("")}</div>`;
+    const pool = TAB === "discover" ? activePreset() : null, here = TAB === "discover";
+    $("viewsM").className = "viewsM";
+    $("viewsM").innerHTML = '<div class="vrow">' + PRESETS.map(p => {
+      const on = p.set ? p.id === pool && (p.id !== "all" || !S.picks.length) : here && S.picks.includes(p.id);
+      const n = p.set ? countFor(p.set) : p.own ? COMPS.filter(c => p.test(c) && KEYS.every(k => k === "picks" || k === "b2" || TESTS[k](c))).length : facet("picks", p.test);
+      return `<button data-preset="${p.id}" aria-pressed="${on}"${n || on ? "" : ' class="zero"'} title="${esc(p.tip)}">${esc(p.label)}<em>${n}</em></button>`;
+    }).join("") + "</div>";
+    layViews();
   }
+  function layViews() {
+    const box = $("viewsM"), btns = [...box.querySelectorAll("button")], W = box.clientWidth, GAPS = [8, 7, 6];
+    if (!btns.length || !W) return;
+    box.className = "viewsM measure"; box.innerHTML = '<div class="vrow"></div>'; btns.forEach(b => box.firstChild.appendChild(b));
+    if (matchMedia("(max-width: 619.98px)").matches) { box.className = "viewsM"; return; }   // phones keep one row that scrolls sideways
+    // the split into R rows whose longest row is as short as it can be, which is also the most even one
+    const split = (w, gap, R) => {
+      const n = w.length, pre = [0]; w.forEach((x, k) => pre.push(pre[k] + x));
+      const best = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(Infinity)), from = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(0));
+      best[0][0] = 0;
+      for (let r = 1; r <= R; r++) for (let j = r; j <= n; j++) for (let i = r - 1; i < j; i++) {
+        const v = Math.max(best[r - 1][i], pre[j] - pre[i] + gap * (j - i - 1));
+        if (v < best[r][j]) { best[r][j] = v; from[r][j] = i; }
+      }
+      const cuts = []; for (let r = R, j = n; r > 0; r--) { cuts.unshift([from[r][j], j]); j = from[r][j]; }
+      return { max: best[R][n], cuts };
+    };
+    // three sizes of chip. The fewest rows the smallest size allows, then the roomiest size that still fits in that many rows
+    const sizes = [0, 1, 2].map(d => { box.className = "viewsM measure d" + d; return btns.map(b => Math.ceil(b.getBoundingClientRect().width)); });
+    let R = 1; while (R < btns.length && split(sizes[2], GAPS[2], R).max > W) R++;
+    let d = 0, fit = split(sizes[0], GAPS[0], R);
+    while (d < 2 && fit.max > W) { d++; fit = split(sizes[d], GAPS[d], R); }
+    box.innerHTML = ""; box.className = "viewsM just d" + d;
+    fit.cuts.forEach(([i, j]) => { const row = document.createElement("div"); row.className = "vrow"; btns.slice(i, j).forEach(b => row.appendChild(b)); box.appendChild(row); });
+  }
+  let vwT = 0;
+  window.addEventListener("resize", () => { clearTimeout(vwT); vwT = setTimeout(() => { if (TAB === "discover") layViews(); }, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (TAB === "discover") layViews(); });
 
   // ------------------------------------------------------------------ tracker
   const STAT = [["todo", "Pending"], ["done", "Done / Submitted"], ["pass", "Cleared"], ["fail", "Not Cleared"], ["na", "Skipped"]];
@@ -1964,7 +2028,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const regPanel = `<section><div class="sec-h"><h2>My Registrations</h2><button class="va" data-tab="tracker">View All${I("arrow", 16)}</button></div>
       ${regs.length ? `<p class="rg-sum">${regs.length} Active, ${dueSoon ? dueSoon + " Due in the Next 7 Days" : "Nothing Due in the Next 7 Days"}</p><div class="evs">${regs.slice(0, 5).map(regRow).join("")}</div>${regs.length > 5 ? `<button class="va rg-more" data-tab="tracker">${regs.length - 5} More in My Registrations${I("arrow", 16)}</button>` : ""}`
         : `<div class="rg-empty">${I("cal", 26)}<b>${nAll ? "Nothing Active Right Now" : "Nothing Registered Yet"}</b><span>${nAll ? "Everything you registered for is under Hidden or Finished" : "Press Track on a comp you registered for. Its stages, dates and reminders then show up here"}</span><button class="btn primary sm" data-tab="${nAll ? "tracker" : "discover"}">${nAll ? "Open My Registrations" : "Find Competitions"}</button></div>`}</section>`;
-    const nFor = id => listFor(PRESETS.find(p => p.id === id).set).length, top = PRESETS.find(p => p.row === 2);
+    const nFor = id => listFor({ picks: [id] }).length, top = PRESETS.find(p => p.ty);
     const many = t => /^(Case Comp|Hackathon|Simulation|Debate)$/.test(t) ? t + "s" : t === "Quiz" ? "Quizzes" : t;
     const glance = (n, label, attr, tip) => `<button ${attr} title="${tip}"><b>${n}</b>${label}</button>`;
     const nudge = CLOUD && cloud.state === "out" ? `<div class="nudge">${I("user", 18)}<span>Sign in with Google for a list ranked for your course and city, saved on every device</span><button class="btn primary sm" data-act="signin">${GI}Sign In</button></div>`
@@ -2005,7 +2069,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       <div class="hg b">${regPanel}
         <section>${promo}
           <h2 class="ql-h">At a Glance</h2>
-          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor(top.id), esc(tc(many(TYPE[top.set.ty[0]].tag || top.label))), `data-preset="${top.id}"`, esc(tc(top.label)))}</div></section></div>
+          <div class="ql">${glance(act.length, "Registered", 'data-tab="tracker"', "Comps in My Registrations")}${glance(nFor("week"), "Closing Soon", 'data-preset="week"', "Registration Closes Within 7 Days")}${glance(nFor("intern"), "Internships", 'data-preset="intern"', "Comps with an Internship, PPI or PPO Chance")}${glance(nFor(top.id), esc(tc(many(TYPE[top.ty].tag || top.label))), `data-preset="${top.id}"`, esc(tc(top.label)))}</div></section></div>
       <div class="hg a"><section><div class="sec-h"><h2>Your Top Picks</h2><button class="va" data-preset="high">View All${I("arrow", 16)}</button></div>
           <div class="picks">${picks.slice(0, 4).map(pickCard).join("") || '<div class="none">Nothing open for you right now</div>'}</div></section></div>
       <p class="foot lg2">${LEGAL}</p>`;
@@ -2211,7 +2275,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     else if (d.act === "acct") { am.hidden = !am.hidden; acctPaint(); }
     else if (d.act === "clearGone") { const keep = new Set(liveStars().map(c => c.sid)), old = P.star; P.star = Object.fromEntries(Object.keys(old).filter(id => keep.has(id)).map(id => [id, 1])); save(); renderAll(); toast("Closed comps cleared from Starred", () => { P.star = old; save(); renderAll(); }); }
     else if (d.pick) { S[d.pick] = d.val; update(); }
-    else if (d.clear) { clearChip(d.clear); update(); }
+    else if (d.clear) { clearChip(d.clear); if (d.clear === "picks") autoSort(); update(); }
     else if (d.act === "theme") { P.look = P.look === "dark" ? "light" : "dark"; applyTheme(); save(); }
     else if (d.act === "filters") { if (window.innerWidth <= 1240) document.body.classList.toggle("fopen"); else { fOpen = !fOpen; $("v-discover").classList.toggle("nof", !fOpen); } }
     else if (d.seg) { e.preventDefault(); S[d.seg] = d.val === "1"; update(); }
@@ -2219,7 +2283,14 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     else if (d.copy) copyComp(d.copy);
     else if (d.act === "legal") { $("acctMenu").hidden = true; openDlg("legalDlg"); }
     else if (d.act === "wipe") { $("acctMenu").hidden = true; openDlg("delDlg"); }
-    else if (d.preset) { const q = TAB === "discover" && S.q !== jumpQ ? S.q : ""; S = Object.assign(DEFAULTS(), JSON.parse(JSON.stringify(PRESETS.find(p => p.id === d.preset).set)), { q }); $("q").value = q; shown = 40; if (TAB !== "discover") setTab("discover"); else renderDiscover(true); }
+    else if (d.preset) {
+      const v = VIEW[d.preset], here = TAB === "discover";
+      if (!v) return;
+      if (v.set || !here) { const q = here && S.q !== jumpQ ? S.q : ""; S = Object.assign(DEFAULTS(), v.set ? JSON.parse(JSON.stringify(v.set)) : { picks: [v.id] }, { q }); $("q").value = q; }
+      else S.picks = S.picks.includes(v.id) ? S.picks.filter(x => x !== v.id) : S.picks.filter(x => VIEW[x]).concat(v.id);
+      autoSort(); shown = 40;
+      if (!here) setTab("discover"); else renderDiscover(true);
+    }
     else if (d.open) { const id = d.open; OPEN.has(id) ? OPEN.delete(id) : OPEN.add(id); if (TAB === "saved") renderSaved(); else renderDiscover(); }
     else if (d.star) { const id = d.star; if (P.star[id]) { delete P.star[id]; save(); renderAll(); toast("Removed from Starred", () => { P.star[id] = 1; save(); renderAll(); }); } else { P.star[id] = 1; save(); renderAll(); toast("Starred, find it under Starred"); } }
     else if (d.hide) {
