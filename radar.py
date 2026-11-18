@@ -363,7 +363,8 @@ def csp_for(html, signin):
     hashes = " ".join("'sha256-%s'" % base64.b64encode(hashlib.sha256(m.encode("utf-8")).digest()).decode()
                       for m in re.findall(r"<script>(.*?)</script>", html, re.S))
     auth = signin.get("authDomain") if signin else None
-    frames = "https://*.firebaseapp.com https://*.web.app https://accounts.google.com" + (" https://" + auth if auth and re.fullmatch(r"[A-Za-z0-9.-]+", auth) else "")
+    # 'self' is for the frame the page shows itself in on a phone that has "Desktop site" switched on
+    frames = "'self' https://*.firebaseapp.com https://*.web.app https://accounts.google.com" + (" https://" + auth if auth and re.fullmatch(r"[A-Za-z0-9.-]+", auth) else "")
     return "; ".join([
         "default-src 'none'",
         "script-src " + hashes + " https://www.gstatic.com https://apis.google.com",

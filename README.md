@@ -115,6 +115,12 @@ What is different on the GitHub link:
 
 GitHub pauses scheduled runs after 60 days without a commit and emails you first. One click on the Actions tab turns them back on.
 
+## Android app
+
+`MyStop-1.0.apk` is a small Android app that opens the published site through the phone's browser, without the browser frame. It holds no copy of the site, so every commit and every three-hour refresh shows up in it on its own. Sign-in is the browser's: whoever is signed in there is signed in here. The file `.well-known/assetlinks.json` in the separate `raunak-comp.github.io` repository is what removes the address bar. A new app later means one more block in that file.
+
+**Phones set to "Desktop site".** With that switch on, the browser ignores the page's own width and draws it about 980 px wide, zoomed out, in the app as well. The page spots this (a phone-sized touch screen whose browser says it is a computer) and shows itself again in a frame as wide as the phone, scaled up to fill the screen, so the phone layout comes back. Tablets and computers are left alone. If a phone ever shows the wrong layout, open the site with `?diag` at the end of the address: it shows the numbers the check works from.
+
 ## Sign-in on every device
 
 Sign-in is optional. It uses Google sign-in through Firebase (free). Once it is on, anyone can sign in with their own Google account, a college account included, and gets their own registrations, stars, hidden comps and profile on every device. Signed out, MyStop works as before and keeps everything in the browser.

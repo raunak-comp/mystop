@@ -45,6 +45,11 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  /* A phone with "Desktop site" switched on: the page is shown again in a frame as wide as the phone, scaled up to fill the screen */
+  html.deskfix, html.deskfix body { height: 100%; overflow: hidden; touch-action: manipulation; }
+  html.deskfix body > :not(#deskFrame) { display: none !important; }
+  #deskFrame { position: fixed; left: 0; top: 0; border: 0; transform-origin: 0 0; touch-action: manipulation; background: var(--bg); }
   body { background: var(--bg); color: var(--tx); font: 14px/1.5 "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: -.006em; font-feature-settings: "cv11", "calt"; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
   button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
   button { cursor: pointer; }
@@ -923,6 +928,43 @@ const DATA = /*__DATA__*/null;
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
+
+  // ------------------------------------------------------------------ phones with "Desktop site" switched on
+  // The browser then ignores the page's own width and lays it out about 980 px wide, zoomed out, in the app as well as in the browser.
+  // The page is loaded again inside a frame that is as wide as the phone really is and scaled up to fill the screen.
+  // Inside the frame every width rule and every measurement sees the phone's true width, so the phone layout comes back untouched.
+  const FRAMED = window.name === "mystopFrame";
+  const realW = () => Math.min(...[screen.width, window.outerWidth].filter(x => x > 0));
+  const deskOnPhone = () => {
+    const w = realW(), h = Math.min(...[screen.height, window.outerHeight].filter(x => x > 0));
+    return !FRAMED && w > 0 && h > 0 && Math.min(w, h) < 600        // a phone-sized screen. Tablets and computers are left alone
+      && navigator.maxTouchPoints > 0
+      && !/Android|Mobile|iPhone|iPad|iPod/i.test(navigator.userAgent);   // and a browser that says it is a computer
+  };
+  if (/[?&]diag\b/.test(location.search) && !FRAMED) {
+    const vv = window.visualViewport;
+    alert(["MyStop screen check", "page " + window.innerWidth + " x " + window.innerHeight, "window " + window.outerWidth + " x " + window.outerHeight,
+      "screen " + screen.width + " x " + screen.height, "ratio " + window.devicePixelRatio + ", zoom " + (vv ? vv.scale.toFixed(3) : "?"),
+      "touch " + navigator.maxTouchPoints + ", app " + matchMedia("(display-mode: standalone)").matches, "fix " + deskOnPhone(), navigator.userAgent].join("\n"));
+  }
+  if (deskOnPhone()) {
+    document.documentElement.classList.add("deskfix");
+    const f = document.createElement("iframe");
+    f.id = "deskFrame"; f.name = "mystopFrame"; f.title = "MyStop"; f.setAttribute("allow", "clipboard-write; web-share");
+    const fit = () => {
+      const k = Math.max(1, window.innerWidth / realW());
+      f.style.width = (window.innerWidth / k) + "px"; f.style.height = (window.innerHeight / k) + "px";
+      f.style.transform = k > 1.001 ? "scale(" + k + ")" : "none";
+    };
+    fit();
+    f.src = location.href;
+    document.body.appendChild(f);
+    addEventListener("resize", fit);
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+    if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener("change", () => setTimeout(fit, 250));
+    return;
+  }
+
   if (!DATA) { $("list").innerHTML = '<div class="empty"><b>No Data Yet</b><p>Run python radar.py to build this dashboard.</p></div>'; return; }
 
   // ------------------------------------------------------------------ helpers
