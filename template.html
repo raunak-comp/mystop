@@ -1354,18 +1354,20 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     const t0 = myTypes()[0], r = regionId(), city = cityShort(), place = r === HOME ? "Delhi" : city;
     const cat = (...g) => c => g.some(x => c.cats.includes(x));
     const near = c => c.loc === "online" || (r === HOME ? c.loc === "delhi" : !!r && c.loc === "near");
+    const easy = c => (c.rounds == null || c.rounds <= 3) && !(c.reg > 3000), bsAny = cat("fms", "isb", "bschool", "nmims", "bschool2");
     return [
       { id: "all", label: "Open to Me", tip: "Your full list. Clears every view and filter", set: {} },
       { id: "high", label: "High Priority", tip: "Score " + META.tiers.high + " and above", test: c => c.tier === "high" },
       { id: "ty-" + t0, ty: t0, label: t0 === "case" ? "Case Competitions" : TYPE[t0].label, tip: t0 === "case" ? "Case and strategy competitions" : "Your main competition type", test: c => c.ty === t0 },
       { id: "iim", org: 1, label: "IIM Online", tip: "IIM competitions held fully online", test: c => c.cats.includes("iim") && c.loc === "online" },
+      // the lesser-known B-schools are kept out of the main list, so lighting this view is what lets them in
+      { id: "bs", org: 1, own: { b2: 1 }, label: "Other B-Schools", tip: "Every B-school outside the IIMs: FMS, ISB, XLRI, SPJIMR, MDI, Great Lakes, IMT, NMIMS and more", test: c => bsAny(c) },
       { id: "iit", org: 1, label: place ? "IIT Online & " + place : "IIT Online", tip: "IIT competitions, online" + (place ? " or in " + place : ""), test: c => c.cats.includes("iit") && near(c) },
-      { id: "bs", org: 1, label: "Top B-Schools", tip: "FMS, ISB, XLRI, SPJIMR, IIFT, NMIMS and their peers", test: cat("fms", "isb", "bschool", "nmims") },
-      // kept out of the main list, so lighting this view is what lets them in
-      { id: "b2", org: 1, own: 1, label: "Other B-Schools", tip: "MDI, Great Lakes, IMT, IMI and similar. Shown only while this view is lit", test: c => !!c.b2 },
       { id: "du", org: 1, label: "DU & New-Age", tip: "Delhi University colleges, Masters' Union and other new-age schools", test: cat("du_top", "du", "newage") },
       { id: "firms", org: 1, label: "Consulting & Finance", tip: "Strategy firms, the Big 4, banks and finance firms", test: cat("mbb", "big4", "fin") },
-      { id: "corp", org: 1, label: "Low-Effort Corporate", tip: "Run by a company, 3 rounds or fewer, under 3,000 registered", test: c => c.cats.includes("corp") && (c.rounds == null || c.rounds <= 3) && !(c.reg > 3000) },
+      // the big flagship comps usually end with a finale in person, so this view also lets those through
+      { id: "corpx", org: 1, own: { loc: ["corp", "check"] }, label: "High-Effort Corporate", tip: "The big company flagships: more than 3 rounds or over 3,000 registered. Includes ones with an in-person finale", test: c => c.cats.includes("corp") && !easy(c) },
+      { id: "corp", org: 1, label: "Low-Effort Corporate", tip: "Run by a company, 3 rounds or fewer, under 3,000 registered", test: c => c.cats.includes("corp") && easy(c) },
       { id: "intern", label: "Internship & PPO", tip: "An internship, PPI or PPO chance on offer", test: c => c.intern >= 1 },
       { id: "prize", label: "₹1 Lakh+ Prizes", tip: "Prize pool of ₹1 lakh or more", sort: "prize", test: c => c.prize >= 100000 },
       { id: "week", label: "Closing This Week", tip: "Registration closes within 7 days", sort: "dl", test: c => c.daysLeft != null && c.daysLeft <= 7 },
@@ -1383,13 +1385,13 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     q: c => !S.q || S.q.toLowerCase().split(/\s+/).every(w => c.hay.includes(w)),
     tier: c => !S.tier.length || S.tier.includes(c.tier),
     cats: c => has(c.cats, S.cats, S.catsAll),
-    loc: c => !S.loc.length || S.loc.includes(c.loc),
+    loc: c => !S.loc.length || S.loc.includes(c.loc) || lets("loc", c),
     niches: c => has(c.niches, S.niches, S.nichesAll),
     intern: c => !S.intern || (S.intern === 1 ? c.intern >= 1 : S.intern === 2 ? c.intern === 2 : c.internKind === (S.intern === 3 ? "ppo" : "ppi")),
     circ: c => has(c.circ, S.circ, false),
     ty: c => !S.ty.length || S.ty.includes(c.ty),
     // lesser-known B-schools sit in their own view. A search, or ticking that organiser, still finds them
-    b2: c => S.b2 === "all" || !!S.q || S.cats.includes("bschool2") || (S.picks.includes("b2") && !!c.b2) || (S.b2 === "only") === !!c.b2,
+    b2: c => S.b2 === "all" || !!S.q || S.cats.includes("bschool2") || (!!c.b2 && lets("b2", c)) || (S.b2 === "only") === !!c.b2,
     src: c => !S.src.length || S.src.includes(c.src),
     picks: c => {
       const on = S.picks.map(id => VIEW[id]).filter(v => v && v.test);
@@ -1414,6 +1416,7 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     showHidden: c => S.showHidden || !P.hide[c.id],
     hideTracked: c => !S.hideTracked || !P.tracked[c.id]
   };
+  const lets = (key, c) => S.picks.some(id => { const v = VIEW[id]; return !!v && !!v.own && !!v.own[key] && (key !== "loc" || v.own.loc.includes(c.loc)) && v.test(c); });
   const KEYS = Object.keys(TESTS);
   const passes = (c, skip) => KEYS.every(k => k === skip || TESTS[k](c));
   function facet(key, pred) { let n = 0; for (const c of COMPS) if (passes(c, key) && pred(c)) n++; return n; }
@@ -1678,12 +1681,14 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
       (gone ? `<p class="foot">${plural(gone, "starred comp")} ${gone === 1 ? "has" : "have"} closed <button class="link" data-act="clearGone">Clear ${gone === 1 ? "It" : "Them"}</button></p>` : "");
     $("pgS").textContent = plural(live.length, "starred comp");
   }
+  // a view that lets extra comps in is counted the way it will look once lit
+  function asLit(p) { const old = S.picks; S.picks = old.includes(p.id) ? old : old.concat(p.id); try { return COMPS.filter(c => p.test(c) && passes(c, "picks")).length; } finally { S.picks = old; } }
   function renderViews() {
     const pool = TAB === "discover" ? activePreset() : null, here = TAB === "discover";
     $("viewsM").className = "viewsM";
     $("viewsM").innerHTML = '<div class="vrow">' + PRESETS.map(p => {
       const on = p.set ? p.id === pool && (p.id !== "all" || !S.picks.length) : here && S.picks.includes(p.id);
-      const n = p.set ? countFor(p.set) : p.own ? COMPS.filter(c => p.test(c) && KEYS.every(k => k === "picks" || k === "b2" || TESTS[k](c))).length : facet("picks", p.test);
+      const n = p.set ? countFor(p.set) : p.own ? asLit(p) : facet("picks", p.test);
       return `<button data-preset="${p.id}" aria-pressed="${on}"${n || on ? "" : ' class="zero"'} title="${esc(p.tip)}">${esc(p.label)}<em>${n}</em></button>`;
     }).join("") + "</div>";
     layViews();
@@ -1693,23 +1698,26 @@ const clip = (s, n) => { s = tidy(s); return s.length > n ? s.slice(0, n - 1).re
     if (!btns.length || !W) return;
     box.className = "viewsM measure"; box.innerHTML = '<div class="vrow"></div>'; btns.forEach(b => box.firstChild.appendChild(b));
     if (matchMedia("(max-width: 619.98px)").matches) { box.className = "viewsM"; return; }   // phones keep one row that scrolls sideways
-    // the split into R rows whose longest row is as short as it can be, which is also the most even one
+    // every way to cut the views into R rows that fits the width. The pick is the one with the most even row sizes, then the shortest longest row
     const split = (w, gap, R) => {
       const n = w.length, pre = [0]; w.forEach((x, k) => pre.push(pre[k] + x));
-      const best = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(Infinity)), from = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(0));
-      best[0][0] = 0;
-      for (let r = 1; r <= R; r++) for (let j = r; j <= n; j++) for (let i = r - 1; i < j; i++) {
-        const v = Math.max(best[r - 1][i], pre[j] - pre[i] + gap * (j - i - 1));
-        if (v < best[r][j]) { best[r][j] = v; from[r][j] = i; }
-      }
-      const cuts = []; for (let r = R, j = n; r > 0; r--) { cuts.unshift([from[r][j], j]); j = from[r][j]; }
-      return { max: best[R][n], cuts };
+      let best = null;
+      const go = (start, left, cuts, max, lo, hi) => {
+        if (left === 0) { if (start === n && (!best || hi - lo < best.even || (hi - lo === best.even && max < best.max))) best = { cuts: cuts.slice(), max, even: hi - lo }; return; }
+        for (let end = start + 1; end <= n - (left - 1); end++) {
+          const len = pre[end] - pre[start] + gap * (end - start - 1);
+          if (len > W) break;
+          cuts.push([start, end]); go(end, left - 1, cuts, Math.max(max, len), Math.min(lo, end - start), Math.max(hi, end - start)); cuts.pop();
+        }
+      };
+      go(0, R, [], 0, Infinity, 0);
+      return best;
     };
-    // three sizes of chip. The fewest rows the smallest size allows, then the roomiest size that still fits in that many rows
+    // three sizes of chip. The fewest rows that can hold them, at the roomiest size that still fits in that many rows
     const sizes = [0, 1, 2].map(d => { box.className = "viewsM measure d" + d; return btns.map(b => Math.ceil(b.getBoundingClientRect().width)); });
-    let R = 1; while (R < btns.length && split(sizes[2], GAPS[2], R).max > W) R++;
-    let d = 0, fit = split(sizes[0], GAPS[0], R);
-    while (d < 2 && fit.max > W) { d++; fit = split(sizes[d], GAPS[d], R); }
+    let fit = null, d = 0;
+    for (let R = 1; R <= btns.length && !fit; R++) for (d = 0; d < 3 && !(fit = split(sizes[d], GAPS[d], R)); d++);
+    if (!fit) { d = 2; fit = { cuts: btns.map((b, k) => [k, k + 1]) }; }
     box.innerHTML = ""; box.className = "viewsM just d" + d;
     fit.cuts.forEach(([i, j]) => { const row = document.createElement("div"); row.className = "vrow"; btns.slice(i, j).forEach(b => row.appendChild(b)); box.appendChild(row); });
   }
